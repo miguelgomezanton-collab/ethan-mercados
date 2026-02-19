@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ETHAN Mercados</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%2306080c'/><text x='16' y='22' text-anchor='middle' font-size='18' font-weight='bold' fill='%2300ff87'>E</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════
+   ETHAN MERCADOS — UNIFIED PLATFORM
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --bg:        #06080c;
+  --bg2:       #0a0d12;
+  --surface:   #0e1118;
+  --surface2:  #141821;
+  --border:    #1c2535;
+  --border2:   #253045;
+  --green:     #00ff87;
+  --green-dim: rgba(0,255,135,0.06);
+  --green-mid: rgba(0,255,135,0.15);
+  --red:       #ff3d5a;
+  --blue:      #4da6ff;
+  --yellow:    #ffd426;
+  --text1:     #e8edf3;
+  --text2:     #8ba0b8;
+  --text3:     #3a4f65;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; overflow: hidden; background: var(--bg); }
+
+/* ── LOGIN SCREEN ─────────────────────────────────────────── */
+#login-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  transition: opacity 0.5s, transform 0.5s;
+}
+#login-screen.hidden {
+  opacity: 0;
+  transform: scale(1.02);
+  pointer-events: none;
+}
+
+.login-box {
+  text-align: center;
+  width: 360px;
+}
+
+.login-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 72px;
+  letter-spacing: 12px;
+  color: var(--green);
+  line-height: 1;
+  margin-bottom: 4px;
+  text-shadow: 0 0 40px rgba(0,255,135,0.2);
+}
+.login-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 48px;
+}
+
+.login-field {
+  position: relative;
+  margin-bottom: 16px;
+}
+.login-field input {
+  width: 100%;
+  padding: 14px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text1);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 14px;
+  letter-spacing: 2px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.login-field input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 1px rgba(0,255,135,0.1);
+}
+.login-field input::placeholder {
+  color: var(--text3);
+  letter-spacing: 3px;
+  font-size: 11px;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--green);
+  border: none;
+  color: var(--bg);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+}
+.login-btn:hover {
+  background: #00e67a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(0,255,135,0.3);
+}
+.login-btn:active { transform: translateY(0); }
+
+.login-error {
+  color: var(--red);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  margin-top: 12px;
+  min-height: 18px;
+  transition: opacity 0.2s;
+}
+
+.login-hint {
+  color: var(--text3);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  margin-top: 32px;
+  opacity: 0.5;
+}
+
+/* Scanline animation on login */
+.login-box::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,255,135,0.008) 2px,
+    rgba(0,255,135,0.008) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── APP SHELL ────────────────────────────────────────────── */
+#app {
+  display: none;
+  height: 100%;
+  flex-direction: column;
+}
+#app.active {
+  display: flex;
+}
+
+/* ── TOPBAR ───────────────────────────────────────────────── */
+.topbar {
+  height: 52px;
+  min-height: 52px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: stretch;
+  z-index: 9999;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px;
+  border-right: 1px solid var(--border);
+  min-width: 160px;
+  cursor: default;
+}
+.brand-icon {
+  width: 28px;
+  height: 28px;
+  background: var(--green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  color: var(--bg);
+  font-weight: bold;
+}
+.brand-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 4px;
+  color: var(--green);
+  line-height: 1;
+}
+.brand-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--text3);
+  text-transform: uppercase;
+}
+
+/* ── NAV TABS ─────────────────────────────────────────────── */
+.nav-tabs {
+  display: flex;
+  align-items: stretch;
+  flex: 1;
+  overflow-x: auto;
+}
+.nav-tabs::-webkit-scrollbar { height: 0; }
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--text3);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  padding: 0 20px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tab-btn:hover {
+  color: var(--text2);
+  background: rgba(255,255,255,0.015);
+}
+.tab-btn.active {
+  color: var(--green);
+  border-bottom-color: var(--green);
+  background: var(--green-dim);
+}
+
+.tab-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* ── TOPBAR RIGHT ─────────────────────────────────────────── */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 20px;
+  border-left: 1px solid var(--border);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: 1px;
+}
+
+.logout-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text3);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.logout-btn:hover {
+  color: var(--red);
+  border-color: var(--red);
+}
+
+/* ── IFRAME CONTAINER ─────────────────────────────────────── */
+.frame-area {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.module-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: var(--bg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.module-frame.active {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+/* ── LOADER ───────────────────────────────────────────────── */
+.frame-loader {
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: opacity 0.3s;
+}
+.frame-loader.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.loader-pulse {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--border);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 16px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loader-text {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--text3);
+  text-transform: uppercase;
+}
+
+/* ── STATUS BAR ───────────────────────────────────────────── */
+.status-bar {
+  height: 24px;
+  min-height: 24px;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 20px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--text3);
+}
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  display: inline-block;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ── RESPONSIVE ───────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .tab-btn { padding: 0 12px; font-size: 9px; letter-spacing: 1.5px; }
+  .tab-btn .tab-label { display: none; }
+  .tab-btn .tab-icon { font-size: 16px; }
+  .brand { min-width: auto; padding: 0 12px; }
+  .brand-name { font-size: 18px; letter-spacing: 2px; }
+  .brand-tag { display: none; }
+  .topbar-right span { display: none; }
+}
+@media (max-width: 600px) {
+  .tab-btn { padding: 0 8px; }
+  .topbar-right { padding: 0 8px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     LOGIN SCREEN
+     ═══════════════════════════════════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">ETHAN</div>
+    <div class="login-sub">Mercados · Trading Platform</div>
+    <div class="login-field">
+      <input type="password" id="login-pass" placeholder="CONTRASEÑA" autofocus
+             onkeydown="if(event.key==='Enter') doLogin()">
+    </div>
+    <button class="login-btn" onclick="doLogin()">ACCEDER</button>
+    <div class="login-error" id="login-error"></div>
+    <div class="login-hint">Sistema privado · Acceso restringido</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     APP SHELL
+     ═══════════════════════════════════════════════════════════ -->
+<div id="app">
+  
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-icon">E</div>
+      <div>
+        <div class="brand-name">ETHAN</div>
+        <div class="brand-tag">Mercados</div>
+      </div>
+    </div>
+
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('screener')" id="tab-screener">
+        <span class="tab-icon">◆</span>
+        <span class="tab-label">Screener</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('macro')" id="tab-macro">
+        <span class="tab-icon">◉</span>
+        <span class="tab-label">Macro</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('portfolio')" id="tab-portfolio">
+        <span class="tab-icon">◫</span>
+        <span class="tab-label">Cartera</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('risk')" id="tab-risk">
+        <span class="tab-icon">⚡</span>
+        <span class="tab-label">Risk Mgmt</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('fundamental')" id="tab-fundamental">
+        <span class="tab-icon">▤</span>
+        <span class="tab-label">Fundamental</span>
+      </button>
+    </div>
+
+    <div class="topbar-right">
+      <span id="clock">—</span>
+      <button class="logout-btn" onclick="doLogout()">Salir</button>
+    </div>
+  </div>
+
+  <!-- IFRAMES -->
+  <div class="frame-area">
+    <div class="frame-loader" id="loader">
+      <div class="loader-pulse"></div>
+      <div class="loader-text">Cargando módulo...</div>
+    </div>
+    <iframe class="module-frame active" id="frame-screener"  src="ethan-app.html"></iframe>
+    <iframe class="module-frame"        id="frame-macro"      data-src="macro.html"></iframe>
+    <iframe class="module-frame"        id="frame-portfolio"  data-src="portfolio.html"></iframe>
+    <iframe class="module-frame"        id="frame-risk"       data-src="risk.html"></iframe>
+    <iframe class="module-frame"        id="frame-fundamental" data-src="fundamental.html"></iframe>
+  </div>
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <span><span class="status-dot"></span>&nbsp; ONLINE</span>
+    <span id="status-module">SCREENER</span>
+    <span style="margin-left:auto;">ETHAN Mercados v2.0</span>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   AUTH SYSTEM (client-side SHA-256 hash)
+   ═══════════════════════════════════════════════════════════ */
+
+// ──────────────────────────────────────────────────────────
+// CAMBIAR CONTRASEÑA: sustituye el hash de abajo por el de tu nueva contraseña.
+// Para generar el hash, abre la consola del navegador (F12) y ejecuta:
+//   crypto.subtle.digest('SHA-256', new TextEncoder().encode('TU_NUEVA_CONTRASEÑA'))
+//     .then(h => console.log(Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join('')))
+//
+// Contraseña por defecto: ethan2026
+// ──────────────────────────────────────────────────────────
+const PASS_HASH = 'e1e8769e31fe6dc1fc7f38303b86e94eefe30856354710cefb1471daa17c8ba7';
+
+async function sha256(text) {
+  const data = new TextEncoder().encode(text);
+  const hash = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Check session
+const SESSION_KEY = 'ethan_session';
+const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24h
+
+function checkSession() {
+  const session = localStorage.getItem(SESSION_KEY);
+  if (session) {
+    try {
+      const { hash, time } = JSON.parse(session);
+      if (hash === PASS_HASH && Date.now() - time < SESSION_DURATION) {
+        return true;
+      }
+    } catch(e) {}
+  }
+  return false;
+}
+
+function saveSession() {
+  localStorage.setItem(SESSION_KEY, JSON.stringify({ hash: PASS_HASH, time: Date.now() }));
+}
+
+async function doLogin() {
+  const pass = document.getElementById('login-pass').value;
+  const hash = await sha256(pass);
+  
+  // Accept matching hash
+  if (hash === PASS_HASH) {
+    saveSession();
+    showApp();
+  } else {
+    const errEl = document.getElementById('login-error');
+    errEl.textContent = '✗ Contraseña incorrecta';
+    document.getElementById('login-pass').value = '';
+    document.getElementById('login-pass').focus();
+    setTimeout(() => { errEl.textContent = ''; }, 3000);
+  }
+}
+
+function doLogout() {
+  localStorage.removeItem(SESSION_KEY);
+  location.reload();
+}
+
+function showApp() {
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('app').classList.add('active');
+  setTimeout(() => {
+    document.getElementById('login-screen').style.display = 'none';
+  }, 500);
+}
+
+// Auto-login if session valid
+if (checkSession()) {
+  showApp();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TAB NAVIGATION + LAZY LOADING
+   ═══════════════════════════════════════════════════════════ */
+
+const TABS = ['screener', 'macro', 'portfolio', 'risk', 'fundamental'];
+const TAB_LABELS = {
+  screener: 'SCREENER',
+  macro: 'ANÁLISIS MACRO',
+  portfolio: 'CARTERA',
+  risk: 'RISK MANAGEMENT',
+  fundamental: 'ANÁLISIS FUNDAMENTAL'
+};
+const loadedFrames = new Set(['screener']); // screener loads immediately
+
+function switchTab(id) {
+  const loader = document.getElementById('loader');
+  
+  // Deactivate all
+  TABS.forEach(t => {
+    document.getElementById('frame-' + t).classList.remove('active');
+    document.getElementById('tab-' + t).classList.remove('active');
+  });
+
+  // Activate selected
+  const frame = document.getElementById('frame-' + id);
+  const tab = document.getElementById('tab-' + id);
+  
+  // Lazy load: set src from data-src on first visit
+  if (!loadedFrames.has(id)) {
+    const dataSrc = frame.getAttribute('data-src');
+    if (dataSrc) {
+      loader.classList.remove('hidden');
+      frame.src = dataSrc;
+      frame.removeAttribute('data-src');
+      loadedFrames.add(id);
+    }
+  }
+
+  frame.classList.add('active');
+  tab.classList.add('active');
+  document.getElementById('status-module').textContent = TAB_LABELS[id] || id.toUpperCase();
+}
+
+// Hide loader when iframe loads
+document.querySelectorAll('.module-frame').forEach(fr => {
+  fr.addEventListener('load', () => {
+    const loader = document.getElementById('loader');
+    loader.classList.add('hidden');
+  });
+});
+
+/* ═══════════════════════════════════════════════════════════
+   CLOCK
+   ═══════════════════════════════════════════════════════════ */
+function updateClock() {
+  const el = document.getElementById('clock');
+  if (el) el.textContent = new Date().toLocaleString('es-ES');
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+/* ═══════════════════════════════════════════════════════════
+   KEYBOARD SHORTCUTS
+   ═══════════════════════════════════════════════════════════ */
+document.addEventListener('keydown', (e) => {
+  if (document.getElementById('login-screen').style.display !== 'none') return;
+  
+  // Alt+1..5 to switch tabs
+  if (e.altKey && e.key >= '1' && e.key <= '5') {
+    e.preventDefault();
+    switchTab(TABS[parseInt(e.key) - 1]);
+  }
+});
+</script>
+
+</body>
+</html>

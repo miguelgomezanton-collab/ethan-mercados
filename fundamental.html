@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Fundamental - Apple Inc.</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2d6a4f 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header { text-align: center; color: white; margin-bottom: 40px; }
+        .header h1 { font-size: 3em; margin-bottom: 10px; text-shadow: 2px 2px 8px rgba(0,0,0,0.3); }
+        .header .subtitle { font-size: 1.3em; opacity: 0.95; }
+        .company-card { background: white; border-radius: 25px; padding: 40px; margin-bottom: 35px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        .company-name { font-size: 2.5em; font-weight: 800; background: linear-gradient(135deg, #1e3a5f 0%, #2d6a4f 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; }
+        .company-sub { color: #888; font-size: 1.1em; margin-bottom: 25px; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .info-item { background: #f8f9fa; padding: 15px 20px; border-radius: 12px; border-left: 4px solid #1e3a5f; }
+        .info-label { color: #666; font-size: 0.85em; margin-bottom: 4px; }
+        .info-value { color: #1e3a5f; font-size: 1.25em; font-weight: 800; }
+        .info-value.highlight { color: #2d6a4f; }
+        .highlight-banner { background: linear-gradient(135deg, #2d6a4f 0%, #1e3a5f 100%); color: white; border-radius: 15px; padding: 20px 30px; text-align: center; font-size: 1.3em; font-weight: 700; margin-bottom: 30px; }
+        .rankings { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 30px; margin-bottom: 35px; }
+        .ranking-card { background: white; border-radius: 25px; padding: 35px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        .ranking-icon { font-size: 3em; text-align: center; margin-bottom: 10px; }
+        .ranking-title { font-size: 1.5em; font-weight: 800; color: #333; text-align: center; margin-bottom: 20px; }
+        .score-circle { width: 180px; height: 180px; margin: 20px auto; border-radius: 50%; background: linear-gradient(135deg, #1e3a5f 0%, #2d6a4f 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; box-shadow: 0 15px 40px rgba(30,58,95,0.4); position: relative; }
+        .score-circle::before { content: ''; position: absolute; inset: 8px; border-radius: 50%; background: linear-gradient(135deg, #2d6a4f 0%, #1e3a5f 100%); z-index: 0; }
+        .score-content { position: relative; z-index: 1; text-align: center; }
+        .score-number { font-size: 3em; font-weight: 800; line-height: 1; }
+        .score-max { font-size: 1.2em; opacity: 0.9; margin-top: 4px; }
+        .score-stars { font-size: 1.4em; margin-top: 8px; }
+        .score-label { text-align: center; font-size: 1.2em; font-weight: 700; color: white; margin: 15px 0; padding: 12px 20px; background: linear-gradient(135deg, #1e3a5f 0%, #2d6a4f 100%); border-radius: 12px; }
+        .metrics { background: #f8f9fa; border-radius: 12px; padding: 18px; }
+        .metric { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e9ecef; font-size: 1em; }
+        .metric:last-child { border-bottom: none; }
+        .metric-label { font-weight: 600; color: #555; }
+        .metric-value { font-weight: 800; color: #1e3a5f; }
+        .financials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin-bottom: 35px; }
+        .fin-card { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); }
+        .fin-title { font-size: 1.3em; font-weight: 800; color: #1e3a5f; margin-bottom: 20px; border-bottom: 3px solid #1e3a5f; padding-bottom: 10px; }
+        .fin-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+        .fin-row:last-child { border-bottom: none; }
+        .fin-label { color: #555; font-weight: 600; }
+        .fin-value { font-weight: 800; color: #1e3a5f; }
+        .fin-value.green { color: #2d6a4f; }
+        .fin-value.red { color: #dc2626; }
+        .fin-value.orange { color: #f59e0b; }
+        .analysis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 35px; }
+        .analysis-card { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); }
+        .analysis-title { font-size: 1.4em; font-weight: 800; margin-bottom: 20px; }
+        .analysis-title.green { color: #2d6a4f; }
+        .analysis-title.red { color: #dc2626; }
+        .analysis-item { padding: 12px 15px; margin: 8px 0; border-radius: 10px; font-weight: 600; font-size: 1em; line-height: 1.4; }
+        .analysis-item.strength { background: #f0fdf4; border-left: 4px solid #2d6a4f; color: #166534; }
+        .analysis-item.weakness { background: #fef2f2; border-left: 4px solid #dc2626; color: #991b1b; }
+        .conclusion { background: white; border-radius: 20px; padding: 40px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); margin-bottom: 35px; }
+        .conclusion h3 { color: #1e3a5f; font-size: 2em; margin-bottom: 20px; }
+        .recommendation { font-size: 1.8em; font-weight: 900; color: #2d6a4f; margin: 20px 0; padding: 20px; background: #f0fdf4; border-radius: 15px; }
+        .investor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 25px; }
+        .investor-item { padding: 15px; border-radius: 12px; font-weight: 700; font-size: 1em; }
+        .investor-item.yes { background: #f0fdf4; color: #166534; border: 2px solid #2d6a4f; }
+        .investor-item.no { background: #fef2f2; color: #991b1b; border: 2px solid #dc2626; }
+        .investor-item.maybe { background: #fffbeb; color: #92400e; border: 2px solid #f59e0b; }
+        .footer { text-align: center; color: white; margin-top: 40px; padding: 25px; background: rgba(255,255,255,0.1); border-radius: 15px; }
+        @media (max-width: 768px) { .header h1 { font-size: 2em; } .rankings, .financials-grid, .analysis-grid { grid-template-columns: 1fr; } .investor-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🍎 Análisis Fundamental Completo</h1>
+        <div class="subtitle">Sistema de 3 Rankings | Apple Inc. (AAPL)</div>
+    </div>
+
+    <div class="company-card">
+        <div class="company-name">Apple Inc. (AAPL)</div>
+        <div class="company-sub">NASDAQ · Technology · Consumer Electronics · EE.UU.</div>
+        <div class="info-grid">
+            <div class="info-item"><div class="info-label">💰 Precio</div><div class="info-value">$255.78</div></div>
+            <div class="info-item"><div class="info-label">📊 Market Cap</div><div class="info-value">$3.76T</div></div>
+            <div class="info-item"><div class="info-label">📈 PER</div><div class="info-value">33.2x ⚠️</div></div>
+            <div class="info-item"><div class="info-label">💵 BPA (TTM)</div><div class="info-value">$7.92</div></div>
+            <div class="info-item"><div class="info-label">📉 PEG</div><div class="info-value highlight">1.28 ✅</div></div>
+            <div class="info-item"><div class="info-label">🏆 ROIC</div><div class="info-value highlight">48.48% ✅✅✅</div></div>
+        </div>
+        <div class="highlight-banner">🚀 MEGA-CAP QUALITY: Empresa más valiosa del mundo · Ecosistema de 2.5B+ dispositivos activos · Record Revenue Q1 2026: $143.8B</div>
+    </div>
+
+    <div class="rankings">
+        <div class="ranking-card">
+            <div class="ranking-icon">🏆</div>
+            <div class="ranking-title">INDICADOR FUNDAMENTAL</div>
+            <div class="score-circle"><div class="score-content"><div class="score-number">4.35</div><div class="score-max">/5.00</div><div class="score-stars">⭐⭐⭐⭐</div></div></div>
+            <div class="score-label">Premium</div>
+            <div class="metrics">
+                <div class="metric"><span class="metric-label">Crecimiento Ingresos</span><span class="metric-value">+10.1% ✅✅</span></div>
+                <div class="metric"><span class="metric-label">Crec. Ingresos Q1 YoY</span><span class="metric-value">+15.6% ✅✅✅</span></div>
+                <div class="metric"><span class="metric-label">Margen Operativo</span><span class="metric-value">32.0% ✅✅✅</span></div>
+                <div class="metric"><span class="metric-label">Margen Neto</span><span class="metric-value">27.1% ✅✅✅</span></div>
+                <div class="metric"><span class="metric-label">FCF/Ingresos</span><span class="metric-value">28.3% ✅✅✅</span></div>
+                <div class="metric"><span class="metric-label">ROIC</span><span class="metric-value">48.5% ✅✅✅</span></div>
+                <div class="metric"><span class="metric-label">Deuda Neta/EBITDA</span><span class="metric-value">0.66x ✅✅✅</span></div>
+                <div class="metric"><span class="metric-label">Evolución BPA</span><span class="metric-value">+25.3% ✅✅✅</span></div>
+                <div class="metric"><span class="metric-label">Revisiones Analistas</span><span class="metric-value">Strong Buy ✅✅</span></div>
+                <div class="metric"><span class="metric-label">Expansión Márgenes</span><span class="metric-value">+940 bps (5Y) ✅✅✅</span></div>
+            </div>
+        </div>
+
+        <div class="ranking-card">
+            <div class="ranking-icon">🎯</div>
+            <div class="ranking-title">INDICADOR GREENBLATT</div>
+            <div class="score-circle"><div class="score-content"><div class="score-number">3.15</div><div class="score-max">/5.00</div><div class="score-stars">⭐⭐⭐</div></div></div>
+            <div class="score-label">Aceptable</div>
+            <div class="metrics">
+                <div class="metric"><span class="metric-label">ROIC</span><span class="metric-value">48.5% ✅✅✅</span></div>
+                <div class="metric"><span class="metric-label">Score ROIC</span><span class="metric-value">5.0/5 ⭐⭐⭐⭐⭐</span></div>
+                <div class="metric"><span class="metric-label">Earnings Yield</span><span class="metric-value">3.01% ❌</span></div>
+                <div class="metric"><span class="metric-label">Score Earnings Yield</span><span class="metric-value">1.3/5 ⭐</span></div>
+                <div class="metric"><span class="metric-label">EV/EBITDA</span><span class="metric-value">24.8x ⚠️</span></div>
+                <div class="metric"><span class="metric-label">Enterprise Value</span><span class="metric-value">$3.78T</span></div>
+            </div>
+        </div>
+
+        <div class="ranking-card">
+            <div class="ranking-icon">💎</div>
+            <div class="ranking-title">INDICADOR LYNCH</div>
+            <div class="score-circle"><div class="score-content"><div class="score-number">2.75</div><div class="score-max">/5.00</div><div class="score-stars">⭐⭐⭐</div></div></div>
+            <div class="score-label">Cara</div>
+            <div class="metrics">
+                <div class="metric"><span class="metric-label">PER</span><span class="metric-value">33.2x ⚠️</span></div>
+                <div class="metric"><span class="metric-label">Score PER</span><span class="metric-value">1.5/5 ⭐</span></div>
+                <div class="metric"><span class="metric-label">PEG</span><span class="metric-value">1.28 ✅</span></div>
+                <div class="metric"><span class="metric-label">Score PEG</span><span class="metric-value">4.0/5 ⭐⭐⭐⭐</span></div>
+                <div class="metric"><span class="metric-label">Crecimiento BPA</span><span class="metric-value">+25.3% ✅✅✅</span></div>
+                <div class="metric"><span class="metric-label">PER Forward</span><span class="metric-value">30.4x ⚠️</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="financials-grid">
+        <div class="fin-card">
+            <div class="fin-title">💵 Cuenta de Resultados</div>
+            <div class="fin-row"><span class="fin-label">Ingresos (TTM)</span><span class="fin-value">$435.6B</span></div>
+            <div class="fin-row"><span class="fin-label">Crecimiento YoY</span><span class="fin-value green">+10.1%</span></div>
+            <div class="fin-row"><span class="fin-label">Crec. Q1 2026 YoY</span><span class="fin-value green">+15.6%</span></div>
+            <div class="fin-row"><span class="fin-label">EBITDA</span><span class="fin-value">$152.9B</span></div>
+            <div class="fin-row"><span class="fin-label">Margen EBITDA</span><span class="fin-value green">34.8%</span></div>
+            <div class="fin-row"><span class="fin-label">Margen Bruto</span><span class="fin-value green">48.2%</span></div>
+            <div class="fin-row"><span class="fin-label">Margen Operativo</span><span class="fin-value green">32.0%</span></div>
+            <div class="fin-row"><span class="fin-label">Beneficio Neto</span><span class="fin-value">$117.8B</span></div>
+            <div class="fin-row"><span class="fin-label">Margen Neto</span><span class="fin-value green">27.1%</span></div>
+            <div class="fin-row"><span class="fin-label">BPA (TTM)</span><span class="fin-value">$7.92</span></div>
+            <div class="fin-row"><span class="fin-label">BPA Q1 2026</span><span class="fin-value green">$2.84 (beat +6.8%)</span></div>
+        </div>
+        <div class="fin-card">
+            <div class="fin-title">🏦 Balance y Liquidez</div>
+            <div class="fin-row"><span class="fin-label">Equity</span><span class="fin-value">$73.7B</span></div>
+            <div class="fin-row"><span class="fin-label">Deuda Total</span><span class="fin-value orange">$98.7B</span></div>
+            <div class="fin-row"><span class="fin-label">Cash & Investments</span><span class="fin-value green">$152.7B</span></div>
+            <div class="fin-row"><span class="fin-label">Posición Neta de Caja</span><span class="fin-value green">$54.0B ✅✅✅</span></div>
+            <div class="fin-row"><span class="fin-label">Deuda Neta/EBITDA</span><span class="fin-value green">0.66x ✅✅✅</span></div>
+            <div class="fin-row"><span class="fin-label">Deuda/Equity</span><span class="fin-value orange">1.03x</span></div>
+            <div class="fin-row"><span class="fin-label">Current Ratio</span><span class="fin-value orange">0.97x</span></div>
+            <div class="fin-row" style="background:#f0fdf4; border-radius:8px; padding:10px; margin-top:8px;"><span style="color:#166534; font-size:0.85em;">✅ Apple tiene más cash que deuda. Usa deuda por eficiencia fiscal, NO por necesidad.</span></div>
+        </div>
+        <div class="fin-card">
+            <div class="fin-title">💰 Cash Flow y Rentabilidad</div>
+            <div class="fin-row"><span class="fin-label">Operating Cash Flow</span><span class="fin-value green">$135.5B ✅✅✅</span></div>
+            <div class="fin-row"><span class="fin-label">Free Cash Flow</span><span class="fin-value green">$123.3B ✅✅✅</span></div>
+            <div class="fin-row"><span class="fin-label">FCF/Ingresos</span><span class="fin-value green">28.3%</span></div>
+            <div class="fin-row"><span class="fin-label">FCF Yield</span><span class="fin-value orange">3.3%</span></div>
+            <div class="fin-row"><span class="fin-label">ROIC</span><span class="fin-value green">48.5% ✅✅✅</span></div>
+            <div class="fin-row"><span class="fin-label">ROE</span><span class="fin-value green">152.0%</span></div>
+            <div class="fin-row"><span class="fin-label">ROA</span><span class="fin-value green">31.1%</span></div>
+            <div class="fin-row"><span class="fin-label">Buybacks (Q1)</span><span class="fin-value">$25.0B (93M acciones)</span></div>
+        </div>
+    </div>
+
+    <div class="financials-grid">
+        <div class="fin-card">
+            <div class="fin-title">📱 Ingresos por Segmento (Q1 2026)</div>
+            <div class="fin-row"><span class="fin-label">iPhone</span><span class="fin-value green">$85.3B (+23% YoY) ✅✅✅</span></div>
+            <div class="fin-row"><span class="fin-label">Services</span><span class="fin-value green">$30.0B (+14% YoY) ✅✅</span></div>
+            <div class="fin-row"><span class="fin-label">Wearables/Home/Acc.</span><span class="fin-value orange">$11.5B (-2% YoY) ⚠️</span></div>
+            <div class="fin-row"><span class="fin-label">iPad</span><span class="fin-value green">$8.6B (+6% YoY) ✅</span></div>
+            <div class="fin-row"><span class="fin-label">Mac</span><span class="fin-value red">$8.4B (-7% YoY) ❌</span></div>
+            <div class="fin-row"><span class="fin-label">Total Q1 2026</span><span class="fin-value green">$143.8B (+16% YoY) ✅✅✅</span></div>
+        </div>
+        <div class="fin-card">
+            <div class="fin-title">📊 Valoración</div>
+            <div class="fin-row"><span class="fin-label">PER (Trailing)</span><span class="fin-value orange">33.2x ⚠️</span></div>
+            <div class="fin-row"><span class="fin-label">PER (Forward)</span><span class="fin-value orange">30.4x ⚠️</span></div>
+            <div class="fin-row"><span class="fin-label">PEG</span><span class="fin-value green">1.28 ✅</span></div>
+            <div class="fin-row"><span class="fin-label">EV/EBITDA</span><span class="fin-value orange">24.8x ⚠️</span></div>
+            <div class="fin-row"><span class="fin-label">EV/Revenue</span><span class="fin-value orange">8.67x</span></div>
+            <div class="fin-row"><span class="fin-label">EV/FCF</span><span class="fin-value orange">30.7x ⚠️</span></div>
+            <div class="fin-row"><span class="fin-label">Earnings Yield</span><span class="fin-value red">3.01% ❌</span></div>
+            <div class="fin-row" style="background:#fffbeb; border-radius:8px; padding:10px; margin-top:8px;"><span style="color:#92400e; font-size:0.85em;">⚠️ Valoración exigente. El mercado paga prima por calidad y ecosistema.</span></div>
+        </div>
+        <div class="fin-card">
+            <div class="fin-title">🎯 Consenso Analistas</div>
+            <div class="fin-row"><span class="fin-label">Consenso</span><span class="fin-value green">Strong Buy ✅</span></div>
+            <div class="fin-row"><span class="fin-label">Buy</span><span class="fin-value green">29 analistas</span></div>
+            <div class="fin-row"><span class="fin-label">Hold</span><span class="fin-value orange">16 analistas</span></div>
+            <div class="fin-row"><span class="fin-label">Sell</span><span class="fin-value red">4 analistas</span></div>
+            <div class="fin-row"><span class="fin-label">Price Target Medio</span><span class="fin-value green">$300 (+17.3%)</span></div>
+            <div class="fin-row"><span class="fin-label">PT Máximo</span><span class="fin-value">$350 (Wedbush)</span></div>
+            <div class="fin-row"><span class="fin-label">PT Mínimo</span><span class="fin-value">$215 (Loop Capital)</span></div>
+            <div class="fin-row"><span class="fin-label">Próximos Earnings</span><span class="fin-value">30 abril 2026</span></div>
+        </div>
+    </div>
+
+    <div class="analysis-grid">
+        <div class="analysis-card">
+            <div class="analysis-title green">✅ Fortalezas Excepcionales</div>
+            <div class="analysis-item strength">✅ ROIC 48.5%: Top 10% de su industria, asignación de capital excepcional</div>
+            <div class="analysis-item strength">✅ FCF $123.3B: Generación de caja insuperable, 28% sobre ingresos</div>
+            <div class="analysis-item strength">✅ EPS +25.3% YoY: Beat consecutivo en últimos 4 trimestres</div>
+            <div class="analysis-item strength">✅ Márgenes en expansión: Bruto 38.8% → 48.2% en 5 años (+940 bps)</div>
+            <div class="analysis-item strength">✅ Ecosistema 2.5B+ dispositivos activos: Moat poderoso e inimitable</div>
+            <div class="analysis-item strength">✅ Services $30B/Q (+14%): Margen 76.5%, motor recurrente</div>
+            <div class="analysis-item strength">✅ Posición neta de caja $54B a pesar de buybacks masivos</div>
+            <div class="analysis-item strength">✅ iPhone 17 récord: $85.3B en Q1, demanda "staggering"</div>
+        </div>
+        <div class="analysis-card">
+            <div class="analysis-title red">⚠️ Riesgos y Debilidades</div>
+            <div class="analysis-item weakness">⚠️ PER 33.2x: Valoración muy exigente vs sector y media histórica</div>
+            <div class="analysis-item weakness">⚠️ EV/EBITDA 24.8x: Caro para empresa con componente hardware</div>
+            <div class="analysis-item weakness">⚠️ Earnings Yield 3.01%: Bajo, poco margen de seguridad</div>
+            <div class="analysis-item weakness">⚠️ Mac -7% YoY y Wearables -2%: Debilidad en segmentos secundarios</div>
+            <div class="analysis-item weakness">⚠️ Dependencia iPhone: ~52% de ingresos en un solo producto</div>
+            <div class="analysis-item weakness">⚠️ Restricciones suministro 3nm: Limitación en nodos avanzados</div>
+            <div class="analysis-item weakness">⚠️ Costes NAND subiendo: Presión en márgenes Q2 2026</div>
+            <div class="analysis-item weakness">⚠️ Riesgo regulatorio: App Store y mercados internacionales</div>
+        </div>
+    </div>
+
+    <div class="conclusion">
+        <h3>💡 Conclusión Final</h3>
+        <p style="font-size:1.1em; color:#555; margin-bottom:15px;"><strong>Puntuación Promedio: 3.42/5</strong> ⭐⭐⭐☆</p>
+        <p style="color:#555; margin-bottom:20px; font-size:1.1em;">Apple es una empresa <strong>EXCEPCIONAL en calidad, rentabilidad y generación de caja</strong>, con fundamentos de primer nivel mundial. Sin embargo, la <strong>valoración actual (PER 33x, EV/EBITDA 25x) ya descuenta mucha perfección</strong>. El PEG de 1.28 es razonable gracias al fuerte crecimiento del EPS (+25%).</p>
+        <div class="recommendation">🎯 RECOMENDACIÓN: INTERESANTE CON CAUTELA</div>
+        <p style="color:#555; font-size:1.05em; margin-top:15px;">Empresa de calidad indiscutible. Ideal para <strong>mantener si ya se posee</strong> y para <strong>comprar en correcciones</strong> (zona $220-$240).</p>
+        <div class="investor-grid">
+            <div class="investor-item yes">✅ Inversor Quality/Growth<br><small>ROIC 48.5%, EPS +25%, márgenes top</small></div>
+            <div class="investor-item maybe">⚠️ Inversor Value<br><small>PER 33x caro, esperar correcciones</small></div>
+            <div class="investor-item no">❌ Inversor Dividendos<br><small>Yield 0.4% muy bajo</small></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div>📅 Análisis generado el 17/02/2026 · NASDAQ: AAPL · ETHAN Mercados</div>
+        <div style="margin-top:8px; opacity:0.8;">⚠️ Este análisis no constituye asesoramiento financiero. Datos de fuentes públicas.</div>
+    </div>
+</div>
+</body>
+</html>
