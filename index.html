@@ -3,102 +3,169 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ETHAN Mercados · Plataforma</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23111'/><text x='16' y='22' text-anchor='middle' font-size='16' font-weight='bold' fill='%23c9a96e'>E</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<title>ethan mercados · Plataforma</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230b1f1f'/><text x='16' y='22' text-anchor='middle' font-size='16' font-weight='bold' fill='%2340d9c0'>E</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Montserrat:wght@200;300;400;500;600&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════════════════
-   ETHAN MERCADOS — PLATAFORMA DE INVERSIÓN
-   Estilo alineado con ethanmercados.com
+   ETHAN MERCADOS · PLATAFORMA
+   Visual identity matching ethanmercados.com
    ═══════════════════════════════════════════════════════════ */
 
 :root {
-  --bg:        #111111;
-  --bg2:       #161616;
-  --surface:   #1a1a1a;
-  --surface2:  #202020;
-  --border:    #2a2a2a;
-  --border2:   #333333;
-  --gold:      #c9a96e;
-  --gold-dim:  rgba(201,169,110,0.08);
-  --gold-mid:  rgba(201,169,110,0.20);
-  --gold-light:#dfc99a;
-  --red:       #e25555;
-  --green:     #5cb885;
-  --blue:      #6a9fd8;
-  --text1:     #f0ede8;
-  --text2:     #a09888;
-  --text3:     #605848;
+  /* Main palette from ethanmercados.com */
+  --bg-deep:   #040e0e;
+  --bg-dark:   #071717;
+  --bg-mid:    #0b1f1f;
+  --surface:   #0f2828;
+  --surface2:  #133232;
+  --border:    #1a3c3c;
+  --border2:   #245050;
+
+  /* Teal accent (hero glow) */
+  --teal:      #40d9c0;
+  --teal-dim:  rgba(64,217,192,0.06);
+  --teal-mid:  rgba(64,217,192,0.15);
+  --teal-glow: rgba(64,217,192,0.25);
+  --teal-bright: #5eecd5;
+  --teal-dark: #2ba897;
+
+  /* Complementary */
+  --cyan:      #38bdf8;
+  --red:       #f47174;
+  --green:     #4ade80;
+  --amber:     #fbbf24;
+
+  /* Text */
+  --text1:     #f0f5f4;
+  --text2:     #9cb8b4;
+  --text3:     #4a706a;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { height: 100%; overflow: hidden; background: var(--bg); }
+html, body { height: 100%; overflow: hidden; background: var(--bg-deep); }
 
-/* ── LOGIN SCREEN ─────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════
+   LOGIN SCREEN — Hero style like ethanmercados.com
+   ══════════════════════════════════════════════════════════ */
 #login-screen {
   position: fixed;
   inset: 0;
-  background: var(--bg);
+  z-index: 99999;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 99999;
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition: opacity 0.7s ease, transform 0.7s ease;
+
+  /* Teal mountain gradient background */
+  background:
+    /* Top glow */
+    radial-gradient(ellipse 120% 50% at 50% 0%, rgba(64,217,192,0.08) 0%, transparent 60%),
+    /* Center mountain glow */
+    radial-gradient(ellipse 80% 60% at 50% 55%, rgba(30,160,140,0.12) 0%, transparent 70%),
+    /* Left teal accent */
+    radial-gradient(ellipse 40% 70% at 15% 60%, rgba(56,189,248,0.06) 0%, transparent 60%),
+    /* Right teal accent */
+    radial-gradient(ellipse 40% 70% at 85% 50%, rgba(64,217,192,0.08) 0%, transparent 60%),
+    /* Base gradient */
+    linear-gradient(180deg, #0a1e1e 0%, #061414 40%, #040e0e 100%);
 }
+#login-screen::before {
+  /* Mountain silhouette shapes via CSS */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    /* Mountain peak center */
+    linear-gradient(165deg, transparent 30%, rgba(40,140,130,0.04) 45%, transparent 55%),
+    /* Mountain ridge left */
+    linear-gradient(155deg, transparent 40%, rgba(30,120,110,0.03) 52%, transparent 60%),
+    /* Mountain ridge right */
+    linear-gradient(175deg, transparent 35%, rgba(50,160,145,0.04) 48%, transparent 58%);
+  pointer-events: none;
+}
+#login-screen::after {
+  /* Subtle noise texture */
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.015;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 128px;
+  pointer-events: none;
+}
+
 #login-screen.hidden {
   opacity: 0;
-  transform: scale(1.01);
+  transform: scale(1.02);
   pointer-events: none;
 }
 
 .login-box {
   text-align: center;
-  width: 400px;
+  width: 420px;
   padding: 0 20px;
+  position: relative;
+  z-index: 2;
 }
 
 .login-logo-img {
-  height: 48px;
-  margin-bottom: 32px;
+  height: 52px;
+  margin-bottom: 40px;
   opacity: 0.95;
-  filter: brightness(1.1);
 }
 
-.login-tagline {
+.login-heading {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 20px;
+  font-size: 52px;
   font-weight: 300;
   font-style: italic;
+  color: var(--text1);
+  line-height: 1.15;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+.login-heading em {
+  font-style: italic;
+  color: var(--teal);
+}
+
+.login-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
   color: var(--text2);
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+  line-height: 1.7;
   margin-bottom: 48px;
 }
 
 .login-field {
-  position: relative;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 .login-field input {
   width: 100%;
   padding: 16px 20px;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
   color: var(--text1);
   font-family: 'Montserrat', sans-serif;
   font-size: 13px;
   font-weight: 400;
   letter-spacing: 3px;
   outline: none;
-  transition: border-color 0.3s;
+  transition: border-color 0.3s, background 0.3s;
+  backdrop-filter: blur(10px);
 }
 .login-field input:focus {
-  border-color: var(--gold);
+  border-color: var(--teal);
+  background: rgba(64,217,192,0.04);
 }
 .login-field input::placeholder {
   color: var(--text3);
   letter-spacing: 4px;
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 400;
   text-transform: uppercase;
 }
 
@@ -106,64 +173,73 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); }
   width: 100%;
   padding: 16px;
   background: transparent;
-  border: 1px solid var(--gold);
-  color: var(--gold);
+  border: 1px solid var(--teal);
+  color: var(--teal);
   font-family: 'Montserrat', sans-serif;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 5px;
   text-transform: uppercase;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 8px;
+  margin-top: 4px;
 }
 .login-btn:hover {
-  background: var(--gold);
-  color: var(--bg);
+  background: var(--teal);
+  color: var(--bg-deep);
+  box-shadow: 0 0 30px rgba(64,217,192,0.2);
 }
 
 .login-error {
   color: var(--red);
   font-family: 'Montserrat', sans-serif;
   font-size: 11px;
-  letter-spacing: 1px;
   margin-top: 16px;
   min-height: 18px;
+  letter-spacing: 0.5px;
 }
 
-.login-hint {
-  color: var(--text3);
+.login-footer {
+  margin-top: 48px;
   font-family: 'Montserrat', sans-serif;
   font-size: 9px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  margin-top: 40px;
+  color: var(--text3);
+  opacity: 0.6;
 }
 
-/* Subtle line decoration */
-.login-divider {
-  width: 60px;
-  height: 1px;
-  background: var(--gold);
-  margin: 0 auto 32px;
+/* Down arrow animation like ethanmercados.com */
+.login-arrow {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--text3);
+  font-size: 28px;
+  animation: float 2.5s ease-in-out infinite;
   opacity: 0.4;
 }
+@keyframes float {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
 
-/* ── APP SHELL ────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════
+   APP SHELL
+   ══════════════════════════════════════════════════════════ */
 #app {
   display: none;
   height: 100%;
   flex-direction: column;
 }
-#app.active {
-  display: flex;
-}
+#app.active { display: flex; }
 
-/* ── TOPBAR ───────────────────────────────────────────────── */
+/* ── TOPBAR ─────────────────────────────────────────────── */
 .topbar {
-  height: 56px;
-  min-height: 56px;
-  background: var(--bg);
+  height: 54px;
+  min-height: 54px;
+  background: var(--bg-dark);
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: stretch;
@@ -176,28 +252,28 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); }
   padding: 0 24px;
   border-right: 1px solid var(--border);
   min-width: 200px;
-  gap: 14px;
+  gap: 16px;
   cursor: default;
 }
 .brand img {
-  height: 26px;
+  height: 22px;
   opacity: 0.9;
 }
-.brand-divider {
+.brand-sep {
   width: 1px;
-  height: 20px;
+  height: 18px;
   background: var(--border2);
 }
-.brand-section {
+.brand-label {
   font-family: 'Montserrat', sans-serif;
-  font-size: 9px;
+  font-size: 8.5px;
   font-weight: 500;
   letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--text3);
 }
 
-/* ── NAV TABS ─────────────────────────────────────────────── */
+/* ── NAV TABS ───────────────────────────────────────────── */
 .nav-tabs {
   display: flex;
   align-items: stretch;
@@ -214,9 +290,9 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); }
   font-family: 'Montserrat', sans-serif;
   font-size: 9.5px;
   font-weight: 500;
-  letter-spacing: 2.5px;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  padding: 0 24px;
+  padding: 0 22px;
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
@@ -226,20 +302,17 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); }
 }
 .tab-btn:hover {
   color: var(--text2);
-  background: rgba(255,255,255,0.02);
+  background: rgba(64,217,192,0.02);
 }
 .tab-btn.active {
-  color: var(--gold);
-  border-bottom-color: var(--gold);
-  background: var(--gold-dim);
+  color: var(--teal);
+  border-bottom-color: var(--teal);
+  background: var(--teal-dim);
 }
 
-.tab-icon {
-  font-size: 13px;
-  line-height: 1;
-}
+.tab-icon { font-size: 13px; line-height: 1; }
 
-/* ── TOPBAR RIGHT ─────────────────────────────────────────── */
+/* ── TOPBAR RIGHT ───────────────────────────────────────── */
 .topbar-right {
   display: flex;
   align-items: center;
@@ -249,7 +322,6 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); }
   font-family: 'IBM Plex Mono', monospace;
   font-size: 11px;
   color: var(--text3);
-  letter-spacing: 0.5px;
 }
 
 .logout-btn {
@@ -270,7 +342,7 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); }
   border-color: var(--red);
 }
 
-/* ── IFRAME CONTAINER ─────────────────────────────────────── */
+/* ── IFRAMES ────────────────────────────────────────────── */
 .frame-area {
   flex: 1;
   position: relative;
@@ -283,7 +355,7 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); }
   width: 100%;
   height: 100%;
   border: none;
-  background: var(--bg);
+  background: var(--bg-deep);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
@@ -294,11 +366,11 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); }
   z-index: 1;
 }
 
-/* ── LOADER ───────────────────────────────────────────────── */
+/* ── LOADER ─────────────────────────────────────────────── */
 .frame-loader {
   position: absolute;
   inset: 0;
-  background: var(--bg);
+  background: var(--bg-deep);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -306,33 +378,32 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); }
   z-index: 10;
   transition: opacity 0.4s;
 }
-.frame-loader.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
+.frame-loader.hidden { opacity: 0; pointer-events: none; }
+
 .loader-ring {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border: 1.5px solid var(--border);
-  border-top-color: var(--gold);
+  border-top-color: var(--teal);
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
 .loader-text {
   font-family: 'Montserrat', sans-serif;
-  font-size: 10px;
+  font-size: 9px;
   letter-spacing: 3px;
   color: var(--text3);
   text-transform: uppercase;
 }
 
-/* ── STATUS BAR ───────────────────────────────────────────── */
+/* ── STATUS BAR ─────────────────────────────────────────── */
 .status-bar {
-  height: 26px;
-  min-height: 26px;
-  background: var(--bg);
+  height: 24px;
+  min-height: 24px;
+  background: var(--bg-dark);
   border-top: 1px solid var(--border);
   display: flex;
   align-items: center;
@@ -344,10 +415,9 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); }
   color: var(--text3);
 }
 .status-dot {
-  width: 5px;
-  height: 5px;
+  width: 5px; height: 5px;
   border-radius: 50%;
-  background: var(--gold);
+  background: var(--teal);
   display: inline-block;
   animation: pulse-dot 2.5s ease-in-out infinite;
 }
@@ -356,60 +426,62 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); }
   50% { opacity: 0.2; }
 }
 
-/* ── RESPONSIVE ───────────────────────────────────────────── */
+/* ── RESPONSIVE ─────────────────────────────────────────── */
 @media (max-width: 900px) {
-  .tab-btn { padding: 0 14px; font-size: 8.5px; letter-spacing: 1.5px; }
+  .tab-btn { padding: 0 12px; font-size: 8.5px; }
   .tab-btn .tab-label { display: none; }
   .tab-btn .tab-icon { font-size: 16px; }
   .brand { min-width: auto; padding: 0 14px; }
-  .brand img { height: 20px; }
-  .brand-divider, .brand-section { display: none; }
+  .brand img { height: 18px; }
+  .brand-sep, .brand-label { display: none; }
   .topbar-right span { display: none; }
+  .login-heading { font-size: 38px; }
 }
 @media (max-width: 600px) {
   .tab-btn { padding: 0 8px; }
   .topbar-right { padding: 0 10px; }
+  .login-heading { font-size: 32px; }
+  .login-box { width: 100%; }
 }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════════════════
+<!-- ══════════════════════════════════════════════════════════
      LOGIN SCREEN
-     ═══════════════════════════════════════════════════════════ -->
+     ══════════════════════════════════════════════════════════ -->
 <div id="login-screen">
   <div class="login-box">
-    <img src="https://ethanmercados.com/wp-content/uploads/2024/03/logo-ethan-mercados-negativo.png" 
+    <img src="https://ethanmercados.com/wp-content/uploads/2024/03/logo-ethan-mercados-negativo.png"
          alt="ethan mercados" class="login-logo-img"
          onerror="this.style.display='none';document.getElementById('fallback-logo').style.display='block';">
-    <div id="fallback-logo" style="display:none;font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--gold);letter-spacing:6px;margin-bottom:32px;">ethan mercados</div>
-    
-    <div class="login-divider"></div>
-    <div class="login-tagline">Invierte · Crece · Disfruta</div>
+    <div id="fallback-logo" style="display:none;font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:400;color:var(--text1);letter-spacing:4px;margin-bottom:40px;">ethan <span style='color:var(--teal)'>mercados</span></div>
+
+    <div class="login-heading">Inversión <em>consciente</em></div>
+    <div class="login-subtitle">La inversión como un camino hacia una nueva Humanidad,<br>invirtiendo y acompañando a los inversores.</div>
 
     <div class="login-field">
       <input type="password" id="login-pass" placeholder="Contraseña" autofocus
              onkeydown="if(event.key==='Enter') doLogin()">
     </div>
-    <button class="login-btn" onclick="doLogin()">Acceder</button>
+    <button class="login-btn" onclick="doLogin()">Acceder a Plataforma</button>
     <div class="login-error" id="login-error"></div>
-    <div class="login-hint">Plataforma privada · Acceso restringido</div>
+    <div class="login-footer">Plataforma privada · Acceso restringido</div>
   </div>
+  <div class="login-arrow">↓</div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════
+<!-- ══════════════════════════════════════════════════════════
      APP SHELL
-     ═══════════════════════════════════════════════════════════ -->
+     ══════════════════════════════════════════════════════════ -->
 <div id="app">
-  
-  <!-- TOPBAR -->
   <div class="topbar">
     <div class="brand">
-      <img src="https://ethanmercados.com/wp-content/uploads/2024/03/logo-ethan-mercados-negativo.png" 
+      <img src="https://ethanmercados.com/wp-content/uploads/2024/03/logo-ethan-mercados-negativo.png"
            alt="ethan mercados"
-           onerror="this.outerHTML='<span style=&quot;font-family:Cormorant Garamond,serif;font-size:18px;color:var(--gold);letter-spacing:3px;&quot;>ethan mercados</span>'">
-      <div class="brand-divider"></div>
-      <div class="brand-section">Plataforma</div>
+           onerror="this.outerHTML='<span style=&quot;font-family:Cormorant Garamond,serif;font-size:16px;color:var(--text1);letter-spacing:2px;&quot;>ethan mercados</span>'">
+      <div class="brand-sep"></div>
+      <div class="brand-label">Plataforma</div>
     </div>
 
     <div class="nav-tabs">
@@ -441,7 +513,6 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); }
     </div>
   </div>
 
-  <!-- IFRAMES -->
   <div class="frame-area">
     <div class="frame-loader" id="loader">
       <div class="loader-ring"></div>
@@ -454,7 +525,6 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); }
     <iframe class="module-frame"        id="frame-fundamental" data-src="fundamental.html"></iframe>
   </div>
 
-  <!-- STATUS BAR -->
   <div class="status-bar">
     <span><span class="status-dot"></span>&nbsp; ONLINE</span>
     <span id="status-module">SCREENER</span>
@@ -463,122 +533,77 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); }
 </div>
 
 <script>
-/* ═══════════════════════════════════════════════════════════
-   AUTH SYSTEM
-   ═══════════════════════════════════════════════════════════ */
-
-// ──────────────────────────────────────────────────────────
+/* ══════════════════════════════════════════════════════════
+   AUTH
+   ══════════════════════════════════════════════════════════ */
 // Contraseña por defecto: ethan2026
-// Para cambiarla, genera nuevo hash en consola del navegador:
-//   crypto.subtle.digest('SHA-256', new TextEncoder().encode('TU_CONTRASEÑA'))
-//     .then(h => console.log(Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join('')))
-// ──────────────────────────────────────────────────────────
 const PASS_HASH = 'e1e8769e31fe6dc1fc7f38303b86e94eefe30856354710cefb1471daa17c8ba7';
 
 async function sha256(text) {
-  const data = new TextEncoder().encode(text);
-  const hash = await crypto.subtle.digest('SHA-256', data);
-  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+  const d = new TextEncoder().encode(text);
+  const h = await crypto.subtle.digest('SHA-256', d);
+  return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2,'0')).join('');
 }
 
-const SESSION_KEY = 'ethan_session';
-const SESSION_DURATION = 24 * 60 * 60 * 1000;
-
+const SK = 'ethan_session', SD = 86400000;
 function checkSession() {
-  try {
-    const { hash, time } = JSON.parse(localStorage.getItem(SESSION_KEY));
-    return hash === PASS_HASH && Date.now() - time < SESSION_DURATION;
-  } catch(e) { return false; }
+  try { const {hash,time} = JSON.parse(localStorage.getItem(SK)); return hash===PASS_HASH && Date.now()-time<SD; } catch(e){return false;}
 }
-
-function saveSession() {
-  localStorage.setItem(SESSION_KEY, JSON.stringify({ hash: PASS_HASH, time: Date.now() }));
-}
+function saveSession() { localStorage.setItem(SK, JSON.stringify({hash:PASS_HASH, time:Date.now()})); }
 
 async function doLogin() {
   const pass = document.getElementById('login-pass').value;
   const hash = await sha256(pass);
-  if (hash === PASS_HASH) {
-    saveSession();
-    showApp();
-  } else {
-    const errEl = document.getElementById('login-error');
-    errEl.textContent = 'Contraseña incorrecta';
+  if (hash === PASS_HASH) { saveSession(); showApp(); }
+  else {
+    document.getElementById('login-error').textContent = 'Contraseña incorrecta';
     document.getElementById('login-pass').value = '';
     document.getElementById('login-pass').focus();
-    setTimeout(() => errEl.textContent = '', 3000);
+    setTimeout(() => document.getElementById('login-error').textContent = '', 3000);
   }
 }
 
-function doLogout() {
-  localStorage.removeItem(SESSION_KEY);
-  location.reload();
-}
+function doLogout() { localStorage.removeItem(SK); location.reload(); }
 
 function showApp() {
   document.getElementById('login-screen').classList.add('hidden');
   document.getElementById('app').classList.add('active');
-  setTimeout(() => document.getElementById('login-screen').style.display = 'none', 600);
+  setTimeout(() => document.getElementById('login-screen').style.display='none', 700);
 }
 
 if (checkSession()) showApp();
 
-/* ═══════════════════════════════════════════════════════════
-   TAB NAVIGATION + LAZY LOADING
-   ═══════════════════════════════════════════════════════════ */
-
-const TABS = ['screener', 'macro', 'portfolio', 'risk', 'fundamental'];
-const TAB_LABELS = {
-  screener: 'SCREENER', macro: 'ANÁLISIS MACRO', portfolio: 'CARTERA',
-  risk: 'RISK MANAGEMENT', fundamental: 'ANÁLISIS FUNDAMENTAL'
-};
-const loadedFrames = new Set(['screener']);
+/* ══════════════════════════════════════════════════════════
+   NAV
+   ══════════════════════════════════════════════════════════ */
+const TABS = ['screener','macro','portfolio','risk','fundamental'];
+const LABELS = {screener:'SCREENER',macro:'ANÁLISIS MACRO',portfolio:'CARTERA',risk:'RISK MANAGEMENT',fundamental:'ANÁLISIS FUNDAMENTAL'};
+const loaded = new Set(['screener']);
 
 function switchTab(id) {
-  const loader = document.getElementById('loader');
   TABS.forEach(t => {
-    document.getElementById('frame-' + t).classList.remove('active');
-    document.getElementById('tab-' + t).classList.remove('active');
+    document.getElementById('frame-'+t).classList.remove('active');
+    document.getElementById('tab-'+t).classList.remove('active');
   });
-
-  const frame = document.getElementById('frame-' + id);
-  if (!loadedFrames.has(id)) {
-    const src = frame.getAttribute('data-src');
-    if (src) {
-      loader.classList.remove('hidden');
-      frame.src = src;
-      frame.removeAttribute('data-src');
-      loadedFrames.add(id);
-    }
+  const fr = document.getElementById('frame-'+id);
+  if (!loaded.has(id)) {
+    const src = fr.getAttribute('data-src');
+    if (src) { document.getElementById('loader').classList.remove('hidden'); fr.src=src; fr.removeAttribute('data-src'); loaded.add(id); }
   }
-
-  frame.classList.add('active');
-  document.getElementById('tab-' + id).classList.add('active');
-  document.getElementById('status-module').textContent = TAB_LABELS[id] || id.toUpperCase();
+  fr.classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+  document.getElementById('status-module').textContent = LABELS[id]||id.toUpperCase();
 }
 
-document.querySelectorAll('.module-frame').forEach(fr => {
-  fr.addEventListener('load', () => document.getElementById('loader').classList.add('hidden'));
-});
+document.querySelectorAll('.module-frame').forEach(f => f.addEventListener('load', () => document.getElementById('loader').classList.add('hidden')));
 
-/* ═══════════════════════════════════════════════════════════
-   CLOCK + KEYBOARD SHORTCUTS
-   ═══════════════════════════════════════════════════════════ */
-function updateClock() {
-  const el = document.getElementById('clock');
-  if (el) el.textContent = new Date().toLocaleString('es-ES');
-}
-setInterval(updateClock, 1000);
-updateClock();
-
+/* Clock + shortcuts */
+const ck = () => { const e=document.getElementById('clock'); if(e) e.textContent=new Date().toLocaleString('es-ES'); };
+setInterval(ck,1000); ck();
 document.addEventListener('keydown', e => {
-  if (document.getElementById('login-screen').style.display !== 'none') return;
-  if (e.altKey && e.key >= '1' && e.key <= '5') {
-    e.preventDefault();
-    switchTab(TABS[parseInt(e.key) - 1]);
-  }
+  if (document.getElementById('login-screen').style.display!=='none') return;
+  if (e.altKey && e.key>='1' && e.key<='5') { e.preventDefault(); switchTab(TABS[+e.key-1]); }
 });
 </script>
-
 </body>
 </html>
