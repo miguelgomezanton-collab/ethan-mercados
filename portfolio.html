@@ -824,7 +824,10 @@
             <div class="section">
                 <div class="section-header">
                     <h2 class="section-title">📋 Operaciones Alcistas</h2>
-                    <button class="export-btn" onclick="exportToCSV('bull')">Exportar CSV</button>
+                    <div style="display:flex;gap:8px;">
+                        <button class="export-btn" onclick="openNewOpForm('alcista')" style="background:var(--accent-bull);color:#0a0e27;font-weight:600;">+ Nueva Operación</button>
+                        <button class="export-btn" onclick="exportToCSV('bull')">Exportar CSV</button>
+                    </div>
                 </div>
                 <div class="table-container">
                     <table>
@@ -870,7 +873,10 @@
             <div class="section">
                 <div class="section-header">
                     <h2 class="section-title">📋 Operaciones Bajistas</h2>
-                    <button class="export-btn" onclick="exportToCSV('bear')">Exportar CSV</button>
+                    <div style="display:flex;gap:8px;">
+                        <button class="export-btn" onclick="openNewOpForm('bajista')" style="background:var(--accent-bear);color:#0a0e27;font-weight:600;">+ Nueva Operación</button>
+                        <button class="export-btn" onclick="exportToCSV('bear')">Exportar CSV</button>
+                    </div>
                 </div>
                 <div class="table-container">
                     <table>
@@ -945,64 +951,40 @@
     </div>
 
     <script>
-        // Data from Excel
-        const portfolioData = {
-            alcista: {
-                importeAsignado: 10000,
-                plusvalias: 1711.55,
-                rentabilidad: 0.1712,
-                benchmark: 0.1253,
-                valoresAsignados: 3,
-                inversionActiva: 0,
-                operaciones: [
-                    { valor: 'CNX RESOURCES',    ticker: 'CNX',  fechaEntrada: '2024-05-28', fechaSalida: '2024-07-31', precioEntrada: 25.25,   precioSalida: 26.50,   capital: 3000, peso: 0.30, plusvalia:  146.17, rentabilidad:  0.0486, dias: 64,  motivo: 'Voluntaria' },
-                    { valor: 'TARGA RESOURCES',   ticker: 'TRGP', fechaEntrada: '2024-06-12', fechaSalida: '2024-07-09', precioEntrada: 121.34,  precioSalida: 132.365, capital: 2500, peso: 0.25, plusvalia:  240.47, rentabilidad:  0.0900, dias: 27,  motivo: 'Voluntaria' },
-                    { valor: 'SPROUTS',           ticker: 'SFM',  fechaEntrada: '2024-06-25', fechaSalida: '2024-07-30', precioEntrada: 82.65,   precioSalida: 99.825,  capital: 3000, peso: 0.30, plusvalia:  615.50, rentabilidad:  0.2068, dias: 35,  motivo: 'Voluntaria' },
-                    { valor: 'COLGATE',           ticker: 'CL',   fechaEntrada: '2024-07-29', fechaSalida: '2024-08-05', precioEntrada: 101.34,  precioSalida: 102.83,  capital: 2500, peso: 0.25, plusvalia:   34.96, rentabilidad:  0.0138, dias: 7,   motivo: 'Voluntaria' },
-                    { valor: 'COLGATE',           ticker: 'CL',   fechaEntrada: '2024-08-06', fechaSalida: '2024-10-15', precioEntrada: 103.01,  precioSalida: 100.91,  capital: 4000, peso: 0.40, plusvalia:  -84.87, rentabilidad: -0.0211, dias: 70,  motivo: '-' },
-                    { valor: 'TARGA RESOURCES',   ticker: 'TRGP', fechaEntrada: '2024-08-15', fechaSalida: '2024-09-20', precioEntrada: 141.015, precioSalida: 149.60,  capital: 4000, peso: 0.40, plusvalia:  237.29, rentabilidad:  0.0601, dias: 36,  motivo: 'Voluntaria' },
-                    { valor: 'SPROUTS',           ticker: 'SFM',  fechaEntrada: '2024-09-23', fechaSalida: '2024-10-09', precioEntrada: 106.879, precioSalida: 113.985, capital: 4000, peso: 0.40, plusvalia:  266.86, rentabilidad:  0.0657, dias: 16,  motivo: '-' },
-                    { valor: 'FISERV',            ticker: 'FI',   fechaEntrada: '2024-11-06', fechaSalida: '2024-11-27', precioEntrada: 211.252, precioSalida: 220.91,  capital: 3400, peso: 0.34, plusvalia:  151.76, rentabilidad:  0.0449, dias: 21,  motivo: 'Voluntaria' },
-                    { valor: 'CNX RESOURCES',     ticker: 'CNX',  fechaEntrada: '2024-11-11', fechaSalida: '2024-11-25', precioEntrada: 39.95,   precioSalida: 40.70,   capital: 3500, peso: 0.35, plusvalia:   62.45, rentabilidad:  0.0178, dias: 14,  motivo: 'Voluntaria' },
-                    { valor: 'TARGA RESOURCES',   ticker: 'TRGP', fechaEntrada: '2024-12-06', fechaSalida: '2025-01-10', precioEntrada: 197.98,  precioSalida: 192.86,  capital: 5000, peso: 0.50, plusvalia: -132.89, rentabilidad: -0.0268, dias: 35,  motivo: 'Voluntaria' },
-                    { valor: 'BOSTON SCIENTIFIC', ticker: 'BSX',  fechaEntrada: '2025-02-03', fechaSalida: '2025-03-04', precioEntrada: 103.195, precioSalida: 102.98,  capital: 4000, peso: 0.40, plusvalia:  -12.41, rentabilidad: -0.0031, dias: 29,  motivo: 'Voluntaria' },
-                    { valor: 'SPROUTS',           ticker: 'SFM',  fechaEntrada: '2025-02-12', fechaSalida: '2025-06-23', precioEntrada: 170.72,  precioSalida: 171.36,  capital: 4000, peso: 0.40, plusvalia:   11.75, rentabilidad:  0.0030, dias: 131, motivo: 'Voluntaria' },
-                    { valor: 'OLD REPUBLIC',      ticker: 'ORI',  fechaEntrada: '2025-04-01', fechaSalida: '2025-04-04', precioEntrada: 39.43,   precioSalida: 38.03,   capital: 3000, peso: 0.30, plusvalia: -110.26, rentabilidad: -0.0363, dias: 3,   motivo: 'Voluntaria' },
-                    { valor: 'TARGA RESOURCES',   ticker: 'TRGP', fechaEntrada: '2025-04-09', fechaSalida: '2025-04-22', precioEntrada: 172.96,  precioSalida: 171.18,  capital: 2600, peso: 0.26, plusvalia:  -28.98, rentabilidad: -0.0112, dias: 13,  motivo: 'Stop' },
-                    { valor: 'AMICUS',            ticker: 'CRK',  fechaEntrada: '2025-06-16', fechaSalida: '2025-06-20', precioEntrada: 26.26,   precioSalida: 30.21,   capital: 4000, peso: 0.40, plusvalia:  313.74, rentabilidad:  0.1493, dias: 4,   motivo: 'Voluntaria' }
-                ]
-            },
-            bajista: {
-                importeAsignado: 10000,
-                plusvalias: 1351.38,
-                rentabilidad: 0.1351,
-                benchmark: 0,
-                valoresAsignados: 3,
-                inversionActiva: 0,
-                operaciones: [
-                    { valor: 'SUNNOVA ENERGY', ticker: 'NOVA', fecha: '2024-05-17', precio: 5.55, capital: 5000, peso: 0.50 },
-                    { valor: 'STEM INC', ticker: 'STEM', fecha: '2024-05-21', precio: 0.48, capital: 4800, peso: 0.48 },
-                    { valor: 'STEM INC', ticker: 'STEM', fecha: '2024-05-22', precio: 0.47, capital: 2000, peso: 0.20 },
-                    { valor: 'MGM CHINA', ticker: 'MCG', fecha: '2024-05-23', precio: 9.5, capital: 1000, peso: 0.10 },
-                    { valor: 'MEREDITH', ticker: 'MD', fecha: '2024-06-25', precio: 26.13, capital: 2000, peso: 0.20 },
-                    { valor: 'CANADIAN SOLAR', ticker: 'CSIQ', fecha: '2024-07-10', precio: 16.64, capital: 3000, peso: 0.30 },
-                    { valor: 'PLUG POWER', ticker: 'PLUG', fecha: '2024-08-08', precio: 2.37, capital: 4000, peso: 0.40 },
-                    { valor: 'CANADIAN SOLAR', ticker: 'CSIQ', fecha: '2024-08-06', precio: 15.83, capital: 2500, peso: 0.25 },
-                    { valor: 'CANADIAN SOLAR', ticker: 'CSIQ', fecha: '2024-08-07', precio: 16.64, capital: 2500, peso: 0.25 },
-                    { valor: 'WOLFSPEED', ticker: 'WLOF', fecha: '2024-08-12', precio: 9.08, capital: 2000, peso: 0.20 },
-                    { valor: 'PLUG POWER', ticker: 'PLUG', fecha: '2024-08-21', precio: 2.06, capital: 2700, peso: 0.27 },
-                    { valor: 'WOLFSPEED', ticker: 'WOLF', fecha: '2024-08-26', precio: 8.63, capital: 2700, peso: 0.27 },
-                    { valor: 'TALOS ENERGY', ticker: 'TALO', fecha: '2024-09-04', precio: 9.67, capital: 2700, peso: 0.27 },
-                    { valor: 'NATIONAL VISION', ticker: 'EYE', fecha: '2024-09-20', precio: 11.99, capital: 3600, peso: 0.36 },
-                    { valor: 'WOLFSPEED', ticker: 'WOLF', fecha: '2024-09-23', precio: 9.83, capital: 2700, peso: 0.27 },
-                    { valor: 'TALOS ENERGY', ticker: 'TALO', fecha: '2024-10-29', precio: 10.67, capital: 2700, peso: 0.27 },
-                    { valor: 'ANGLO GOLD', ticker: 'AGL', fecha: '2024-11-07', precio: 31.6, capital: 3000, peso: 0.30 },
-                    { valor: 'WOLFSPEED', ticker: 'WOLF', fecha: '2024-11-11', precio: 10.72, capital: 3000, peso: 0.30 },
-                    { valor: 'PLUG POWER', ticker: 'PLUG', fecha: '2024-11-12', precio: 2.34, capital: 2500, peso: 0.25 },
-                    { valor: 'ANGLO GOLD', ticker: 'AGL', fecha: '2024-11-12', precio: 32.99, capital: 2500, peso: 0.25 }
-                ]
+        // ══════════════════════════════════════════════════════════════
+        // DATA LOADING: Lee operaciones.json desde el mismo directorio
+        // Para añadir operaciones, edita operaciones.json en GitHub
+        // ══════════════════════════════════════════════════════════════
+        let portfolioData = null;
+
+        async function loadPortfolioData() {
+            try {
+                const response = await fetch('operaciones.json?v=' + Date.now());
+                if (!response.ok) throw new Error('No se pudo cargar operaciones.json');
+                portfolioData = await response.json();
+                
+                // Recalcular plusvalías y rentabilidad automáticamente desde las operaciones alcistas
+                const alcOps = portfolioData.alcista.operaciones;
+                if (alcOps.length > 0 && alcOps[0].plusvalia !== undefined) {
+                    const totalPlus = alcOps.reduce((s, op) => s + op.plusvalia, 0);
+                    portfolioData.alcista.plusvalias = Math.round(totalPlus * 100) / 100;
+                    portfolioData.alcista.rentabilidad = totalPlus / portfolioData.alcista.importeAsignado;
+                }
+
+                initApp();
+            } catch (err) {
+                console.error('Error cargando datos:', err);
+                document.body.innerHTML = '<div style="padding:40px;text-align:center;color:#ff3d5a;font-family:monospace;">' +
+                    '<h2>⚠️ Error cargando operaciones.json</h2>' +
+                    '<p style="color:#8ba0b8;margin-top:12px;">Asegúrate de que el archivo operaciones.json está en el mismo directorio que este HTML.</p>' +
+                    '<p style="color:#3a4f65;margin-top:8px;">Error: ' + err.message + '</p></div>';
             }
-        };
+        }
+
+        // Iniciar carga
+        loadPortfolioData();
+
+        function initApp() {
 
         // Calculate metrics
         function calculateMetrics(data) {
@@ -1557,6 +1539,296 @@
         createBearTickerChart();
         createBearTimelineChart();
         createGeneralCharts();
+
+        } // end initApp()
+
+<!-- ═══════════════════════════════════════════════════════════
+     MODAL: NUEVA OPERACIÓN
+     ═══════════════════════════════════════════════════════════ -->
+<div id="opModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:99999;display:none;align-items:center;justify-content:center;">
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:32px;width:520px;max-width:95vw;max-height:90vh;overflow-y:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+      <h3 id="opModalTitle" style="font-size:18px;color:var(--text-primary);">+ Nueva Operación Alcista</h3>
+      <button onclick="closeModal()" style="background:none;border:none;color:var(--text-secondary);font-size:24px;cursor:pointer;">&times;</button>
+    </div>
+
+    <div id="ghConfigPanel" style="display:none;background:#1a2332;border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:20px;">
+      <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">⚙️ Configuración GitHub (solo la primera vez)</p>
+      <input id="ghUser" placeholder="Usuario GitHub (ej: miguelgomezanton-collab)" style="width:100%;padding:10px;margin-bottom:8px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;">
+      <input id="ghRepo" placeholder="Nombre del repo (ej: ethan-mercados)" value="ethan-mercados" style="width:100%;padding:10px;margin-bottom:8px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;">
+      <input id="ghToken" type="password" placeholder="Personal Access Token (ghp_...)" style="width:100%;padding:10px;margin-bottom:8px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;">
+      <button onclick="saveGhConfig()" style="width:100%;padding:10px;background:var(--accent-neutral);color:#0a0e27;border:none;border-radius:6px;font-weight:600;cursor:pointer;">Guardar configuración</button>
+    </div>
+
+    <input type="hidden" id="opType" value="alcista">
+    
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div style="grid-column:span 2;">
+        <label style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;">VALOR</label>
+        <input id="opValor" placeholder="Ej: SPROUTS" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;margin-top:4px;">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;">TICKER</label>
+        <input id="opTicker" placeholder="Ej: SFM" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;margin-top:4px;text-transform:uppercase;">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;">CAPITAL (€)</label>
+        <input id="opCapital" type="number" placeholder="3000" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;margin-top:4px;">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;">FECHA ENTRADA</label>
+        <input id="opFechaEnt" type="date" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;margin-top:4px;">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;">FECHA SALIDA</label>
+        <input id="opFechaSal" type="date" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;margin-top:4px;">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;">PRECIO ENTRADA ($)</label>
+        <input id="opPrecioEnt" type="number" step="0.001" placeholder="82.65" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;margin-top:4px;">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;">PRECIO SALIDA ($)</label>
+        <input id="opPrecioSal" type="number" step="0.001" placeholder="99.825" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;margin-top:4px;">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;">PESO EN CARTERA</label>
+        <input id="opPeso" type="number" step="0.01" placeholder="0.30" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;margin-top:4px;">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;">MOTIVO SALIDA</label>
+        <select id="opMotivo" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;margin-top:4px;">
+          <option value="Voluntaria">Voluntaria</option>
+          <option value="Stop">Stop</option>
+          <option value="-">-</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Campos auto-calculados -->
+    <div id="opPreview" style="display:none;margin-top:16px;padding:12px;background:var(--bg-dark);border-radius:8px;border:1px solid var(--border);">
+      <p style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;margin-bottom:8px;">CÁLCULO AUTOMÁTICO</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:13px;">
+        <div><span style="color:var(--text-secondary);">Plusvalía:</span> <strong id="prevPlus">—</strong></div>
+        <div><span style="color:var(--text-secondary);">Rentab.:</span> <strong id="prevRent">—</strong></div>
+        <div><span style="color:var(--text-secondary);">Días:</span> <strong id="prevDias">—</strong></div>
+      </div>
+    </div>
+
+    <div id="opStatus" style="margin-top:12px;font-size:12px;min-height:20px;"></div>
+
+    <button id="opSubmitBtn" onclick="submitOperation()" style="width:100%;padding:14px;margin-top:16px;background:var(--accent-bull);color:#0a0e27;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s;">
+      Guardar operación en GitHub
+    </button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// GITHUB API INTEGRATION
+// ══════════════════════════════════════════════════════════════
+
+const GH_CONFIG_KEY = 'ethan_gh_config';
+
+function getGhConfig() {
+  try { return JSON.parse(localStorage.getItem(GH_CONFIG_KEY)); } catch(e) { return null; }
+}
+
+function saveGhConfig() {
+  const user = document.getElementById('ghUser').value.trim();
+  const repo = document.getElementById('ghRepo').value.trim();
+  const token = document.getElementById('ghToken').value.trim();
+  if (!user || !repo || !token) { alert('Rellena todos los campos'); return; }
+  localStorage.setItem(GH_CONFIG_KEY, JSON.stringify({ user, repo, token }));
+  document.getElementById('ghConfigPanel').style.display = 'none';
+  document.getElementById('opStatus').innerHTML = '<span style="color:var(--success);">✓ Configuración guardada</span>';
+}
+
+function openNewOpForm(type) {
+  const modal = document.getElementById('opModal');
+  modal.style.display = 'flex';
+  document.getElementById('opType').value = type;
+  document.getElementById('opModalTitle').textContent = type === 'alcista' 
+    ? '+ Nueva Operación Alcista' : '+ Nueva Operación Bajista';
+  
+  const btn = document.getElementById('opSubmitBtn');
+  btn.style.background = type === 'alcista' ? 'var(--accent-bull)' : 'var(--accent-bear)';
+
+  // Show GitHub config if not set
+  const cfg = getGhConfig();
+  document.getElementById('ghConfigPanel').style.display = cfg ? 'none' : 'block';
+  if (cfg) {
+    document.getElementById('ghUser').value = cfg.user;
+    document.getElementById('ghRepo').value = cfg.repo;
+    document.getElementById('ghToken').value = cfg.token;
+  }
+
+  // Clear form
+  ['opValor','opTicker','opCapital','opFechaEnt','opFechaSal','opPrecioEnt','opPrecioSal','opPeso'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('opMotivo').value = 'Voluntaria';
+  document.getElementById('opPreview').style.display = 'none';
+  document.getElementById('opStatus').innerHTML = '';
+}
+
+function closeModal() {
+  document.getElementById('opModal').style.display = 'none';
+}
+
+// Auto-calculate preview when prices change
+['opPrecioEnt','opPrecioSal','opCapital','opFechaEnt','opFechaSal'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updatePreview);
+});
+
+function updatePreview() {
+  const pEnt = parseFloat(document.getElementById('opPrecioEnt').value);
+  const pSal = parseFloat(document.getElementById('opPrecioSal').value);
+  const cap = parseFloat(document.getElementById('opCapital').value);
+  const fEnt = document.getElementById('opFechaEnt').value;
+  const fSal = document.getElementById('opFechaSal').value;
+
+  if (pEnt && pSal && cap) {
+    const acciones = cap / pEnt;
+    const plusvalia = Math.round((pSal - pEnt) * acciones * 100) / 100;
+    const rent = (pSal - pEnt) / pEnt;
+    const dias = (fEnt && fSal) ? Math.round((new Date(fSal) - new Date(fEnt)) / 86400000) : '—';
+
+    document.getElementById('prevPlus').textContent = `€${plusvalia.toFixed(2)}`;
+    document.getElementById('prevPlus').style.color = plusvalia >= 0 ? 'var(--success)' : 'var(--danger)';
+    document.getElementById('prevRent').textContent = `${(rent * 100).toFixed(2)}%`;
+    document.getElementById('prevRent').style.color = rent >= 0 ? 'var(--success)' : 'var(--danger)';
+    document.getElementById('prevDias').textContent = dias;
+    document.getElementById('opPreview').style.display = 'block';
+  }
+}
+
+async function submitOperation() {
+  const cfg = getGhConfig();
+  if (!cfg) {
+    document.getElementById('ghConfigPanel').style.display = 'block';
+    document.getElementById('opStatus').innerHTML = '<span style="color:var(--danger);">⚠ Configura GitHub primero</span>';
+    return;
+  }
+
+  const statusEl = document.getElementById('opStatus');
+  const btn = document.getElementById('opSubmitBtn');
+  
+  // Gather form data
+  const type = document.getElementById('opType').value;
+  const valor = document.getElementById('opValor').value.trim().toUpperCase();
+  const ticker = document.getElementById('opTicker').value.trim().toUpperCase();
+  const capital = parseFloat(document.getElementById('opCapital').value);
+  const fechaEnt = document.getElementById('opFechaEnt').value;
+  const fechaSal = document.getElementById('opFechaSal').value;
+  const precioEnt = parseFloat(document.getElementById('opPrecioEnt').value);
+  const precioSal = parseFloat(document.getElementById('opPrecioSal').value);
+  const peso = parseFloat(document.getElementById('opPeso').value);
+  const motivo = document.getElementById('opMotivo').value;
+
+  // Validate
+  if (!valor || !ticker || !capital || !fechaEnt || !precioEnt || !peso) {
+    statusEl.innerHTML = '<span style="color:var(--danger);">⚠ Rellena al menos: valor, ticker, capital, fecha entrada, precio entrada, peso</span>';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.style.opacity = '0.5';
+  statusEl.innerHTML = '<span style="color:var(--accent-neutral);">⏳ Guardando en GitHub...</span>';
+
+  try {
+    // 1. Get current file content from GitHub
+    const apiBase = `https://api.github.com/repos/${cfg.user}/${cfg.repo}/contents/operaciones.json`;
+    const headers = {
+      'Authorization': `token ${cfg.token}`,
+      'Accept': 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json'
+    };
+
+    const getRes = await fetch(apiBase, { headers });
+    if (!getRes.ok) throw new Error(`GitHub GET error: ${getRes.status} - Verifica usuario/repo/token`);
+    const fileData = await getRes.json();
+    
+    // 2. Decode and parse current JSON
+    const currentContent = JSON.parse(atob(fileData.content));
+    
+    // 3. Build new operation
+    const acciones = capital / precioEnt;
+    const dias = fechaSal ? Math.round((new Date(fechaSal) - new Date(fechaEnt)) / 86400000) : 0;
+    const plusvalia = precioSal ? Math.round((precioSal - precioEnt) * acciones * 100) / 100 : 0;
+    const rentabilidad = precioSal ? Math.round(((precioSal - precioEnt) / precioEnt) * 10000) / 10000 : 0;
+
+    let newOp;
+    if (type === 'alcista') {
+      newOp = {
+        valor, ticker,
+        fechaEntrada: fechaEnt,
+        fechaSalida: fechaSal || '',
+        precioEntrada: precioEnt,
+        precioSalida: precioSal || 0,
+        capital, peso, plusvalia, rentabilidad, dias, motivo
+      };
+    } else {
+      newOp = {
+        valor, ticker,
+        fecha: fechaEnt,
+        precio: precioEnt,
+        capital, peso
+      };
+    }
+
+    // 4. Add to correct array
+    currentContent[type].operaciones.push(newOp);
+
+    // Recalculate totals for alcista
+    if (type === 'alcista') {
+      const ops = currentContent.alcista.operaciones;
+      const totalPlus = ops.reduce((s, op) => s + (op.plusvalia || 0), 0);
+      currentContent.alcista.plusvalias = Math.round(totalPlus * 100) / 100;
+      currentContent.alcista.rentabilidad = Math.round((totalPlus / currentContent.alcista.importeAsignado) * 10000) / 10000;
+    }
+
+    // 5. Push updated JSON to GitHub
+    const updatedJson = JSON.stringify(currentContent, null, 2);
+    const putRes = await fetch(apiBase, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({
+        message: `Nueva op ${type}: ${ticker} (${fechaEnt})`,
+        content: btoa(unescape(encodeURIComponent(updatedJson))),
+        sha: fileData.sha
+      })
+    });
+
+    if (!putRes.ok) {
+      const errBody = await putRes.json();
+      throw new Error(`GitHub PUT error: ${putRes.status} - ${errBody.message || ''}`);
+    }
+
+    statusEl.innerHTML = '<span style="color:var(--success);">✓ Operación guardada en GitHub. Recargando...</span>';
+    
+    // Reload after 1.5s to show updated data
+    setTimeout(() => {
+      closeModal();
+      location.reload();
+    }, 1500);
+
+  } catch (err) {
+    console.error(err);
+    statusEl.innerHTML = `<span style="color:var(--danger);">✗ Error: ${err.message}</span>`;
+    btn.disabled = false;
+    btn.style.opacity = '1';
+  }
+}
+
+// Close modal on Escape
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// Close modal on background click
+document.getElementById('opModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('opModal')) closeModal();
+});
+</script>
     </script>
 </body>
 </html>
