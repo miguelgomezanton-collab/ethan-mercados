@@ -4,26 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard de Gestión Monetaria</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0d0f14;
+    --bg: #040e0e;
     --surface: #161a24;
     --surface2: #1e2433;
-    --border: #2a3040;
-    --accent: #4f8ef7;
-    --accent2: #7c5cfc;
-    --green: #22d3a5;
-    --red: #f7604f;
-    --yellow: #f7c948;
-    --text: #e4e8f0;
-    --text2: #8892a4;
-    --text3: #4e5669;
+    --border: #1a3c3c;
+    --accent: #38bdf8;
+    --accent2: #2dd4bf;
+    --green: #40d9c0;
+    --red: #f47174;
+    --yellow: #fbbf24;
+    --text: #d0e8e4;
+    --text2: #9cb8b4;
+    --text3: #4a706a;
     --radius: 14px;
     --shadow: 0 4px 24px rgba(0,0,0,0.35);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-family: 'Inter', 'Montserrat', 'Segoe UI', sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
@@ -90,10 +91,10 @@
   }
   .kpi-card.blue::before   { background: linear-gradient(90deg, var(--accent), var(--accent2)); }
   .kpi-card.green::before  { background: linear-gradient(90deg, var(--green), #17b891); }
-  .kpi-card.red::before    { background: linear-gradient(90deg, var(--red), #e84c3d); }
-  .kpi-card.yellow::before { background: linear-gradient(90deg, var(--yellow), #e5a800); }
-  .kpi-card.purple::before { background: linear-gradient(90deg, var(--accent2), #9b7aff); }
-  .kpi-card.teal::before   { background: linear-gradient(90deg, #22c5d3, #17a2b8); }
+  .kpi-card.red::before    { background: linear-gradient(90deg, var(--red), #f47174); }
+  .kpi-card.yellow::before { background: linear-gradient(90deg, var(--yellow), #d97706); }
+  .kpi-card.purple::before { background: linear-gradient(90deg, var(--accent2), #5eead4); }
+  .kpi-card.teal::before   { background: linear-gradient(90deg, #38bdf8, #17a2b8); }
   .kpi-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.7px; font-weight: 600; }
   .kpi-value { font-size: 28px; font-weight: 700; margin: 8px 0 4px; letter-spacing: -0.5px; }
   .kpi-sub   { font-size: 12px; color: var(--text2); }
@@ -216,7 +217,7 @@
   }
   .risk-needle {
     position: absolute; top: -4px; width: 18px; height: 18px;
-    background: white; border-radius: 50%; transform: translateX(-50%);
+    background: #071717; color: #d0e8e4; border-radius: 50%; transform: translateX(-50%);
     box-shadow: 0 2px 6px rgba(0,0,0,0.4); transition: left 0.3s ease;
     border: 2px solid var(--bg);
   }
@@ -1644,7 +1645,7 @@
     }));
 
     const maxVol = Math.max(...datosConPeso.map(d => d.volNorm));
-    const colors = ['#4f8ef7','#22d3a5','#f7c948','#7c5cfc','#f7604f','#22c5d3','#ff9f43','#a29bfe'];
+    const colors = ['#38bdf8','#40d9c0','#fbbf24','#2dd4bf','#f47174','#38bdf8','#fbbf24','#a29bfe'];
 
     const resDiv = document.getElementById('vol-resultados');
     if (!resDiv) return;

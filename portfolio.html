@@ -8,17 +8,17 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-dark: #0a0e27;
-            --bg-card: #141b2d;
-            --bg-secondary: #1a2332;
-            --accent-bull: #00d4aa;
-            --accent-bear: #ff6b9d;
-            --accent-neutral: #4c9aff;
-            --text-primary: #e2e8f0;
-            --text-secondary: #94a3b8;
-            --border: #1e293b;
-            --success: #00d4aa;
-            --danger: #ff6b9d;
+            --bg-dark: #040e0e;
+            --bg-card: #0a1919;
+            --bg-secondary: #0f2828;
+            --accent-bull: #40d9c0;
+            --accent-bear: #f47174;
+            --accent-neutral: #38bdf8;
+            --text-primary: #e0f0ed;
+            --text-secondary: #9cb8b4;
+            --border: #1a3c3c;
+            --success: #40d9c0;
+            --danger: #f47174;
             --warning: #fbbf24;
         }
 
@@ -44,7 +44,7 @@
 
         /* Header */
         header {
-            background: linear-gradient(135deg, #141b2d 0%, #1a2332 100%);
+            background: linear-gradient(135deg, #0a1919 0%, #0f2828 100%);
             padding: 50px 40px;
             margin-bottom: 30px;
             border-radius: 20px;
@@ -142,15 +142,15 @@
         }
 
         .strategy-btn.bull.active {
-            background: linear-gradient(135deg, var(--accent-bull) 0%, #00b894 100%);
+            background: linear-gradient(135deg, var(--accent-bull) 0%, #2ba897 100%);
         }
 
         .strategy-btn.bear.active {
-            background: linear-gradient(135deg, var(--accent-bear) 0%, #ff4757 100%);
+            background: linear-gradient(135deg, var(--accent-bear) 0%, #f47174 100%);
         }
 
         .strategy-btn.general.active {
-            background: linear-gradient(135deg, var(--accent-neutral) 0%, #667eea 100%);
+            background: linear-gradient(135deg, var(--accent-neutral) 0%, #5eead4 100%);
         }
 
         /* Dashboard Grid */
@@ -184,15 +184,15 @@
         }
 
         .metric-card.bull::after {
-            background: linear-gradient(90deg, var(--accent-bull), #00b894);
+            background: linear-gradient(90deg, var(--accent-bull), #2ba897);
         }
 
         .metric-card.bear::after {
-            background: linear-gradient(90deg, var(--accent-bear), #ff4757);
+            background: linear-gradient(90deg, var(--accent-bear), #f47174);
         }
 
         .metric-card.neutral::after {
-            background: linear-gradient(90deg, var(--accent-neutral), #667eea);
+            background: linear-gradient(90deg, var(--accent-neutral), #5eead4);
         }
 
         .metric-card:hover::after {
@@ -443,7 +443,7 @@
         /* Export Button */
         .export-btn {
             padding: 12px 24px;
-            background: linear-gradient(135deg, var(--accent-neutral) 0%, #667eea 100%);
+            background: linear-gradient(135deg, var(--accent-neutral) 0%, #5eead4 100%);
             color: white;
             border: none;
             border-radius: 10px;
@@ -587,8 +587,8 @@
 
         /* Projection Card */
         .projection-card {
-            background: linear-gradient(135deg, rgba(0,212,170,0.05) 0%, rgba(76,154,255,0.05) 100%);
-            border: 1px solid rgba(0,212,170,0.2);
+            background: linear-gradient(135deg, rgba(64,217,192,0.05) 0%, rgba(76,154,255,0.05) 100%);
+            border: 1px solid rgba(64,217,192,0.2);
             border-radius: 16px;
             padding: 30px;
         }
@@ -644,8 +644,8 @@
             min-height: 30px;
         }
 
-        .bull-bar { background: linear-gradient(180deg, rgba(0,212,170,0.8) 0%, rgba(0,184,148,0.4) 100%); }
-        .highlight-bar { background: linear-gradient(180deg, var(--accent-bull) 0%, rgba(0,184,148,0.7) 100%) !important; box-shadow: 0 0 20px rgba(0,212,170,0.4); }
+        .bull-bar { background: linear-gradient(180deg, rgba(64,217,192,0.8) 0%, rgba(0,184,148,0.4) 100%); }
+        .highlight-bar { background: linear-gradient(180deg, var(--accent-bull) 0%, rgba(0,184,148,0.7) 100%) !important; box-shadow: 0 0 20px rgba(64,217,192,0.4); }
 
         .proj-label {
             font-size: 0.8em;
@@ -825,7 +825,7 @@
                 <div class="section-header">
                     <h2 class="section-title">📋 Operaciones Alcistas</h2>
                     <div style="display:flex;gap:8px;">
-                        <button class="export-btn" onclick="openNewOpForm('alcista')" style="background:var(--accent-bull);color:#0a0e27;font-weight:600;">+ Nueva Operación</button>
+                        <button class="export-btn" onclick="openNewOpForm('alcista')" style="background:var(--accent-bull);color:#040e0e;font-weight:600;">+ Nueva Operación</button>
                         <button class="export-btn" onclick="exportToCSV('bull')">Exportar CSV</button>
                     </div>
                 </div>
@@ -874,7 +874,7 @@
                 <div class="section-header">
                     <h2 class="section-title">📋 Operaciones Bajistas</h2>
                     <div style="display:flex;gap:8px;">
-                        <button class="export-btn" onclick="openNewOpForm('bajista')" style="background:var(--accent-bear);color:#0a0e27;font-weight:600;">+ Nueva Operación</button>
+                        <button class="export-btn" onclick="openNewOpForm('bajista')" style="background:var(--accent-bear);color:#040e0e;font-weight:600;">+ Nueva Operación</button>
                         <button class="export-btn" onclick="exportToCSV('bear')">Exportar CSV</button>
                     </div>
                 </div>
@@ -974,10 +974,10 @@
                 initApp();
             } catch (err) {
                 console.error('Error cargando datos:', err);
-                document.body.innerHTML = '<div style="padding:40px;text-align:center;color:#ff3d5a;font-family:monospace;">' +
+                document.body.innerHTML = '<div style="padding:40px;text-align:center;color:#f47174;font-family:monospace;">' +
                     '<h2>⚠️ Error cargando operaciones.json</h2>' +
-                    '<p style="color:#8ba0b8;margin-top:12px;">Asegúrate de que el archivo operaciones.json está en el mismo directorio que este HTML.</p>' +
-                    '<p style="color:#3a4f65;margin-top:8px;">Error: ' + err.message + '</p></div>';
+                    '<p style="color:#8cb0a8;margin-top:12px;">Asegúrate de que el archivo operaciones.json está en el mismo directorio que este HTML.</p>' +
+                    '<p style="color:#3a5c56;margin-top:8px;">Error: ' + err.message + '</p></div>';
             }
         }
 
@@ -1271,8 +1271,8 @@
         }
 
         // Chart Configuration
-        Chart.defaults.color = '#94a3b8';
-        Chart.defaults.borderColor = '#1e293b';
+        Chart.defaults.color = '#9cb8b4';
+        Chart.defaults.borderColor = '#1a3c3c';
 
         // Create Charts
         function createBullTickerChart() {
@@ -1288,9 +1288,9 @@
                     labels: Object.keys(tickerCapital),
                     datasets: [{
                         data: Object.values(tickerCapital),
-                        backgroundColor: ['#00d4aa', '#00b894', '#00a085', '#008876', '#007067'],
+                        backgroundColor: ['#40d9c0', '#2ba897', '#00a085', '#008876', '#007067'],
                         borderWidth: 2,
-                        borderColor: '#141b2d'
+                        borderColor: '#0a1919'
                     }]
                 },
                 options: {
@@ -1306,8 +1306,8 @@
             const ops = portfolioData.alcista.operaciones;
             const labels = ops.map(op => op.ticker);
             const data   = ops.map(op => op.plusvalia);
-            const colors = data.map(v => v >= 0 ? 'rgba(0,212,170,0.75)' : 'rgba(255,107,157,0.75)');
-            const borders= data.map(v => v >= 0 ? '#00d4aa' : '#ff6b9d');
+            const colors = data.map(v => v >= 0 ? 'rgba(64,217,192,0.75)' : 'rgba(255,107,157,0.75)');
+            const borders= data.map(v => v >= 0 ? '#40d9c0' : '#f47174');
 
             new Chart(ctx, {
                 type: 'bar',
@@ -1349,9 +1349,9 @@
                     labels: Object.keys(tickerCapital),
                     datasets: [{
                         data: Object.values(tickerCapital),
-                        backgroundColor: ['#ff6b9d', '#ff4757', '#ee5a6f', '#dc4c87', '#ca3f9f'],
+                        backgroundColor: ['#f47174', '#f47174', '#ee5a6f', '#dc4c87', '#ca3f9f'],
                         borderWidth: 2,
-                        borderColor: '#141b2d'
+                        borderColor: '#0a1919'
                     }]
                 },
                 options: {
@@ -1374,7 +1374,7 @@
                     datasets: [{
                         label: 'Capital',
                         data: capitals,
-                        borderColor: '#ff6b9d',
+                        borderColor: '#f47174',
                         backgroundColor: 'rgba(255, 107, 157, 0.1)',
                         borderWidth: 2,
                         tension: 0.4,
@@ -1406,7 +1406,7 @@
                         label: 'Rentabilidad (%)',
                         data: [portfolioData.alcista.rentabilidad * 100, portfolioData.bajista.rentabilidad * 100],
                         backgroundColor: ['rgba(0, 212, 170, 0.8)', 'rgba(255, 107, 157, 0.8)'],
-                        borderColor: ['#00d4aa', '#ff6b9d'],
+                        borderColor: ['#40d9c0', '#f47174'],
                         borderWidth: 2
                     }]
                 },
@@ -1431,9 +1431,9 @@
                     labels: ['Alcista', 'Bajista'],
                     datasets: [{
                         data: [bullMetrics.totalCapital, bearMetrics.totalCapital],
-                        backgroundColor: ['#00d4aa', '#ff6b9d'],
+                        backgroundColor: ['#40d9c0', '#f47174'],
                         borderWidth: 2,
-                        borderColor: '#141b2d'
+                        borderColor: '#0a1919'
                     }]
                 },
                 options: {
@@ -1453,7 +1453,7 @@
                         label: 'Número de Operaciones',
                         data: [bullMetrics.numOperaciones, bearMetrics.numOperaciones],
                         backgroundColor: ['rgba(0, 212, 170, 0.8)', 'rgba(255, 107, 157, 0.8)'],
-                        borderColor: ['#00d4aa', '#ff6b9d'],
+                        borderColor: ['#40d9c0', '#f47174'],
                         borderWidth: 2
                     }]
                 },
@@ -1474,7 +1474,7 @@
                         label: 'Plusvalías (€)',
                         data: [portfolioData.alcista.plusvalias, portfolioData.bajista.plusvalias],
                         backgroundColor: ['rgba(0, 212, 170, 0.8)', 'rgba(255, 107, 157, 0.8)'],
-                        borderColor: ['#00d4aa', '#ff6b9d'],
+                        borderColor: ['#40d9c0', '#f47174'],
                         borderWidth: 2
                     }]
                 },
@@ -1552,12 +1552,12 @@
       <button onclick="closeModal()" style="background:none;border:none;color:var(--text-secondary);font-size:24px;cursor:pointer;">&times;</button>
     </div>
 
-    <div id="ghConfigPanel" style="display:none;background:#1a2332;border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:20px;">
+    <div id="ghConfigPanel" style="display:none;background:#0f2828;border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:20px;">
       <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">⚙️ Configuración GitHub (solo la primera vez)</p>
       <input id="ghUser" placeholder="Usuario GitHub (ej: miguelgomezanton-collab)" style="width:100%;padding:10px;margin-bottom:8px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;">
       <input id="ghRepo" placeholder="Nombre del repo (ej: ethan-mercados)" value="ethan-mercados" style="width:100%;padding:10px;margin-bottom:8px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;">
       <input id="ghToken" type="password" placeholder="Personal Access Token (ghp_...)" style="width:100%;padding:10px;margin-bottom:8px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;">
-      <button onclick="saveGhConfig()" style="width:100%;padding:10px;background:var(--accent-neutral);color:#0a0e27;border:none;border-radius:6px;font-weight:600;cursor:pointer;">Guardar configuración</button>
+      <button onclick="saveGhConfig()" style="width:100%;padding:10px;background:var(--accent-neutral);color:#040e0e;border:none;border-radius:6px;font-weight:600;cursor:pointer;">Guardar configuración</button>
     </div>
 
     <input type="hidden" id="opType" value="alcista">
@@ -1617,7 +1617,7 @@
 
     <div id="opStatus" style="margin-top:12px;font-size:12px;min-height:20px;"></div>
 
-    <button id="opSubmitBtn" onclick="submitOperation()" style="width:100%;padding:14px;margin-top:16px;background:var(--accent-bull);color:#0a0e27;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s;">
+    <button id="opSubmitBtn" onclick="submitOperation()" style="width:100%;padding:14px;margin-top:16px;background:var(--accent-bull);color:#040e0e;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s;">
       Guardar operación en GitHub
     </button>
   </div>

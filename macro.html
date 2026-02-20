@@ -5,24 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Macro | 14 Febrero 2026</title>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            font-family: 'Montserrat', 'Segoe UI', sans-serif;
+            background: #040e0e;
             min-height: 100vh;
             padding: 20px;
         }
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background: white;
+            background: #071717; color: #d0e8e4;
             border-radius: 25px;
-            box-shadow: 0 25px 70px rgba(0,0,0,0.4);
+            box-shadow: 0 25px 70px rgba(0,0,0,0.6); border: 1px solid #1a3c3c;
             overflow: hidden;
         }
         .header {
-            background: linear-gradient(135deg, #0f2027 0%, #203a43 100%);
+            background: linear-gradient(135deg, #071717 0%, #203a43 100%);
             color: white;
             padding: 35px 40px;
             text-align: center;
@@ -33,26 +34,26 @@
 
         .nav {
             display: flex;
-            border-bottom: 3px solid #e0e0e0;
+            border-bottom: 1px solid #1a3c3c;
             overflow-x: auto;
-            background: #f8f9fa;
+            background: #0a1919;
         }
         .nav-btn {
             flex: 1;
             padding: 18px 20px;
-            background: white;
+            background: #071717; color: #d0e8e4;
             border: none;
-            border-right: 1px solid #e0e0e0;
+            border-right: 1px solid #1a3c3c;
             cursor: pointer;
             font-size: 0.95rem;
             font-weight: 600;
             white-space: nowrap;
             transition: all 0.25s;
         }
-        .nav-btn:hover { background: #e8f4f8; }
-        .nav-btn.active { background: #10b981; color: white; }
+        .nav-btn:hover { background: #0f2828; color: #d0e8e4; }
+        .nav-btn.active { background: rgba(64,217,192,0.15); color: #40d9c0; border-bottom: 2px solid #40d9c0; }
 
-        .content { padding: 35px; }
+        .content { padding: 35px; background: #071717; }
         .page { display: none; }
         .page.active { display: block; }
 
@@ -64,9 +65,9 @@
             color: white;
             margin-bottom: 30px;
         }
-        .main-score.amarillo { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); }
-        .main-score.verde    { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
-        .main-score.rojo     { background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%); }
+        .main-score.amarillo { background: linear-gradient(135deg, #3b2f00 0%, #4a3500 100%); }
+        .main-score.verde    { background: linear-gradient(135deg, #2ba897 0%, #40d9c0 100%); }
+        .main-score.rojo     { background: linear-gradient(135deg, #b91c1c 0%, #f47174 100%); }
         .big-score { font-size: 5rem; font-weight: 900; margin: 15px 0; text-shadow: 2px 4px 10px rgba(0,0,0,0.25); }
         .signal { font-size: 1.8rem; margin: 10px 0; }
 
@@ -82,9 +83,9 @@
         .score-card h3 { font-size: 1.2rem; margin-bottom: 10px; opacity: 0.9; }
         .score-card .score { font-size: 2.8rem; font-weight: 800; margin: 10px 0; }
         .score-card .desc { font-size: 0.9rem; opacity: 0.85; }
-        .card-green   { background: linear-gradient(135deg, #11998e, #38ef7d); }
-        .card-neutral { background: linear-gradient(135deg, #667eea, #764ba2); }
-        .card-orange  { background: linear-gradient(135deg, #f6d365, #fda085); color: #2c3e50; }
+        .card-green   { background: linear-gradient(135deg, #2ba897, #40d9c0); }
+        .card-neutral { background: linear-gradient(135deg, #5eead4, #764ba2); }
+        .card-orange  { background: linear-gradient(135deg, #3b2f00, #4a3500); color: #d0e8e4; }
         .card-red     { background: linear-gradient(135deg, #eb3349, #f45c43); }
 
         /* Alerta */
@@ -97,11 +98,11 @@
             margin: 20px 0;
             font-size: 0.95rem;
         }
-        .alert-box strong { color: #c0392b; }
+        .alert-box strong { color: #b91c1c; }
 
         /* Gauge visual */
         .visual-gauge-container {
-            background: #f8f9fa;
+            background: #0a1919;
             border-radius: 20px;
             padding: 35px;
             margin: 25px 0;
@@ -111,7 +112,7 @@
             text-align: center;
             font-size: 1.5rem;
             font-weight: 700;
-            color: #0f2027;
+            color: #071717;
             margin-bottom: 35px;
         }
         .gauge-scale {
@@ -123,7 +124,7 @@
         .gauge-bar {
             display: flex;
             height: 75px;
-            border: 3px solid #2c3e50;
+            border: 3px solid #d0e8e4;
             border-radius: 10px;
             overflow: hidden;
         }
@@ -141,12 +142,12 @@
         }
         .gauge-segment:last-child { border-right: none; }
         .gauge-segment:hover { filter: brightness(1.1); }
-        .seg-rojo-oscuro { background: linear-gradient(135deg, #c0392b, #e74c3c); color: white; }
-        .seg-rojo        { background: linear-gradient(135deg, #e74c3c, #f1948a); }
-        .seg-naranja     { background: linear-gradient(135deg, #e67e22, #f39c12); }
+        .seg-rojo-oscuro { background: linear-gradient(135deg, #b91c1c, #f47174); color: white; }
+        .seg-rojo        { background: linear-gradient(135deg, #f47174, #f1948a); }
+        .seg-naranja     { background: linear-gradient(135deg, #d97706, #fbbf24); }
         .seg-amarillo    { background: linear-gradient(135deg, #f1c40f, #f9e79f); }
-        .seg-verde       { background: linear-gradient(135deg, #27ae60, #58d68d); }
-        .seg-verde-plus  { background: linear-gradient(135deg, #1e8449, #27ae60); color: white; }
+        .seg-verde       { background: linear-gradient(135deg, #40d9c0, #58d68d); }
+        .seg-verde-plus  { background: linear-gradient(135deg, #2ba897, #40d9c0); color: white; }
 
         .gauge-markers {
             display: flex;
@@ -154,7 +155,7 @@
             margin-top: 8px;
             padding: 0 2px;
         }
-        .gauge-marker { font-weight: 600; font-size: 0.9rem; color: #2c3e50; }
+        .gauge-marker { font-weight: 600; font-size: 0.9rem; color: #d0e8e4; }
 
         .current-position {
             position: absolute;
@@ -163,9 +164,9 @@
             animation: bounce 2.5s ease-in-out infinite;
             text-align: center;
         }
-        .position-arrow { font-size: 2.5rem; color: #e74c3c; line-height: 1; }
+        .position-arrow { font-size: 2.5rem; color: #f47174; line-height: 1; }
         .position-label {
-            background: #e74c3c;
+            background: #f47174;
             color: white;
             padding: 6px 14px;
             border-radius: 20px;
@@ -186,12 +187,12 @@
             gap: 12px;
             margin-top: 35px;
         }
-        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: #2c3e50; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: #d0e8e4; }
         .legend-color { width: 22px; height: 22px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.2); }
 
         /* Chart container */
         .chart-container {
-            background: white;
+            background: #071717; color: #d0e8e4;
             border-radius: 15px;
             padding: 20px;
             margin: 20px 0;
@@ -200,33 +201,33 @@
 
         /* Analysis box */
         .analysis-box {
-            background: #f8f9fa;
+            background: #0a1919;
             padding: 22px;
             border-radius: 12px;
             margin: 20px 0;
-            border-left: 5px solid #10b981;
+            border-left: 5px solid #40d9c0;
         }
-        .analysis-box.warning { border-left-color: #e67e22; }
-        .analysis-box.danger  { border-left-color: #e74c3c; }
-        .analysis-box h3 { color: #0f2027; margin-bottom: 12px; font-size: 1.05rem; }
+        .analysis-box.warning { border-left-color: #d97706; }
+        .analysis-box.danger  { border-left-color: #f47174; }
+        .analysis-box h3 { color: #d0e8e4; margin-bottom: 12px; font-size: 1.05rem; }
         .analysis-box ul { list-style: none; padding: 0; }
         .analysis-box ul li { padding: 4px 0; line-height: 1.6; }
-        .analysis-box ul li::before { content: "▸ "; color: #10b981; font-weight: bold; }
-        .analysis-box.warning ul li::before { color: #e67e22; }
-        .analysis-box.danger ul li::before  { color: #e74c3c; }
+        .analysis-box ul li::before { content: "▸ "; color: #40d9c0; font-weight: bold; }
+        .analysis-box.warning ul li::before { color: #d97706; }
+        .analysis-box.danger ul li::before  { color: #f47174; }
         .analysis-box p { line-height: 1.7; }
 
         /* Tabla */
         .indicator-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.92rem; }
         .indicator-table th {
-            background: #0f2027;
+            background: #071717;
             color: white;
             padding: 13px 15px;
             text-align: left;
             font-weight: 600;
         }
         .indicator-table td { padding: 12px 15px; border-bottom: 1px solid #e8e8e8; vertical-align: middle; }
-        .indicator-table tr:hover td { background: #f0f8ff; }
+        .indicator-table tr:hover td { background: #0a1a1f; }
         .score-badge {
             display: inline-block;
             padding: 4px 14px;
@@ -239,25 +240,25 @@
         .score-neutral  { background: #fff3cd; color: #856404; }
 
         /* Nuevos vs anteriores */
-        .cambio-up   { color: #27ae60; font-weight: 700; }
-        .cambio-down { color: #e74c3c; font-weight: 700; }
+        .cambio-up   { color: #40d9c0; font-weight: 700; }
+        .cambio-down { color: #f47174; font-weight: 700; }
         .cambio-flat { color: #888; }
 
         /* Sección título */
-        .section-title { font-size: 1.8rem; font-weight: 700; color: #0f2027; margin-bottom: 20px; }
+        .section-title { font-size: 1.8rem; font-weight: 700; color: #d0e8e4; margin-bottom: 20px; }
 
         /* Probabilidades */
         .prob-bar-wrap { margin: 12px 0; }
         .prob-label { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 4px; }
-        .prob-bar { background: #e0e0e0; border-radius: 8px; height: 18px; overflow: hidden; }
+        .prob-bar { background: #1a3c3c; border-radius: 8px; height: 18px; overflow: hidden; }
         .prob-fill { height: 100%; border-radius: 8px; transition: width 1s ease; }
-        .fill-green  { background: linear-gradient(90deg, #27ae60, #58d68d); }
-        .fill-orange { background: linear-gradient(90deg, #e67e22, #f39c12); }
-        .fill-red    { background: linear-gradient(90deg, #c0392b, #e74c3c); }
+        .fill-green  { background: linear-gradient(90deg, #40d9c0, #58d68d); }
+        .fill-orange { background: linear-gradient(90deg, #d97706, #fbbf24); }
+        .fill-red    { background: linear-gradient(90deg, #b91c1c, #f47174); }
 
         /* Footer */
         .footer {
-            background: #0f2027;
+            background: #071717;
             color: white;
             text-align: center;
             padding: 28px 30px;
@@ -322,9 +323,9 @@
                 <div class="score">+1/14</div>
                 <div class="desc">M2 USA +4.6% · BBB 0.96%</div>
             </div>
-            <div class="score-card card-orange" style="color:#2c3e50;">
+            <div class="score-card card-orange" style="color:#d0e8e4;">
                 <h3>Score vs Dic 25</h3>
-                <div class="score" style="color:#c0392b;">−1</div>
+                <div class="score" style="color:#b91c1c;">−1</div>
                 <div class="desc">Put/Call baja a zona euforia · P/C 0.60</div>
             </div>
         </div>
@@ -446,7 +447,7 @@
                 <li><strong>DURATION:</strong> Sigue negativo pero desacelerando</li>
                 <li><strong>DIFFUSION:</strong> Mejora en componentes laborales (claims, horas)</li>
             </ul>
-            <p style="margin-top:10px; color:#e67e22;"><strong>Próximo dato: 19 Feb 2026 (puede retrasarse por government shutdown)</strong></p>
+            <p style="margin-top:10px; color:#d97706;"><strong>Próximo dato: 19 Feb 2026 (puede retrasarse por government shutdown)</strong></p>
         </div>
 
         <div class="analysis-box warning">
@@ -508,7 +509,7 @@
                     <td>×2</td>
                     <td><strong>−2</strong></td>
                 </tr>
-                <tr style="background:#fff0f0;">
+                <tr style="background:#1f0a0a;">
                     <td><strong>Reservas Bancarias</strong></td>
                     <td>$2.93T (4 Feb 26)</td>
                     <td>~$3.27T (Feb 25)</td>
@@ -532,7 +533,7 @@
                     <td>×1</td>
                     <td><strong>+1</strong></td>
                 </tr>
-                <tr style="background:#fff0f0;">
+                <tr style="background:#1f0a0a;">
                     <td><strong>Put/Call Ratio (CBOE)</strong></td>
                     <td>0.60 (13 Feb 26)</td>
                     <td>0.75</td>
@@ -592,7 +593,7 @@
                 <div class="score" style="font-size:2rem;">55%</div>
                 <div class="desc">LEI mejorando · curvas OK · crédito barato</div>
             </div>
-            <div class="score-card card-orange" style="color:#2c3e50;">
+            <div class="score-card card-orange" style="color:#d0e8e4;">
                 <h3>Desaceleración</h3>
                 <div class="score" style="font-size:2rem;">30%</div>
                 <div class="desc">Consumer confidence deteriorando · Fed restrictiva</div>
@@ -677,14 +678,14 @@
                     <td><span class="cambio-up">↓ compresión</span></td>
                     <td>+1 → +1 (sin cambio)</td>
                 </tr>
-                <tr style="background:#fff0f0;">
+                <tr style="background:#1f0a0a;">
                     <td><strong>Put/Call Ratio</strong></td>
                     <td>0.75 (neutral)</td>
                     <td><strong>0.60 (euforia)</strong></td>
                     <td><span class="cambio-down">↓ DETERIORO</span></td>
                     <td><strong>0 → −1 ⚠️</strong></td>
                 </tr>
-                <tr style="background:#fff0f0;">
+                <tr style="background:#1f0a0a;">
                     <td><strong>Reservas bancarias</strong></td>
                     <td>$2.93T (~−4.7%)</td>
                     <td>$2.93T (~−10.4%)</td>
@@ -748,21 +749,21 @@
         delta: { reference: 4, valueformat: ".0f", prefix: "vs Dic25: " },
         title: { text: "Score Macro · Feb 2026", font: { size: 20, family: "Segoe UI" } },
         gauge: {
-            axis: { range: [-17, 17], tickwidth: 1, tickcolor: "#2c3e50", tickfont: { size: 11 } },
-            bar: { color: "#f39c12", thickness: 0.25 },
+            axis: { range: [-17, 17], tickwidth: 1, tickcolor: "#d0e8e4", tickfont: { size: 11 } },
+            bar: { color: "#fbbf24", thickness: 0.25 },
             bgcolor: "white",
             borderwidth: 2,
-            bordercolor: "#ccc",
+            bordercolor: "#245050",
             steps: [
-                { range: [-17, -10], color: "#c0392b" },
-                { range: [-10, -4],  color: "#e74c3c" },
-                { range: [-4,   0],  color: "#e67e22" },
+                { range: [-17, -10], color: "#b91c1c" },
+                { range: [-10, -4],  color: "#f47174" },
+                { range: [-4,   0],  color: "#d97706" },
                 { range: [0,    4],  color: "#f1c40f" },
-                { range: [4,   10],  color: "#27ae60" },
-                { range: [10,  17],  color: "#1e8449" }
+                { range: [4,   10],  color: "#40d9c0" },
+                { range: [10,  17],  color: "#2ba897" }
             ],
             threshold: {
-                line: { color: "#c0392b", width: 3 },
+                line: { color: "#b91c1c", width: 3 },
                 thickness: 0.75,
                 value: 3
             }
@@ -772,8 +773,8 @@
     var gaugeLayout = {
         height: 380,
         margin: { t: 50, r: 30, l: 30, b: 30 },
-        font: { color: "#2c3e50", family: "Segoe UI" },
-        paper_bgcolor: "white"
+        font: { color: "#d0e8e4", family: "Segoe UI" },
+        paper_bgcolor: "#071717"
     };
 
     Plotly.newPlot('scoreGauge', gaugeData, gaugeLayout, { responsive: true, displayModeBar: false });
