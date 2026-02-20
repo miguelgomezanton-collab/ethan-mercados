@@ -17,8 +17,8 @@ body {
 /* ── TOPBAR ── */
 .topbar {
   position: fixed;
-  top: 0; left: 0; right: 0;
-  height: 52px;
+  top: 42px; left: 0; right: 0;
+  height: 42px;
   background: #051212;
   border-bottom: 1px solid #1a3c3c;
   display: flex;
@@ -91,7 +91,7 @@ nav {
 /* ── IFRAMES ── */
 .frame-container {
   position: fixed;
-  top: 52px;
+  top: 42px;
   left: 0; right: 0; bottom: 0;
 }
 
@@ -137,12 +137,7 @@ iframe.active { display: block; }
 <body>
 
 <div class="topbar">
-  <div class="brand">
-    <div>
-      <div class="brand-name">ETHAN</div>
-      <div class="brand-tag">Mercados</div>
-    </div>
-  </div>
+  <div class="brand" style="display:none;"></div>
   <nav>
     <button class="nav-btn active" onclick="show('watch')" id="btn-watch">
       👁&nbsp; Watchlist

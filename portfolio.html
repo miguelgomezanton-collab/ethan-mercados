@@ -825,7 +825,7 @@
                 <div class="section-header">
                     <h2 class="section-title">📋 Operaciones Alcistas</h2>
                     <div style="display:flex;gap:8px;">
-                        <button class="export-btn" onclick="openNewOpForm('alcista')" style="background:var(--accent-bull);color:#040e0e;font-weight:600;">+ Nueva Operación</button>
+                        <button class="export-btn" onclick="openNewOpForm('alcista')" style="background:#40d9c0;color:#040e0e;font-weight:600;">+ Nueva Operación</button>
                         <button class="export-btn" onclick="exportToCSV('bull')">Exportar CSV</button>
                     </div>
                 </div>
@@ -874,7 +874,7 @@
                 <div class="section-header">
                     <h2 class="section-title">📋 Operaciones Bajistas</h2>
                     <div style="display:flex;gap:8px;">
-                        <button class="export-btn" onclick="openNewOpForm('bajista')" style="background:var(--accent-bear);color:#040e0e;font-weight:600;">+ Nueva Operación</button>
+                        <button class="export-btn" onclick="openNewOpForm('bajista')" style="background:#f47174;color:#040e0e;font-weight:600;">+ Nueva Operación</button>
                         <button class="export-btn" onclick="exportToCSV('bear')">Exportar CSV</button>
                     </div>
                 </div>
@@ -992,8 +992,10 @@
             const avgCapital = totalCapital / data.operaciones.length;
             const rentabilidadPorOp = data.plusvalias / data.operaciones.length;
             
-            const firstDate = new Date(data.operaciones[0].fecha);
-            const lastDate = new Date(data.operaciones[data.operaciones.length - 1].fecha);
+            const firstOp = data.operaciones[0];
+            const lastOp = data.operaciones[data.operaciones.length - 1];
+            const firstDate = new Date(firstOp.fechaEntrada || firstOp.fecha);
+            const lastDate = new Date(lastOp.fechaSalida || lastOp.fecha);
             const years = (lastDate - firstDate) / (365.25 * 24 * 60 * 60 * 1000);
             const cagr = Math.pow(1 + data.rentabilidad, 1/years) - 1;
             
@@ -1206,7 +1208,7 @@
                         <td class="${esGanadora ? 'positive' : 'negative'}"><strong>${esGanadora ? '+' : ''}€${op.plusvalia.toFixed(2)}</strong></td>
                         <td class="${esGanadora ? 'positive' : 'negative'}">${esGanadora ? '+' : ''}${(op.rentabilidad*100).toFixed(2)}%</td>
                         <td>${op.dias}d</td>
-                        <td><span style="font-size:0.85em;color:var(--text-secondary)">${op.motivo}</span></td>
+                        <td><span style="font-size:0.85em;color:#9cb8b4">${op.motivo}</span></td>
                     </tr>
                 `;
             }).join('');
@@ -1540,23 +1542,29 @@
         createBearTimelineChart();
         createGeneralCharts();
 
+        
+        // Expose functions to global scope for onclick handlers
+        window.switchStrategy = switchStrategy;
+        window.exportToCSV = exportToCSV;
+
         } // end initApp()
+    </script>
 
 <!-- ═══════════════════════════════════════════════════════════
      MODAL: NUEVA OPERACIÓN
      ═══════════════════════════════════════════════════════════ -->
-<div id="opModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:99999;display:none;align-items:center;justify-content:center;">
-  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:32px;width:520px;max-width:95vw;max-height:90vh;overflow-y:auto;">
+<div id="opModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:99999;align-items:center;justify-content:center;">
+  <div style="background:#0a1919;border:1px solid #1a3c3c;border-radius:16px;padding:32px;width:520px;max-width:95vw;max-height:90vh;overflow-y:auto;">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
-      <h3 id="opModalTitle" style="font-size:18px;color:var(--text-primary);">+ Nueva Operación Alcista</h3>
-      <button onclick="closeModal()" style="background:none;border:none;color:var(--text-secondary);font-size:24px;cursor:pointer;">&times;</button>
+      <h3 id="opModalTitle" style="font-size:18px;color:#d0e8e4;">+ Nueva Operación Alcista</h3>
+      <button onclick="closeModal()" style="background:none;border:none;color:#9cb8b4;font-size:24px;cursor:pointer;">&times;</button>
     </div>
 
     <div id="ghConfigPanel" style="display:none;background:#0f2828;border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:20px;">
-      <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">⚙️ Configuración GitHub (solo la primera vez)</p>
-      <input id="ghUser" placeholder="Usuario GitHub (ej: miguelgomezanton-collab)" style="width:100%;padding:10px;margin-bottom:8px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;">
-      <input id="ghRepo" placeholder="Nombre del repo (ej: ethan-mercados)" value="ethan-mercados" style="width:100%;padding:10px;margin-bottom:8px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;">
-      <input id="ghToken" type="password" placeholder="Personal Access Token (ghp_...)" style="width:100%;padding:10px;margin-bottom:8px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;">
+      <p style="font-size:12px;color:#9cb8b4;margin-bottom:12px;">⚙️ Configuración GitHub (solo la primera vez)</p>
+      <input id="ghUser" placeholder="Usuario GitHub (ej: miguelgomezanton-collab)" style="width:100%;padding:10px;margin-bottom:8px;background:var(--bg-dark);border:1px solid var(--border);color:#d0e8e4;border-radius:6px;font-size:13px;">
+      <input id="ghRepo" placeholder="Nombre del repo (ej: ethan-mercados)" value="ethan-mercados" style="width:100%;padding:10px;margin-bottom:8px;background:var(--bg-dark);border:1px solid var(--border);color:#d0e8e4;border-radius:6px;font-size:13px;">
+      <input id="ghToken" type="password" placeholder="Personal Access Token (ghp_...)" style="width:100%;padding:10px;margin-bottom:8px;background:var(--bg-dark);border:1px solid var(--border);color:#d0e8e4;border-radius:6px;font-size:13px;">
       <button onclick="saveGhConfig()" style="width:100%;padding:10px;background:var(--accent-neutral);color:#040e0e;border:none;border-radius:6px;font-weight:600;cursor:pointer;">Guardar configuración</button>
     </div>
 
@@ -1564,40 +1572,40 @@
     
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
       <div style="grid-column:span 2;">
-        <label style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;">VALOR</label>
-        <input id="opValor" placeholder="Ej: SPROUTS" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;margin-top:4px;">
+        <label style="font-size:11px;color:#9cb8b4;letter-spacing:1px;">VALOR</label>
+        <input id="opValor" placeholder="Ej: SPROUTS" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:#d0e8e4;border-radius:6px;font-size:13px;margin-top:4px;">
       </div>
       <div>
-        <label style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;">TICKER</label>
-        <input id="opTicker" placeholder="Ej: SFM" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;margin-top:4px;text-transform:uppercase;">
+        <label style="font-size:11px;color:#9cb8b4;letter-spacing:1px;">TICKER</label>
+        <input id="opTicker" placeholder="Ej: SFM" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:#d0e8e4;border-radius:6px;font-size:13px;margin-top:4px;text-transform:uppercase;">
       </div>
       <div>
-        <label style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;">CAPITAL (€)</label>
-        <input id="opCapital" type="number" placeholder="3000" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;margin-top:4px;">
+        <label style="font-size:11px;color:#9cb8b4;letter-spacing:1px;">CAPITAL (€)</label>
+        <input id="opCapital" type="number" placeholder="3000" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:#d0e8e4;border-radius:6px;font-size:13px;margin-top:4px;">
       </div>
       <div>
-        <label style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;">FECHA ENTRADA</label>
-        <input id="opFechaEnt" type="date" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;margin-top:4px;">
+        <label style="font-size:11px;color:#9cb8b4;letter-spacing:1px;">FECHA ENTRADA</label>
+        <input id="opFechaEnt" type="date" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:#d0e8e4;border-radius:6px;font-size:13px;margin-top:4px;">
       </div>
       <div>
-        <label style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;">FECHA SALIDA</label>
-        <input id="opFechaSal" type="date" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;margin-top:4px;">
+        <label style="font-size:11px;color:#9cb8b4;letter-spacing:1px;">FECHA SALIDA</label>
+        <input id="opFechaSal" type="date" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:#d0e8e4;border-radius:6px;font-size:13px;margin-top:4px;">
       </div>
       <div>
-        <label style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;">PRECIO ENTRADA ($)</label>
-        <input id="opPrecioEnt" type="number" step="0.001" placeholder="82.65" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;margin-top:4px;">
+        <label style="font-size:11px;color:#9cb8b4;letter-spacing:1px;">PRECIO ENTRADA ($)</label>
+        <input id="opPrecioEnt" type="number" step="0.001" placeholder="82.65" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:#d0e8e4;border-radius:6px;font-size:13px;margin-top:4px;">
       </div>
       <div>
-        <label style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;">PRECIO SALIDA ($)</label>
-        <input id="opPrecioSal" type="number" step="0.001" placeholder="99.825" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;margin-top:4px;">
+        <label style="font-size:11px;color:#9cb8b4;letter-spacing:1px;">PRECIO SALIDA ($)</label>
+        <input id="opPrecioSal" type="number" step="0.001" placeholder="99.825" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:#d0e8e4;border-radius:6px;font-size:13px;margin-top:4px;">
       </div>
       <div>
-        <label style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;">PESO EN CARTERA</label>
-        <input id="opPeso" type="number" step="0.01" placeholder="0.30" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;margin-top:4px;">
+        <label style="font-size:11px;color:#9cb8b4;letter-spacing:1px;">PESO EN CARTERA</label>
+        <input id="opPeso" type="number" step="0.01" placeholder="0.30" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:#d0e8e4;border-radius:6px;font-size:13px;margin-top:4px;">
       </div>
       <div>
-        <label style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;">MOTIVO SALIDA</label>
-        <select id="opMotivo" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;margin-top:4px;">
+        <label style="font-size:11px;color:#9cb8b4;letter-spacing:1px;">MOTIVO SALIDA</label>
+        <select id="opMotivo" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border);color:#d0e8e4;border-radius:6px;font-size:13px;margin-top:4px;">
           <option value="Voluntaria">Voluntaria</option>
           <option value="Stop">Stop</option>
           <option value="-">-</option>
@@ -1607,17 +1615,17 @@
 
     <!-- Campos auto-calculados -->
     <div id="opPreview" style="display:none;margin-top:16px;padding:12px;background:var(--bg-dark);border-radius:8px;border:1px solid var(--border);">
-      <p style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;margin-bottom:8px;">CÁLCULO AUTOMÁTICO</p>
+      <p style="font-size:11px;color:#9cb8b4;letter-spacing:1px;margin-bottom:8px;">CÁLCULO AUTOMÁTICO</p>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:13px;">
-        <div><span style="color:var(--text-secondary);">Plusvalía:</span> <strong id="prevPlus">—</strong></div>
-        <div><span style="color:var(--text-secondary);">Rentab.:</span> <strong id="prevRent">—</strong></div>
-        <div><span style="color:var(--text-secondary);">Días:</span> <strong id="prevDias">—</strong></div>
+        <div><span style="color:#9cb8b4;">Plusvalía:</span> <strong id="prevPlus">—</strong></div>
+        <div><span style="color:#9cb8b4;">Rentab.:</span> <strong id="prevRent">—</strong></div>
+        <div><span style="color:#9cb8b4;">Días:</span> <strong id="prevDias">—</strong></div>
       </div>
     </div>
 
     <div id="opStatus" style="margin-top:12px;font-size:12px;min-height:20px;"></div>
 
-    <button id="opSubmitBtn" onclick="submitOperation()" style="width:100%;padding:14px;margin-top:16px;background:var(--accent-bull);color:#040e0e;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s;">
+    <button id="opSubmitBtn" onclick="submitOperation()" style="width:100%;padding:14px;margin-top:16px;background:#40d9c0;color:#040e0e;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s;">
       Guardar operación en GitHub
     </button>
   </div>
@@ -1641,7 +1649,7 @@ function saveGhConfig() {
   if (!user || !repo || !token) { alert('Rellena todos los campos'); return; }
   localStorage.setItem(GH_CONFIG_KEY, JSON.stringify({ user, repo, token }));
   document.getElementById('ghConfigPanel').style.display = 'none';
-  document.getElementById('opStatus').innerHTML = '<span style="color:var(--success);">✓ Configuración guardada</span>';
+  document.getElementById('opStatus').innerHTML = '<span style="color:#40d9c0;">✓ Configuración guardada</span>';
 }
 
 function openNewOpForm(type) {
@@ -1707,7 +1715,7 @@ async function submitOperation() {
   const cfg = getGhConfig();
   if (!cfg) {
     document.getElementById('ghConfigPanel').style.display = 'block';
-    document.getElementById('opStatus').innerHTML = '<span style="color:var(--danger);">⚠ Configura GitHub primero</span>';
+    document.getElementById('opStatus').innerHTML = '<span style="color:#f47174;">⚠ Configura GitHub primero</span>';
     return;
   }
 
@@ -1728,13 +1736,13 @@ async function submitOperation() {
 
   // Validate
   if (!valor || !ticker || !capital || !fechaEnt || !precioEnt || !peso) {
-    statusEl.innerHTML = '<span style="color:var(--danger);">⚠ Rellena al menos: valor, ticker, capital, fecha entrada, precio entrada, peso</span>';
+    statusEl.innerHTML = '<span style="color:#f47174;">⚠ Rellena al menos: valor, ticker, capital, fecha entrada, precio entrada, peso</span>';
     return;
   }
 
   btn.disabled = true;
   btn.style.opacity = '0.5';
-  statusEl.innerHTML = '<span style="color:var(--accent-neutral);">⏳ Guardando en GitHub...</span>';
+  statusEl.innerHTML = '<span style="color:#38bdf8;">⏳ Guardando en GitHub...</span>';
 
   try {
     // 1. Get current file content from GitHub
@@ -1805,7 +1813,7 @@ async function submitOperation() {
       throw new Error(`GitHub PUT error: ${putRes.status} - ${errBody.message || ''}`);
     }
 
-    statusEl.innerHTML = '<span style="color:var(--success);">✓ Operación guardada en GitHub. Recargando...</span>';
+    statusEl.innerHTML = '<span style="color:#40d9c0;">✓ Operación guardada en GitHub. Recargando...</span>';
     
     // Reload after 1.5s to show updated data
     setTimeout(() => {
@@ -1815,7 +1823,7 @@ async function submitOperation() {
 
   } catch (err) {
     console.error(err);
-    statusEl.innerHTML = `<span style="color:var(--danger);">✗ Error: ${err.message}</span>`;
+    statusEl.innerHTML = `<span style="color:#f47174;">✗ Error: ${err.message}</span>`;
     btn.disabled = false;
     btn.style.opacity = '1';
   }
@@ -1829,6 +1837,5 @@ document.getElementById('opModal').addEventListener('click', e => {
   if (e.target === document.getElementById('opModal')) closeModal();
 });
 </script>
-    </script>
 </body>
 </html>
