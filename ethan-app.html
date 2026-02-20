@@ -44,7 +44,7 @@ body {
 .brand-tag {
   font-size: 9px;
   letter-spacing: 2px;
-  color: #3a5c56;
+  color: #6a9e94;
   text-transform: uppercase;
   margin-top: 2px;
 }
@@ -59,7 +59,7 @@ nav {
   background: transparent;
   border: none;
   border-bottom: 3px solid transparent;
-  color: #3a5c56;
+  color: #6a9e94;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 11px;
   font-weight: 500;
@@ -129,7 +129,7 @@ iframe.active { display: block; }
 .loader-text {
   font-size: 10px;
   letter-spacing: 3px;
-  color: #3a5c56;
+  color: #6a9e94;
   text-transform: uppercase;
 }
 </style>
@@ -181,7 +181,7 @@ iframe.active { display: block; }
   --blue: #38bdf8;
   --purple: #5eead4;
   --text: #d0e8e4;
-  --text2: #4a706a;
+  --text2: #7a9e98;
   --text3: #273040;
 }
 
@@ -260,7 +260,7 @@ body::before {
   transition: border-color .2s;
 }
 .ticker-in:focus { border-color: var(--green); }
-.ticker-in::placeholder { color: var(--text3); letter-spacing: 3px; }
+.ticker-in::placeholder { color: var(--text2); letter-spacing: 3px; }
 
 .add-btn {
   background: var(--green);
@@ -417,7 +417,7 @@ body::before {
 .del-btn {
   background: transparent;
   border: none;
-  color: var(--text3);
+  color: var(--text2);
   font-size: 16px;
   cursor: pointer;
   padding: 4px 8px;
@@ -500,7 +500,7 @@ body::before {
   text-transform: uppercase;
   margin-bottom: 8px;
 }
-.empty-sub { font-size: 12px; color: var(--text3); letter-spacing: 1px; }
+.empty-sub { font-size: 12px; color: var(--text2); letter-spacing: 1px; }
 
 /* Footer */
 footer {
@@ -510,7 +510,7 @@ footer {
   display: flex;
   justify-content: space-between;
   font-size: 11px;
-  color: var(--text3);
+  color: var(--text2);
   letter-spacing: 1px;
 }
 </style>
@@ -521,8 +521,8 @@ footer {
   <!-- HEADER -->
   <div class=&quot;hdr&quot;>
     <div class=&quot;hdr-left&quot;>
-      <div class=&quot;hdr-title&quot;>Watchlist</div>
-      <div class=&quot;hdr-badge&quot;>ETHAN Mercados</div>
+      <div class=&quot;hdr-title&quot; style=&quot;display:none&quot;>Watchlist</div>
+      <div class=&quot;hdr-badge&quot; style=&quot;display:none&quot;>ETHAN Mercados</div>
     </div>
     <div class=&quot;hdr-right&quot;>
       <div class=&quot;last-update&quot; id=&quot;lastUpdate&quot;>—</div>
@@ -552,7 +552,7 @@ footer {
   <div id=&quot;watchlist&quot;></div>
 
   <footer>
-    <span>ETHAN Mercados · Watchlist</span>
+    <span>Watchlist</span>
     <span>Haz clic en un valor para ver el detalle completo · No es asesoramiento financiero</span>
   </footer>
 </div>
@@ -1093,7 +1093,7 @@ document.getElementById('tickerIn').addEventListener('keydown', e=>{
 
   .timestamp {
     font-size: 11px;
-    color: var(--text3);
+    color: var(--text2);
     letter-spacing: 1px;
   }
 
@@ -1369,7 +1369,7 @@ document.getElementById('tickerIn').addEventListener('keydown', e=>{
   .signal-status.active { color: var(--ok); }
   .signal-status.waiting { color: var(--warn); }
   .signal-status.inactive { color: var(--danger); }
-  .signal-desc { font-size: 10px; color: var(--text3); margin-top: 6px; letter-spacing: 0.5px; }
+  .signal-desc { font-size: 10px; color: var(--text2); margin-top: 6px; letter-spacing: 0.5px; }
 
   /* LOADING / ERROR */
   .state-display {
@@ -1405,7 +1405,7 @@ document.getElementById('tickerIn').addEventListener('keydown', e=>{
   }
 
   .error-sub {
-    color: var(--text3);
+    color: var(--text2);
     font-size: 11px;
     margin-top: 12px;
     line-height: 1.8;
@@ -1424,7 +1424,7 @@ document.getElementById('tickerIn').addEventListener('keydown', e=>{
     font-size: 10px;
     letter-spacing: 3px;
     text-transform: uppercase;
-    color: var(--text3);
+    color: var(--text2);
     margin-bottom: 16px;
   }
 
@@ -1445,7 +1445,7 @@ document.getElementById('tickerIn').addEventListener('keydown', e=>{
 
   .stop-name { font-size: 11px; color: var(--text2); }
   .stop-price { font-size: 14px; font-weight: 500; color: var(--danger); }
-  .stop-dist { font-size: 10px; color: var(--text3); }
+  .stop-dist { font-size: 10px; color: var(--text2); }
 
   /* FOOTER */
   footer {
@@ -1462,13 +1462,13 @@ document.getElementById('tickerIn').addEventListener('keydown', e=>{
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 3px;
-    color: var(--text3);
+    color: var(--text2);
     text-transform: uppercase;
   }
 
   .footer-note {
     font-size: 10px;
-    color: var(--text3);
+    color: var(--text2);
     letter-spacing: 1px;
   }
 
@@ -1491,8 +1491,8 @@ document.getElementById('tickerIn').addEventListener('keydown', e=>{
   <!-- HEADER -->
   <header>
     <div class=&quot;brand&quot;>
-      <div class=&quot;brand-name&quot;>ETHAN Mercados</div>
-      <div class=&quot;brand-slogan&quot;>Lo más fuerte de lo fuerte</div>
+      <div class=&quot;brand-name&quot; style=&quot;display:none&quot;>ETHAN Mercados</div>
+      <div class=&quot;brand-slogan&quot; style=&quot;display:none&quot;>Lo más fuerte de lo fuerte</div>
     </div>
     <div class=&quot;header-right&quot;>
       <div class=&quot;timestamp&quot; id=&quot;timestamp&quot;>—</div>
@@ -1509,7 +1509,7 @@ document.getElementById('tickerIn').addEventListener('keydown', e=>{
   <div id=&quot;resultContainer&quot;></div>
 
   <footer>
-    <div class=&quot;footer-brand&quot;>ETHAN Mercados System</div>
+    <div class=&quot;footer-brand&quot; style=&quot;display:none&quot;>ETHAN Mercados System</div>
     <div class=&quot;footer-note&quot;>Análisis técnico multi-timeframe · No es asesoramiento financiero</div>
   </footer>
 
@@ -2176,7 +2176,7 @@ body::after {
   transition: border-color .2s;
 }
 .ticker-in:focus { border-color: var(--green); }
-.ticker-in::placeholder { color: var(--text3); }
+.ticker-in::placeholder { color: var(--text2); }
 
 .run-btn {
   background: var(--green);
@@ -2361,7 +2361,7 @@ canvas { display: block; }
   letter-spacing: 3px;
   color: var(--text2);
 }
-.state-sub { font-size: 11px; color: var(--text3); margin-top: 10px; letter-spacing: 1px; }
+.state-sub { font-size: 11px; color: var(--text2); margin-top: 10px; letter-spacing: 1px; }
 
 /* SELECTOR DE ENTRADA */
 .entry-selector {
@@ -2386,10 +2386,10 @@ canvas { display: block; }
 }
 .entry-btn:hover { background: var(--s2); color: var(--text); }
 .entry-btn.active { background: var(--s2); color: var(--green); border-top-color: var(--green); }
-.entry-btn .btn-num { font-size: 9px; letter-spacing: 3px; color: var(--text3); margin-bottom: 6px; }
+.entry-btn .btn-num { font-size: 9px; letter-spacing: 3px; color: var(--text2); margin-bottom: 6px; }
 .entry-btn.active .btn-num { color: var(--green2); }
 .entry-btn .btn-name { font-weight: 600; margin-bottom: 4px; }
-.entry-btn .btn-desc { font-size: 10px; color: var(--text3); line-height: 1.4; }
+.entry-btn .btn-desc { font-size: 10px; color: var(--text2); line-height: 1.4; }
 .entry-btn.active .btn-desc { color: var(--text2); }
 
 /* SELECTOR DE SALIDA */
@@ -2415,10 +2415,10 @@ canvas { display: block; }
 }
 .exit-btn:hover { background: var(--s2); color: var(--text); }
 .exit-btn.active { background: var(--s2); color: var(--red); border-top-color: var(--red); }
-.exit-btn .btn-num { font-size: 9px; letter-spacing: 3px; color: var(--text3); margin-bottom: 6px; }
+.exit-btn .btn-num { font-size: 9px; letter-spacing: 3px; color: var(--text2); margin-bottom: 6px; }
 .exit-btn.active .btn-num { color: var(--red2); }
 .exit-btn .btn-name { font-weight: 600; margin-bottom: 4px; }
-.exit-btn .btn-desc { font-size: 10px; color: var(--text3); line-height: 1.4; }
+.exit-btn .btn-desc { font-size: 10px; color: var(--text2); line-height: 1.4; }
 .exit-btn.active .btn-desc { color: var(--text2); }
 
 /* PANEL MEJOR COMBINACIÓN */
@@ -2493,7 +2493,7 @@ canvas { display: block; }
   line-height: 1;
   margin-bottom: 4px;
 }
-.combo-cell-detail { font-size: 10px; color: var(--text3); }
+.combo-cell-detail { font-size: 10px; color: var(--text2); }
 
 /* ── FOOTER ── */
 footer {
@@ -2502,7 +2502,7 @@ footer {
   display: flex;
   justify-content: space-between;
   font-size: 10px;
-  color: var(--text3);
+  color: var(--text2);
   letter-spacing: 1px;
 }
 </style>
@@ -2513,8 +2513,8 @@ footer {
   <!-- HEADER -->
   <div class=&quot;hdr&quot;>
     <div class=&quot;hdr-left&quot;>
-      <div class=&quot;sys-tag&quot;>Sistema ETHAN Mercados</div>
-      <div class=&quot;hdr-title&quot;>BACKTESTING</div>
+      <div class=&quot;sys-tag&quot; style=&quot;display:none&quot;>Sistema ETHAN Mercados</div>
+      <div class=&quot;hdr-title&quot; style=&quot;display:none&quot;>BACKTESTING</div>
       <div class=&quot;hdr-sub&quot;>Entrada: M✓ + W✓ + MACD↑ diario + RSI&amp;gt;57 &amp;nbsp;|&amp;nbsp; Salida: Media 10 semanal rota ó condiciones rotas</div>
     </div>
     <div class=&quot;hdr-right&quot;>
@@ -2595,7 +2595,7 @@ footer {
   </div>
 
   <footer>
-    <span>ETHAN Mercados · Backtesting Engine v2.0 · 4 Sistemas de Entrada</span>
+    <span>Backtesting Engine</span>
     <span>No es asesoramiento financiero · Resultados históricos no garantizan rentabilidad futura</span>
   </footer>
 </div>
