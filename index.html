@@ -57,32 +57,11 @@ html, body { height: 100%; overflow: hidden; background: var(--bg-deep); }
   justify-content: center;
   transition: opacity 0.7s ease, transform 0.7s ease;
 
-  /* Teal mountain gradient background */
+  /* Background image (hero.jpg) with dark overlay */
   background:
-    /* Top glow */
-    radial-gradient(ellipse 120% 50% at 50% 0%, rgba(64,217,192,0.08) 0%, transparent 60%),
-    /* Center mountain glow */
-    radial-gradient(ellipse 80% 60% at 50% 55%, rgba(30,160,140,0.12) 0%, transparent 70%),
-    /* Left teal accent */
-    radial-gradient(ellipse 40% 70% at 15% 60%, rgba(56,189,248,0.06) 0%, transparent 60%),
-    /* Right teal accent */
-    radial-gradient(ellipse 40% 70% at 85% 50%, rgba(64,217,192,0.08) 0%, transparent 60%),
-    /* Base gradient */
-    linear-gradient(180deg, #0a1e1e 0%, #061414 40%, #040e0e 100%);
-}
-#login-screen::before {
-  /* Mountain silhouette shapes via CSS */
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    /* Mountain peak center */
-    linear-gradient(165deg, transparent 30%, rgba(40,140,130,0.04) 45%, transparent 55%),
-    /* Mountain ridge left */
-    linear-gradient(155deg, transparent 40%, rgba(30,120,110,0.03) 52%, transparent 60%),
-    /* Mountain ridge right */
-    linear-gradient(175deg, transparent 35%, rgba(50,160,145,0.04) 48%, transparent 58%);
-  pointer-events: none;
+    linear-gradient(180deg, rgba(4,14,14,0.45) 0%, rgba(4,14,14,0.55) 50%, rgba(4,14,14,0.85) 100%),
+    url('hero.jpg') center center / cover no-repeat;
+  background-color: #040e0e;
 }
 #login-screen::after {
   /* Subtle noise texture */
