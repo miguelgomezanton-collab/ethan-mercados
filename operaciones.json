@@ -1,8 +1,8 @@
 {
   "alcista": {
     "importeAsignado": 10000,
-    "plusvalias": 2334.04,
-    "rentabilidad": 0.2334,
+    "plusvalias": 2957.63,
+    "rentabilidad": 0.2958,
     "benchmark": 0.1253,
     "valoresAsignados": 3,
     "inversionActiva": 0,
@@ -230,6 +230,20 @@
         "rentabilidad": 0.2075,
         "dias": 5,
         "motivo": "Stop"
+      },
+      {
+        "valor": "SPROUTS",
+        "ticker": "SFP",
+        "fechaEntrada": "2026-02-07",
+        "fechaSalida": "2026-02-12",
+        "precioEntrada": 82.65,
+        "precioSalida": 99.83,
+        "capital": 3000,
+        "peso": 0.3,
+        "plusvalia": 623.59,
+        "rentabilidad": 0.2079,
+        "dias": 5,
+        "motivo": "Voluntaria"
       }
     ]
   },
