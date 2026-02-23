@@ -523,7 +523,7 @@ function renderOpenTable(tbId, ops, type) {
     <td><strong>${o.valor}</strong></td><td><span class="ticker">${o.ticker}</span></td>
     <td>${new Date(o.fe).toLocaleDateString('es-ES')}</td><td>${fmtE(o.pe)}</td>
     <td>${fmtE(o.cap)}</td><td>${(o.peso*100).toFixed(0)}%</td><td>${(o.cap/o.pe).toFixed(2)}</td>
-    <td><button class="btn btn-sm btn-outline" onclick="openCloseModal('${type}',${i})" style="font-size:10px;padding:4px 10px">Cerrar</button></td></tr>`).join('') : '<tr><td colspan="8" style="text-align:center;color:var(--text3)">—</td></tr>';
+    <td><button class="btn btn-sm" onclick="openCloseModal('${type}',${i})" style="font-size:10px;padding:4px 12px;background:var(--bear-dim);color:var(--bear);border:1px solid var(--bear-border);cursor:pointer">✕ Cerrar</button></td></tr>`).join('') : '<tr><td colspan="8" style="text-align:center;color:var(--text3)">—</td></tr>';
 }
 
 function renderPLChart(canvasId, ops, cPos, cNeg) {
