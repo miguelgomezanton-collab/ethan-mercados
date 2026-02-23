@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ethan mercados · Cartera</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root {
+  --bg:#040e0e;--surface:#071717;--surface2:#0b1f1f;--surface3:#0f2828;
+  --border:#1a3c3c;--border2:#245050;
+  --accent:#40d9c0;--accent2:#2ba897;--accent-glow:rgba(64,217,192,0.10);
+  --bull:#4ade80;--bull-dim:rgba(74,222,128,0.10);--bull-border:rgba(74,222,128,0.25);
+  --bear:#f47174;--bear-dim:rgba(244,113,116,0.10);--bear-border:rgba(244,113,116,0.25);
+  --warn:#fbbf24;--warn-dim:rgba(251,191,36,0.10);
+  --text:#d0e8e4;--text2:#9cb8b4;--text3:#4a706a;
+  --radius:12px;--radius-sm:8px;
+  --font:'Montserrat',sans-serif;--mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--surface)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+.app{max-width:1440px;margin:0 auto;padding:20px 24px 60px}
+header{display:flex;align-items:center;justify-content:space-between;padding:20px 0 24px;border-bottom:1px solid var(--border);margin-bottom:24px;flex-wrap:wrap;gap:16px}
+.brand{display:flex;align-items:center;gap:14px}
+.brand-icon{width:44px;height:44px;background:linear-gradient(135deg,#0f2828,#133232);border:1px solid var(--accent);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;letter-spacing:-1px;font-family:var(--mono)}
+.brand h1{font-size:22px;font-weight:700;letter-spacing:-0.5px}
+.brand p{font-size:12px;color:var(--text2);margin-top:1px}
+
+/* TABS */
+.tabs{display:flex;gap:4px;background:var(--surface);border-radius:var(--radius);padding:4px;margin-bottom:20px;border:1px solid var(--border)}
+.tab{padding:10px 22px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--text2);border:none;background:none;font-family:var(--font)}
+.tab:hover{color:var(--text);background:var(--surface2)}
+.tab.active{background:var(--accent-glow);color:var(--accent);border:1px solid rgba(59,130,246,0.3)}
+.sub-tabs{display:flex;gap:4px;margin-bottom:20px}
+.sub-tab{padding:8px 18px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--text3);border:1px solid var(--border);background:var(--surface);font-family:var(--font)}
+.sub-tab:hover{color:var(--text2);border-color:var(--border2)}
+.sub-tab.active-bull{background:var(--bull-dim);color:var(--bull);border-color:var(--bull-border)}
+.sub-tab.active-bear{background:var(--bear-dim);color:var(--bear);border-color:var(--bear-border)}
+.sub-tab.active-gen{background:var(--accent-glow);color:var(--accent);border-color:rgba(59,130,246,0.3)}
+.view{display:none}.view.active{display:block}
+.sub-view{display:none}.sub-view.active{display:block}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;transition:border-color .2s}
+.card:hover{border-color:var(--border2)}
+.card-title{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:16px;display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:0.5px}
+.card-title span{font-size:16px}
+
+/* KPIs */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:24px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kpi.green::before{background:var(--bull)}.kpi.red::before{background:var(--bear)}.kpi.blue::before{background:var(--accent)}.kpi.purple::before{background:var(--accent2)}.kpi.yellow::before{background:var(--warn)}
+.kpi-label{font-size:11px;text-transform:uppercase;letter-spacing:0.6px;color:var(--text2);margin-bottom:6px;font-weight:500}
+.kpi-value{font-size:26px;font-weight:700;font-family:var(--mono);letter-spacing:-1px;line-height:1.1}
+.kpi-sub{font-size:11px;color:var(--text3);margin-top:4px;font-family:var(--mono)}
+.kpi-value.green{color:var(--bull)}.kpi-value.red{color:var(--bear)}.kpi-value.blue{color:var(--accent)}.kpi-value.yellow{color:var(--warn)}
+
+/* TABLES */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--surface2);padding:10px 14px;text-align:left;font-weight:600;color:var(--text2);font-size:11px;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;position:sticky;top:0}
+td{padding:10px 14px;border-top:1px solid var(--border);white-space:nowrap}
+tr:hover td{background:var(--surface2)}
+.ticker{font-family:var(--mono);font-weight:600;font-size:12px;background:var(--surface2);padding:2px 8px;border-radius:4px}
+.badge-green{color:var(--bull);background:var(--bull-dim);padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:12px;font-weight:600}
+.badge-red{color:var(--bear);background:var(--bear-dim);padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:12px;font-weight:600}
+
+/* FORMS */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group label{font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--text2);font-weight:500}
+input[type="number"],input[type="text"],input[type="date"],select{
+  background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:10px 14px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;width:100%;transition:border-color .2s}
+input:focus,select:focus{border-color:var(--accent)}
+input[type="range"]{-webkit-appearance:none;background:var(--surface2);height:6px;border-radius:3px;outline:none}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--surface)}
+.btn{padding:9px 18px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .2s;font-family:var(--font)}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:#2563eb}
+.btn-success{background:var(--bull);color:#fff}.btn-success:hover{background:#059669}
+.btn-danger{background:var(--bear);color:#fff}.btn-danger:hover{background:#dc2626}
+.btn-outline{background:none;border:1px solid var(--border);color:var(--text2)}.btn-outline:hover{border-color:var(--text);color:var(--text)}
+.btn-sm{padding:6px 12px;font-size:11px}
+
+/* STRAT TABS */
+.strat-tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:16px}
+.strat-tab{padding:7px 14px;border-radius:var(--radius-sm);font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text2);transition:all .2s;font-family:var(--font)}
+.strat-tab:hover{border-color:var(--accent);color:var(--text)}
+.strat-tab.active{background:var(--accent-glow);color:var(--accent);border-color:rgba(59,130,246,0.4)}
+.strat-view{display:none}.strat-view.active{display:block}
+
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+.mb-sm{margin-bottom:14px}.mb-md{margin-bottom:20px}.mb-lg{margin-bottom:28px}
+
+.chart-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.chart-box canvas{max-height:300px}
+
+.semaforo{display:flex;gap:12px;align-items:center;padding:14px 18px;border-radius:var(--radius);font-weight:600;font-size:14px}
+.semaforo.verde{background:var(--bull-dim);border:1px solid var(--bull-border);color:var(--bull)}
+.semaforo.amarillo{background:var(--warn-dim);border:1px solid rgba(245,158,11,0.3);color:var(--warn)}
+.semaforo.rojo{background:var(--bear-dim);border:1px solid var(--bear-border);color:var(--bear)}
+.semaforo-dot{width:14px;height:14px;border-radius:50%;animation:pulse 2s infinite}
+.semaforo.verde .semaforo-dot{background:var(--bull)}
+.semaforo.amarillo .semaforo-dot{background:var(--warn)}
+.semaforo.rojo .semaforo-dot{background:var(--bear)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+.proj-row{display:grid;grid-template-columns:60px 1fr 100px;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.proj-bar{height:8px;border-radius:4px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .5s ease}
+
+.empty-state{text-align:center;padding:40px 20px;color:var(--text3)}
+.empty-state p{font-size:14px;margin-bottom:8px}
+.empty-state small{font-size:12px}
+
+@media(max-width:900px){.g2,.g3{grid-template-columns:1fr}.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.app{padding:12px 10px}.kpi-grid{grid-template-columns:1fr}.tabs,.sub-tabs{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- HEADER -->
+<header>
+  <div class="brand">
+    <div class="brand-icon">E</div>
+    <div><h1 style="font-family:'Cormorant Garamond',serif;font-weight:300;letter-spacing:2px">ETHAN <span style="font-weight:600">Mercados</span></h1><p>Cartera & Risk Management</p></div>
+  </div>
+  <span style="font-family:var(--mono);font-size:12px;color:var(--text2)" id="lastUpdate"></span>
+</header>
+
+<!-- CAPITAL BAR (siempre visible) -->
+<div class="card mb-md" style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+  <div class="form-group" style="min-width:180px">
+    <label>Capital Total (€)</label>
+    <input type="number" id="capitalTotal" value="10000" min="100" step="100" oninput="recalcAll()">
+  </div>
+  <div class="form-group" style="min-width:140px">
+    <label>% RV Alcista</label>
+    <input type="number" id="pctAlcista" value="50" min="0" max="100" step="5" oninput="recalcAll()">
+  </div>
+  <div class="form-group" style="min-width:140px">
+    <label>% RV Bajista</label>
+    <input type="number" id="pctBajista" value="50" min="0" max="100" step="5" oninput="recalcAll()">
+  </div>
+  <div style="font-family:var(--mono);font-size:13px;color:var(--text2)">
+    Alcista: <strong id="euroAlcista" style="color:var(--bull)">€5,000</strong> · 
+    Bajista: <strong id="euroBajista" style="color:var(--bear)">€5,000</strong>
+  </div>
+</div>
+
+<!-- 2 MAIN TABS -->
+<div class="tabs">
+  <button class="tab active" data-view="cartera" onclick="switchMain('cartera')">📊 Cartera</button>
+  <button class="tab" data-view="risk" onclick="switchMain('risk')">⚙️ Risk Management</button>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- VIEW: CARTERA                              -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="view active" id="view-cartera">
+  <div class="sub-tabs">
+    <button class="sub-tab active-bull" data-sub="bull" onclick="switchSub('bull')">📈 RV Alcista</button>
+    <button class="sub-tab" data-sub="bear" onclick="switchSub('bear')">📉 RV Bajista</button>
+    <button class="sub-tab" data-sub="general" onclick="switchSub('general')">📊 General + Proyecciones</button>
+  </div>
+
+  <!-- SUB: BULL -->
+  <div class="sub-view active" id="sub-bull">
+    <div class="kpi-grid" id="kpi-bull"></div>
+    <div class="g2 mb-md">
+      <div class="card">
+        <div class="card-title"><span>📋</span> Operaciones Cerradas</div>
+        <div class="table-wrap" style="max-height:400px;overflow-y:auto">
+          <table><thead><tr><th>Valor</th><th>Ticker</th><th>Entrada</th><th>Salida</th><th>P.Ent</th><th>P.Sal</th><th>Capital</th><th>P/L €</th><th>P/L %</th><th>Días</th></tr></thead>
+          <tbody id="tb-bull-closed"></tbody></table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span>🟢</span> Posiciones Abiertas</div>
+        <div class="table-wrap" style="max-height:400px;overflow-y:auto">
+          <table><thead><tr><th>Valor</th><th>Ticker</th><th>Entrada</th><th>Precio</th><th>Capital</th><th>Peso</th><th>Acc.</th><th></th></tr></thead>
+          <tbody id="tb-bull-open"></tbody></table>
+        </div>
+      </div>
+    </div>
+    <div class="g2 mb-md">
+      <div class="chart-box"><div class="card-title"><span>📊</span> P/L por Operación</div><canvas id="chart-bull-pl"></canvas></div>
+      <div class="chart-box"><div class="card-title"><span>📈</span> Equity Curve</div><canvas id="chart-bull-equity"></canvas></div>
+    </div>
+    <div class="card mb-md">
+      <div class="card-title"><span>➕</span> Añadir Operación Alcista</div>
+      <div class="form-grid mb-sm">
+        <div class="form-group"><label>Valor</label><input type="text" id="add-bull-valor" placeholder="APPLE"></div>
+        <div class="form-group"><label>Ticker</label><input type="text" id="add-bull-ticker" placeholder="AAPL"></div>
+        <div class="form-group"><label>F. Entrada</label><input type="date" id="add-bull-fentrada"></div>
+        <div class="form-group"><label>F. Salida (vacío=abierta)</label><input type="date" id="add-bull-fsalida"></div>
+        <div class="form-group"><label>P. Entrada (€)</label><input type="number" id="add-bull-pentrada" step="0.01"></div>
+        <div class="form-group"><label>P. Salida (€)</label><input type="number" id="add-bull-psalida" step="0.01"></div>
+        <div class="form-group"><label>Capital (€)</label><input type="number" id="add-bull-capital" step="100"></div>
+        <div class="form-group" style="justify-content:flex-end"><button class="btn btn-success" onclick="addOp('bull')">Añadir</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUB: BEAR -->
+  <div class="sub-view" id="sub-bear">
+    <div class="kpi-grid" id="kpi-bear"></div>
+    <div class="g2 mb-md">
+      <div class="card">
+        <div class="card-title"><span>📋</span> Operaciones Cerradas</div>
+        <div class="table-wrap" style="max-height:400px;overflow-y:auto">
+          <table><thead><tr><th>Valor</th><th>Ticker</th><th>Entrada</th><th>Salida</th><th>P.Ent</th><th>P.Sal</th><th>Capital</th><th>P/L €</th><th>P/L %</th><th>Días</th></tr></thead>
+          <tbody id="tb-bear-closed"></tbody></table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span>🔴</span> Posiciones Abiertas</div>
+        <div class="table-wrap" style="max-height:400px;overflow-y:auto">
+          <table><thead><tr><th>Valor</th><th>Ticker</th><th>Entrada</th><th>Precio</th><th>Capital</th><th>Peso</th><th>Acc.</th><th></th></tr></thead>
+          <tbody id="tb-bear-open"></tbody></table>
+        </div>
+      </div>
+    </div>
+    <div class="g2 mb-md">
+      <div class="chart-box"><div class="card-title"><span>📊</span> P/L por Operación</div><canvas id="chart-bear-pl"></canvas></div>
+      <div class="chart-box"><div class="card-title"><span>📈</span> Equity Curve</div><canvas id="chart-bear-equity"></canvas></div>
+    </div>
+    <div class="card mb-md">
+      <div class="card-title"><span>➕</span> Añadir Operación Bajista</div>
+      <div class="form-grid mb-sm">
+        <div class="form-group"><label>Valor</label><input type="text" id="add-bear-valor" placeholder="TESLA"></div>
+        <div class="form-group"><label>Ticker</label><input type="text" id="add-bear-ticker" placeholder="TSLA"></div>
+        <div class="form-group"><label>F. Entrada</label><input type="date" id="add-bear-fentrada"></div>
+        <div class="form-group"><label>F. Salida (vacío=abierta)</label><input type="date" id="add-bear-fsalida"></div>
+        <div class="form-group"><label>P. Entrada (€)</label><input type="number" id="add-bear-pentrada" step="0.01"></div>
+        <div class="form-group"><label>P. Salida (€)</label><input type="number" id="add-bear-psalida" step="0.01"></div>
+        <div class="form-group"><label>Capital (€)</label><input type="number" id="add-bear-capital" step="100"></div>
+        <div class="form-group" style="justify-content:flex-end"><button class="btn btn-danger" onclick="addOp('bear')">Añadir</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUB: GENERAL + PROYECCIONES + DRAWDOWN -->
+  <div class="sub-view" id="sub-general">
+    <div class="kpi-grid" id="kpi-general"></div>
+
+    <!-- Comparativa -->
+    <div class="g2 mb-md">
+      <div class="chart-box"><div class="card-title"><span>⚖️</span> Comparativa Alcista vs Bajista</div><canvas id="chart-compare"></canvas></div>
+      <div class="chart-box"><div class="card-title"><span>📈</span> Equity Curve Combinada</div><canvas id="chart-general-equity"></canvas></div>
+    </div>
+
+    <div class="g3 mb-md">
+      <div class="card" id="ratios-1"></div>
+      <div class="card" id="ratios-2"></div>
+      <div class="card" id="ratios-3"></div>
+    </div>
+
+    <!-- PROYECCIONES (vive aquí ahora) -->
+    <div class="kpi-grid mb-md" id="kpi-proj"></div>
+    <div class="g2 mb-md">
+      <div class="card">
+        <div class="card-title"><span>🚀</span> Proyección a 5 Años</div>
+        <p style="font-size:12px;color:var(--text2);margin-bottom:14px">Basado en rentabilidad media × sizing actual, con reinversión compuesta.</p>
+        <div id="proj-table"></div>
+      </div>
+      <div class="chart-box"><div class="card-title"><span>📈</span> Curva de Crecimiento</div><canvas id="chart-projection"></canvas></div>
+    </div>
+
+    <!-- DRAWDOWN + ESCENARIOS -->
+    <div class="g2 mb-md">
+      <div class="card">
+        <div class="card-title"><span>📉</span> Drawdown Esperado</div>
+        <p style="font-size:12px;color:var(--text2);margin-bottom:14px">Según tu win rate, sizing y rachas perdedoras probables.</p>
+        <div id="dd-analysis"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span>🎯</span> Escenarios</div>
+        <div id="scenarios"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- VIEW: RISK MANAGEMENT                      -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="view" id="view-risk">
+  <!-- CALCULADORA DE POSICIÓN -->
+  <div class="card mb-md" style="border-color:var(--accent)">
+    <div class="card-title"><span>📐</span> Calculadora de Tamaño de Posición</div>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:14px">Calcula cuántas acciones comprar y cuánto capital invertir para cada operación que quieras abrir.</p>
+    <div class="form-grid mb-sm">
+      <div class="form-group"><label>Ticker / Valor</label><input type="text" id="sz-ticker" placeholder="Ej: AAPL" oninput="calcSizing()"></div>
+      <div class="form-group"><label>Precio de Entrada (€)</label><input type="number" id="sz-precio" step="0.01" placeholder="150.00" oninput="calcSizing()"></div>
+      <div class="form-group"><label>Stop Loss (€)</label><input type="number" id="sz-stop" step="0.01" placeholder="145.00" oninput="calcSizing()"></div>
+      <div class="form-group"><label>Take Profit (€) <span style="color:var(--text3)">(opcional)</span></label><input type="number" id="sz-tp" step="0.01" placeholder="165.00" oninput="calcSizing()"></div>
+    </div>
+    <div id="sz-result"></div>
+  </div>
+
+  <div id="semaforo-container" class="mb-md"></div>
+
+  <div class="card mb-md">
+    <div class="card-title"><span>🎯</span> Configuración de Riesgo</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Riesgo por Operación (%)</label>
+        <input type="range" id="riesgoPct" min="0.5" max="5" step="0.25" value="1" oninput="recalcAll()">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3)"><span>0.5%</span><span id="riesgoPctVal" style="color:var(--accent);font-weight:700">1%</span><span>5%</span></div>
+      </div>
+      <div class="form-group">
+        <label>Drawdown Máx. Tolerable (%)</label>
+        <input type="range" id="ddPct" min="5" max="30" step="1" value="10" oninput="recalcAll()">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3)"><span>5%</span><span id="ddPctVal" style="color:var(--bear);font-weight:700">10%</span><span>30%</span></div>
+      </div>
+      <div class="form-group">
+        <label>Posiciones Simultáneas Máx.</label>
+        <input type="number" id="maxPos" value="3" min="1" max="20" oninput="recalcAll()">
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-grid mb-md" id="kpi-risk"></div>
+
+  <!-- 7 Strategy tabs -->
+  <div class="strat-tabs">
+    <button class="strat-tab active" onclick="switchStrat('pctfijo')">% Fijo</button>
+    <button class="strat-tab" onclick="switchStrat('kelly')">Kelly</button>
+    <button class="strat-tab" onclick="switchStrat('martingala')">Martingala</button>
+    <button class="strat-tab" onclick="switchStrat('antimartingala')">Anti-Martingala</button>
+    <button class="strat-tab" onclick="switchStrat('fibonacci')">Fibonacci</button>
+    <button class="strat-tab" onclick="switchStrat('parabolico')">Parabólico</button>
+    <button class="strat-tab" onclick="switchStrat('volatilidad')">Por Volatilidad</button>
+  </div>
+
+  <!-- % Fijo -->
+  <div class="strat-view active" id="strat-pctfijo">
+    <div class="g2">
+      <div class="card">
+        <div class="card-title"><span>📐</span> % Fijo del Capital</div>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:14px">Arriesgas un porcentaje fijo en cada operación. La más recomendada.</p>
+        <div class="form-group mb-sm"><label>Stop Loss (€ desde entrada)</label><input type="number" id="pf-sl" value="2" step="0.1" oninput="calcPctFijo()"></div>
+        <div id="pf-result"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span>📉</span> Simulación de Rachas Perdedoras</div>
+        <div id="pf-racha"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kelly -->
+  <div class="strat-view" id="strat-kelly"><div class="g2">
+    <div class="card"><div class="card-title"><span>🧮</span> Criterio de Kelly</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:14px">Fracción óptima para maximizar crecimiento a largo plazo. Se alimenta de tu Win Rate y ratios reales.</p>
+      <div id="kelly-result"></div></div>
+    <div class="card"><div class="card-title"><span>📊</span> Full vs Half vs Quarter</div><div id="kelly-comparison"></div></div>
+  </div></div>
+
+  <!-- Martingala -->
+  <div class="strat-view" id="strat-martingala"><div class="g2">
+    <div class="card"><div class="card-title"><span>⚠️</span> Martingala (Alto Riesgo)</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:14px">Doblas la apuesta tras cada pérdida. Extremadamente peligrosa.</p>
+      <div class="form-group mb-sm"><label>Apuesta Inicial (€)</label><input type="number" id="mg-apuesta" value="100" step="10" oninput="calcMartingala()"></div>
+      <div id="mg-result"></div></div>
+    <div class="card"><div class="card-title"><span>💀</span> Tabla de Destrucción</div>
+      <div class="table-wrap"><table><thead><tr><th>#</th><th>Apuesta</th><th>Pérdida Acum.</th><th>% Capital</th><th>Estado</th></tr></thead><tbody id="mg-table"></tbody></table></div></div>
+  </div></div>
+
+  <!-- Anti-Martingala -->
+  <div class="strat-view" id="strat-antimartingala"><div class="g2">
+    <div class="card"><div class="card-title"><span>🔄</span> Anti-Martingala (Paroli)</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:14px">Doblas tras cada ganancia, reset tras pérdida.</p>
+      <div class="form-group mb-sm"><label>Apuesta Base (€)</label><input type="number" id="am-apuesta" value="100" step="10" oninput="calcAntiMartingala()"></div>
+      <div class="form-group mb-sm"><label>Reset tras X ganancias</label><input type="number" id="am-reset" value="3" min="2" max="10" oninput="calcAntiMartingala()"></div>
+      <div id="am-result"></div></div>
+    <div class="card"><div class="card-title"><span>📊</span> Tabla de Progresión</div>
+      <div class="table-wrap"><table><thead><tr><th>#</th><th>Apuesta</th><th>Ganancia Acum.</th><th>Acción</th></tr></thead><tbody id="am-table"></tbody></table></div></div>
+  </div></div>
+
+  <!-- Fibonacci -->
+  <div class="strat-view" id="strat-fibonacci"><div class="g2">
+    <div class="card"><div class="card-title"><span>🌀</span> Secuencia Fibonacci</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:14px">Aumentas siguiendo Fibonacci tras cada pérdida.</p>
+      <div class="form-group mb-sm"><label>Unidad Base (€)</label><input type="number" id="fib-base" value="50" step="10" oninput="calcFibonacci()"></div>
+      <div id="fib-result"></div></div>
+    <div class="card"><div class="card-title"><span>📊</span> Secuencia</div>
+      <div class="table-wrap"><table><thead><tr><th>Paso</th><th>Mult.</th><th>Apuesta</th><th>Acum.</th><th>Estado</th></tr></thead><tbody id="fib-table"></tbody></table></div></div>
+  </div></div>
+
+  <!-- Parabólico -->
+  <div class="strat-view" id="strat-parabolico"><div class="g2">
+    <div class="card"><div class="card-title"><span>📈</span> Parabólico (Power of Profits)</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:14px">Escalas usando solo ganancias acumuladas. Capital original protegido.</p>
+      <div class="form-group mb-sm"><label>Delta de escalado (%)</label><input type="number" id="par-delta" value="25" min="5" max="100" step="5" oninput="calcParabolico()"></div>
+      <div id="par-result"></div></div>
+    <div class="card"><div class="card-title"><span>📊</span> Niveles de Escalado</div>
+      <div class="table-wrap"><table><thead><tr><th>Nivel</th><th>Beneficio Necesario</th><th>Sizing</th><th>Aumento</th></tr></thead><tbody id="par-table"></tbody></table></div></div>
+  </div></div>
+
+  <!-- Volatilidad -->
+  <div class="strat-view" id="strat-volatilidad">
+    <div class="card">
+      <div class="card-title"><span>⚡</span> Sizing por Volatilidad Inversa (ATR)</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:14px">Más capital a activos menos volátiles, igualando riesgo real.</p>
+      <div id="vol-inputs" class="mb-sm"></div>
+      <button class="btn btn-outline btn-sm" onclick="addVolRow()">+ Añadir Activo</button>
+      <div id="vol-result" style="margin-top:16px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CERRAR POSICIÓN -->
+<div id="close-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;display:none;align-items:center;justify-content:center">
+  <div style="background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:28px;width:380px;max-width:90vw">
+    <div style="font-size:14px;font-weight:600;margin-bottom:18px;color:var(--text)">Cerrar Posición: <span id="cm-name" style="color:var(--accent)"></span></div>
+    <div class="form-group mb-sm"><label>Fecha de Salida</label><input type="date" id="cm-fecha"></div>
+    <div class="form-group mb-sm"><label>Precio de Salida (€)</label><input type="number" id="cm-precio" step="0.01" placeholder="0.00"></div>
+    <div id="cm-preview" style="margin:14px 0;font-size:13px;font-family:var(--mono);color:var(--text2)"></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-success" onclick="confirmClose()">Cerrar Posición</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- JAVASCRIPT                                 -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+// ── DATA (empty — user adds their own) ──
+const DATA = {
+  bull: { closed: [], open: [] },
+  bear: { closed: [], open: [] }
+};
+
+function enrichOps(ops, isBear) {
+  return ops.map(op => {
+    const dias = Math.round((new Date(op.fs) - new Date(op.fe)) / 86400000);
+    const acciones = op.cap / op.pe;
+    let pl, pct;
+    if (isBear) { pl = acciones * (op.pe - op.ps); pct = (op.pe - op.ps) / op.pe; }
+    else { pl = acciones * (op.ps - op.pe); pct = (op.ps - op.pe) / op.pe; }
+    return { ...op, dias, acciones, pl: Math.round(pl * 100) / 100, pct };
+  });
+}
+DATA.bull.enriched = [];
+DATA.bear.enriched = [];
+
+// ── CALC RATIOS ──
+function calcRatios(ops) {
+  if (!ops.length) return null;
+  const totalPL = ops.reduce((s,o) => s+o.pl, 0);
+  const winners = ops.filter(o => o.pl > 0), losers = ops.filter(o => o.pl <= 0);
+  const winRate = winners.length / ops.length;
+  const avgWinPct = winners.length ? winners.reduce((s,o) => s+o.pct, 0)/winners.length : 0;
+  const avgLossPct = losers.length ? Math.abs(losers.reduce((s,o) => s+o.pct, 0)/losers.length) : 0;
+  const esperanza = winRate * avgWinPct - (1-winRate) * avgLossPct;
+  const rents = ops.map(o => o.pct);
+  const meanRent = rents.reduce((s,r) => s+r, 0)/rents.length;
+  const stdRent = Math.sqrt(rents.reduce((s,r) => s+(r-meanRent)**2, 0)/rents.length);
+  const sharpe = stdRent > 0 ? meanRent/stdRent : 0;
+  const diasArr = ops.map(o => o.dias).filter(d => d > 0);
+  const diasMedio = diasArr.length ? diasArr.reduce((s,d) => s+d, 0)/diasArr.length : 0;
+  const maxWin = ops.reduce((a,b) => a.pct > b.pct ? a : b);
+  const maxLoss = ops.reduce((a,b) => a.pct < b.pct ? a : b);
+  const opsAnio = diasMedio > 0 ? 365.25/diasMedio : 0;
+  const grossWin = winners.reduce((s,o) => s+o.pl, 0);
+  const grossLoss = Math.abs(losers.reduce((s,o) => s+o.pl, 0));
+  const profitFactor = grossLoss > 0 ? grossWin/grossLoss : Infinity;
+  let maxConsecLoss = 0, cl = 0;
+  ops.forEach(o => { if (o.pl <= 0) { cl++; maxConsecLoss = Math.max(maxConsecLoss, cl); } else cl = 0; });
+  return { totalPL, winRate, avgWinPct, avgLossPct, esperanza, sharpe, diasMedio, maxWin, maxLoss, opsAnio, rentMedia: meanRent, profitFactor, maxConsecLoss, winners: winners.length, losers: losers.length, total: ops.length, stdRent };
+}
+
+// ── CHARTS ──
+const charts = {};
+function destroyChart(id) { if (charts[id]) { charts[id].destroy(); delete charts[id]; } }
+
+// ── FORMATTERS ──
+function fmt(n, d=2) { return n.toFixed(d); }
+function fmtE(n) { return '€'+n.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtPct(n) { return (n>=0?'+':'')+(n*100).toFixed(2)+'%'; }
+function fmtK(n) { return n>=1000 ? '€'+(n/1000).toFixed(1)+'k' : fmtE(n); }
+
+// ── RENDER KPIs ──
+function renderKPIs(id, r, color) {
+  const c = document.getElementById(id);
+  if (!r) { c.innerHTML = '<div class="empty-state"><p>Sin operaciones cerradas</p><small>Añade operaciones con el formulario de abajo</small></div>'; return; }
+  const cl = color==='bull'?'green':color==='bear'?'red':'blue';
+  c.innerHTML = `
+    <div class="kpi ${cl}"><div class="kpi-label">P/L Total</div><div class="kpi-value ${r.totalPL>=0?'green':'red'}">${fmtE(r.totalPL)}</div><div class="kpi-sub">${r.total} operaciones</div></div>
+    <div class="kpi ${cl}"><div class="kpi-label">Win Rate</div><div class="kpi-value">${(r.winRate*100).toFixed(1)}%</div><div class="kpi-sub">${r.winners}W / ${r.losers}L</div></div>
+    <div class="kpi ${cl}"><div class="kpi-label">Rent. Media/Op</div><div class="kpi-value ${r.rentMedia>=0?'green':'red'}">${fmtPct(r.rentMedia)}</div><div class="kpi-sub">${fmt(r.diasMedio,0)} días · ${fmt(r.opsAnio,1)} ops/año</div></div>
+    <div class="kpi ${cl}"><div class="kpi-label">Esperanza Mat.</div><div class="kpi-value ${r.esperanza>=0?'green':'red'}">${fmtPct(r.esperanza)}</div><div class="kpi-sub">Sharpe: ${fmt(r.sharpe)}</div></div>
+    <div class="kpi ${cl}"><div class="kpi-label">Profit Factor</div><div class="kpi-value">${r.profitFactor===Infinity?'∞':fmt(r.profitFactor)}</div><div class="kpi-sub">AvgW: ${fmtPct(r.avgWinPct)} · AvgL: -${(r.avgLossPct*100).toFixed(2)}%</div></div>
+    <div class="kpi ${cl}"><div class="kpi-label">Máx Ganancia</div><div class="kpi-value green">${fmtPct(r.maxWin.pct)}</div><div class="kpi-sub">${r.maxWin.ticker} · ${r.maxWin.dias}d</div></div>
+    <div class="kpi ${cl}"><div class="kpi-label">Máx Pérdida</div><div class="kpi-value red">${fmtPct(r.maxLoss.pct)}</div><div class="kpi-sub">${r.maxLoss.ticker} · ${r.maxLoss.dias}d</div></div>
+    <div class="kpi ${cl}"><div class="kpi-label">Máx Rachas Perd.</div><div class="kpi-value red">${r.maxConsecLoss}</div><div class="kpi-sub">consecutivas</div></div>`;
+}
+
+function renderTable(tbId, ops) {
+  document.getElementById(tbId).innerHTML = ops.length ? ops.map(o => `<tr>
+    <td><strong>${o.valor}</strong></td><td><span class="ticker">${o.ticker}</span></td>
+    <td>${new Date(o.fe).toLocaleDateString('es-ES')}</td><td>${new Date(o.fs).toLocaleDateString('es-ES')}</td>
+    <td>${fmtE(o.pe)}</td><td>${fmtE(o.ps)}</td><td>${fmtE(o.cap)}</td>
+    <td><span class="${o.pl>=0?'badge-green':'badge-red'}">${fmtE(o.pl)}</span></td>
+    <td><span class="${o.pct>=0?'badge-green':'badge-red'}">${fmtPct(o.pct)}</span></td>
+    <td>${o.dias}d</td></tr>`).join('') : '<tr><td colspan="10" style="text-align:center;color:var(--text3)">—</td></tr>';
+}
+
+function renderOpenTable(tbId, ops, type) {
+  document.getElementById(tbId).innerHTML = ops.length ? ops.map((o,i) => `<tr>
+    <td><strong>${o.valor}</strong></td><td><span class="ticker">${o.ticker}</span></td>
+    <td>${new Date(o.fe).toLocaleDateString('es-ES')}</td><td>${fmtE(o.pe)}</td>
+    <td>${fmtE(o.cap)}</td><td>${(o.peso*100).toFixed(0)}%</td><td>${(o.cap/o.pe).toFixed(2)}</td>
+    <td><button class="btn btn-sm btn-outline" onclick="openCloseModal('${type}',${i})" style="font-size:10px;padding:4px 10px">Cerrar</button></td></tr>`).join('') : '<tr><td colspan="8" style="text-align:center;color:var(--text3)">—</td></tr>';
+}
+
+function renderPLChart(canvasId, ops, cPos, cNeg) {
+  destroyChart(canvasId);
+  if (!ops.length) return;
+  charts[canvasId] = new Chart(document.getElementById(canvasId).getContext('2d'), {
+    type:'bar', data:{labels:ops.map(o=>o.ticker),datasets:[{data:ops.map(o=>o.pl),backgroundColor:ops.map(o=>o.pl>=0?cPos:cNeg),borderRadius:4}]},
+    options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmtE(c.parsed.y)}}},scales:{y:{ticks:{callback:v=>'€'+v,color:'#8896ab'},grid:{color:'rgba(255,255,255,0.04)'}},x:{ticks:{color:'#8896ab'},grid:{display:false}}}}
+  });
+}
+
+function renderEquityChart(canvasId, ops, color) {
+  destroyChart(canvasId);
+  if (!ops.length) return;
+  let eq = [0]; ops.forEach((o,i) => eq.push(eq[i]+o.pl));
+  charts[canvasId] = new Chart(document.getElementById(canvasId).getContext('2d'), {
+    type:'line', data:{labels:['Inicio',...ops.map(o=>o.ticker)],datasets:[{data:eq,borderColor:color,backgroundColor:color+'20',fill:true,tension:.3,pointRadius:4,pointBackgroundColor:color}]},
+    options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmtE(c.parsed.y)}}},scales:{y:{ticks:{callback:v=>'€'+v,color:'#8896ab'},grid:{color:'rgba(255,255,255,0.04)'}},x:{ticks:{color:'#8896ab'},grid:{display:false}}}}
+  });
+}
+
+// ── GENERAL VIEW ──
+function renderGeneral() {
+  const rb = calcRatios(DATA.bull.enriched), rr = calcRatios(DATA.bear.enriched);
+  const allOps = [...DATA.bull.enriched,...DATA.bear.enriched].sort((a,b)=>new Date(a.fe)-new Date(b.fe));
+  const rg = calcRatios(allOps);
+  renderKPIs('kpi-general', rg, 'general');
+
+  // Radar
+  destroyChart('chart-compare');
+  if (rb || rr) {
+    const mkData = r => [r?.winRate*100||0,(r?.rentMedia||0)*100,(r?.esperanza||0)*100,r?.sharpe||0,Math.min(r?.profitFactor||0,10)];
+    charts['chart-compare'] = new Chart(document.getElementById('chart-compare').getContext('2d'), {
+      type:'radar',data:{labels:['Win Rate','Rent. Media %','Esperanza %','Sharpe','Profit Factor'],
+        datasets:[{label:'Alcista',data:mkData(rb),borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.1)',pointBackgroundColor:'#10b981'},
+                  {label:'Bajista',data:mkData(rr),borderColor:'#f43f5e',backgroundColor:'rgba(244,63,94,0.1)',pointBackgroundColor:'#f43f5e'}]},
+      options:{responsive:true,scales:{r:{ticks:{color:'#8896ab',backdropColor:'transparent'},grid:{color:'rgba(255,255,255,0.06)'},pointLabels:{color:'#e8ecf4',font:{size:11}}}},plugins:{legend:{labels:{color:'#e8ecf4'}}}}
+    });
+  }
+
+  // Combined equity
+  destroyChart('chart-general-equity');
+  if (allOps.length) {
+    let eq=[0]; allOps.forEach((o,i)=>eq.push(eq[i]+o.pl));
+    charts['chart-general-equity'] = new Chart(document.getElementById('chart-general-equity').getContext('2d'), {
+      type:'line',data:{labels:eq.map((_,i)=>i===0?'Inicio':'Op '+i),datasets:[{label:'Combinada',data:eq,borderColor:'#38bdf8',tension:.3,pointRadius:3,fill:false}]},
+      options:{responsive:true,plugins:{legend:{labels:{color:'#e8ecf4'}}},scales:{y:{ticks:{callback:v=>'€'+v,color:'#8896ab'},grid:{color:'rgba(255,255,255,0.04)'}},x:{ticks:{color:'#8896ab'},grid:{display:false}}}}
+    });
+  }
+
+  // Ratio cards
+  const r1=document.getElementById('ratios-1'), r2=document.getElementById('ratios-2'), r3=document.getElementById('ratios-3');
+  if (rg) {
+    r1.innerHTML = `<div class="card-title"><span>📊</span> Ratios Rentabilidad</div><div style="font-size:13px;line-height:2;color:var(--text2)">
+      <div>Rent. Media/Op: <strong style="color:var(--text)">${fmtPct(rg.rentMedia)}</strong></div>
+      <div>Días Medios: <strong style="color:var(--text)">${fmt(rg.diasMedio,1)}</strong></div>
+      <div>Ops/Año: <strong style="color:var(--text)">${fmt(rg.opsAnio,1)}</strong></div>
+      <div>Desv. Estándar: <strong style="color:var(--text)">${fmtPct(rg.stdRent)}</strong></div></div>`;
+    r2.innerHTML = `<div class="card-title"><span>⚖️</span> Ratios Riesgo</div><div style="font-size:13px;line-height:2;color:var(--text2)">
+      <div>Win Rate: <strong style="color:var(--text)">${(rg.winRate*100).toFixed(1)}%</strong></div>
+      <div>Profit Factor: <strong style="color:var(--text)">${rg.profitFactor===Infinity?'∞':fmt(rg.profitFactor)}</strong></div>
+      <div>Sharpe: <strong style="color:var(--text)">${fmt(rg.sharpe)}</strong></div>
+      <div>Máx Rachas Perd.: <strong style="color:var(--bear)">${rg.maxConsecLoss}</strong></div></div>`;
+    r3.innerHTML = `<div class="card-title"><span>💰</span> P/L Resumen</div><div style="font-size:13px;line-height:2;color:var(--text2)">
+      <div>P/L Alcista: <strong style="color:var(--bull)">${fmtE(rb?.totalPL||0)}</strong></div>
+      <div>P/L Bajista: <strong style="color:var(--bear)">${fmtE(rr?.totalPL||0)}</strong></div>
+      <div>P/L Total: <strong style="color:${(rg.totalPL>=0)?'var(--bull)':'var(--bear)'}">${fmtE(rg.totalPL)}</strong></div>
+      <div>Esperanza: <strong style="color:${(rg.esperanza>=0)?'var(--bull)':'var(--bear)'}">${fmtPct(rg.esperanza)}</strong></div></div>`;
+  } else { r1.innerHTML = r2.innerHTML = r3.innerHTML = '<div class="empty-state"><small>Añade operaciones para ver ratios</small></div>'; }
+
+  renderProjections();
+}
+
+// ── PROJECTIONS (inside General) ──
+function renderProjections() {
+  const { capital, ratios, riskPct, ddPct } = getConfig();
+  const projContainer = document.getElementById('kpi-proj');
+  const projTable = document.getElementById('proj-table');
+  const ddEl = document.getElementById('dd-analysis');
+  const scEl = document.getElementById('scenarios');
+
+  if (!ratios) {
+    projContainer.innerHTML = '<div class="empty-state"><small>Necesitas operaciones cerradas para proyectar</small></div>';
+    projTable.innerHTML = ''; ddEl.innerHTML = ''; scEl.innerHTML = '';
+    destroyChart('chart-projection');
+    return;
+  }
+
+  const { rentMedia, opsAnio, diasMedio, winRate, avgWinPct, avgLossPct } = ratios;
+  const sizing = Math.min(riskPct / (avgLossPct || 0.01), 1);
+  const impactoGan = avgWinPct * sizing;
+  const impactoPerd = avgLossPct * sizing;
+  const rentEfectiva = winRate * impactoGan - (1-winRate) * impactoPerd;
+  const totalOps5y = Math.round(opsAnio * 5);
+  const cap1y = capital * Math.pow(1+rentEfectiva, Math.round(opsAnio));
+  const cap5y = capital * Math.pow(1+rentEfectiva, totalOps5y);
+
+  projContainer.innerHTML = `
+    <div class="kpi green"><div class="kpi-label">Capital Inicial</div><div class="kpi-value">${fmtE(capital)}</div></div>
+    <div class="kpi blue"><div class="kpi-label">Rent. Histórica/Op</div><div class="kpi-value blue">${fmtPct(rentMedia)}</div><div class="kpi-sub">${fmt(diasMedio,0)}d · ${fmt(opsAnio,1)} ops/año</div></div>
+    <div class="kpi yellow"><div class="kpi-label">Sizing</div><div class="kpi-value yellow">${(sizing*100).toFixed(1)}%</div><div class="kpi-sub">Riesgo ${(riskPct*100).toFixed(1)}%</div></div>
+    <div class="kpi purple"><div class="kpi-label">Impacto Real/Op</div><div class="kpi-value ${rentEfectiva>=0?'green':'red'}">${fmtPct(rentEfectiva)}</div><div class="kpi-sub">Esperanza × Sizing</div></div>
+    <div class="kpi green"><div class="kpi-label">Proyección 1Y</div><div class="kpi-value green">${fmtK(cap1y)}</div><div class="kpi-sub">×${(cap1y/capital).toFixed(2)}</div></div>
+    <div class="kpi green"><div class="kpi-label">Proyección 5Y</div><div class="kpi-value green">${fmtK(cap5y)}</div><div class="kpi-sub">×${(cap5y/capital).toFixed(2)}</div></div>`;
+
+  // Table
+  let h = '';
+  for (let y=1;y<=5;y++) {
+    const cap = capital * Math.pow(1+rentEfectiva, Math.round(opsAnio*y));
+    const bw = Math.min((cap/Math.max(cap5y,capital*1.01))*100,100);
+    h += `<div class="proj-row"><span style="font-weight:600;color:var(--accent)">Año ${y}</span><div><div class="proj-bar" style="width:${bw}%"></div></div><span style="font-family:var(--mono);font-weight:600;text-align:right">${fmtK(cap)}</span></div>`;
+  }
+  projTable.innerHTML = h;
+
+  // Chart with 3 curves
+  destroyChart('chart-projection');
+  const months = Array.from({length:61},(_,i)=>i);
+  const mkCurve = rE => months.map(m => capital*Math.pow(1+rE, Math.round(opsAnio*m/12)));
+  const sH = Math.min((riskPct/2)/(avgLossPct||0.01),1), sD = Math.min((riskPct*2)/(avgLossPct||0.01),1);
+  const rH = winRate*avgWinPct*sH-(1-winRate)*avgLossPct*sH;
+  const rD = winRate*avgWinPct*sD-(1-winRate)*avgLossPct*sD;
+  charts['chart-projection'] = new Chart(document.getElementById('chart-projection').getContext('2d'), {
+    type:'line',data:{labels:months.map(i=>i%12===0?`Año ${i/12}`:''),
+      datasets:[
+        {label:`Riesgo ${(riskPct*100).toFixed(1)}%`,data:mkCurve(rentEfectiva),borderColor:'#40d9c0',backgroundColor:'rgba(64,217,192,0.08)',fill:true,tension:.3,pointRadius:0,borderWidth:2.5},
+        {label:`Riesgo ${(riskPct*50).toFixed(1)}%`,data:mkCurve(rH),borderColor:'#38bdf8',borderDash:[5,3],tension:.3,pointRadius:0,fill:false,borderWidth:1.5},
+        {label:`Riesgo ${(riskPct*200).toFixed(1)}%`,data:mkCurve(rD),borderColor:'#f59e0b',borderDash:[5,3],tension:.3,pointRadius:0,fill:false,borderWidth:1.5}]},
+    options:{responsive:true,plugins:{legend:{labels:{color:'#e8ecf4',font:{size:11}}}},scales:{y:{ticks:{callback:v=>fmtK(v),color:'#8896ab'},grid:{color:'rgba(255,255,255,0.04)'}},x:{ticks:{color:'#8896ab',maxTicksLimit:6},grid:{display:false}}}}
+  });
+
+  // Drawdown
+  const lossRate = 1-winRate;
+  let ddH = `<div style="padding:8px;background:var(--surface2);border-radius:var(--radius-sm);margin-bottom:10px;font-size:12px;color:var(--text2)">
+    Cada pérdida: <strong style="color:var(--bear)">-${(impactoPerd*100).toFixed(2)}%</strong> en cuenta</div><div style="font-size:13px;line-height:2">`;
+  for (let n=2;n<=10;n++) {
+    const prob = Math.pow(lossRate,n);
+    const dd = (1-Math.pow(1-impactoPerd,n))*100;
+    const p100 = (1-Math.pow(1-prob,100))*100;
+    const exc = dd > ddPct*100;
+    ddH += `<div style="display:flex;justify-content:space-between;padding:5px 8px;border-radius:4px;${exc?'background:var(--bear-dim)':''}">
+      <span>${n} pérdidas</span><span style="font-family:var(--mono);font-size:12px">DD: <strong style="color:${exc?'var(--bear)':'var(--warn)'}">${dd.toFixed(1)}%</strong>${exc?' ⚠️':''} · P(100ops): ${p100.toFixed(1)}%</span></div>`;
+  }
+  const lDD = Math.log(1-ddPct)/Math.log(1-impactoPerd);
+  ddH += `</div><div style="margin-top:12px;padding:10px;background:var(--accent-glow);border:1px solid rgba(59,130,246,0.3);border-radius:var(--radius-sm);font-size:12px">
+    <strong style="color:var(--accent)">Con tu sizing:</strong> <strong>${Math.floor(lDD)} pérdidas consecutivas</strong> hasta DD máx ${(ddPct*100).toFixed(0)}%.
+    ${lDD>8?'<span style="color:var(--bull)">✅ Muy seguro</span>':lDD>5?'<span style="color:var(--warn)">⚠️ Moderado</span>':'<span style="color:var(--bear)">🔴 Peligroso</span>'}</div>`;
+  ddEl.innerHTML = ddH;
+
+  // Scenarios
+  const scs = [{name:'Conservador',m:.5,color:'var(--warn)',d:'Mitad riesgo'},{name:'Base (actual)',m:1,color:'var(--accent)',d:`Riesgo ${(riskPct*100).toFixed(1)}%`},{name:'Agresivo',m:2,color:'var(--bear)',d:'Doble riesgo'}];
+  let sH2 = '<div style="font-size:13px">';
+  scs.forEach(s => {
+    const sz = Math.min((riskPct*s.m)/(avgLossPct||0.01),1);
+    const rE = winRate*avgWinPct*sz-(1-winRate)*avgLossPct*sz;
+    const cp = capital*Math.pow(1+rE,totalOps5y);
+    const ddL = Math.floor(Math.log(1-ddPct)/Math.log(1-avgLossPct*sz));
+    sH2 += `<div style="padding:12px;background:var(--surface2);border-radius:var(--radius-sm);margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><strong style="color:${s.color}">${s.name}</strong><span style="font-size:11px;color:var(--text3)">${s.d}</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;color:var(--text2)">
+        <div>Impacto/op: <strong style="font-family:var(--mono);color:var(--text)">${fmtPct(rE)}</strong></div>
+        <div>Capital 5Y: <strong style="font-family:var(--mono);color:var(--text)">${fmtK(cp)}</strong></div>
+        <div>DD/pérdida: <strong style="font-family:var(--mono);color:var(--bear)">${(avgLossPct*sz*100).toFixed(2)}%</strong></div>
+        <div>Pérdidas→DD: <strong style="font-family:var(--mono);color:${ddL>8?'var(--bull)':ddL>5?'var(--warn)':'var(--bear)'}">${ddL}</strong></div></div></div>`;
+  });
+  scEl.innerHTML = sH2 + '</div>';
+}
+
+// ── GETCONFIG ──
+function getConfig() {
+  const capital = parseFloat(document.getElementById('capitalTotal').value)||10000;
+  const riskPct = parseFloat(document.getElementById('riesgoPct').value)/100;
+  const ddPct = parseFloat(document.getElementById('ddPct').value)/100;
+  const maxPos = parseInt(document.getElementById('maxPos').value)||3;
+  const allOps = [...DATA.bull.enriched,...DATA.bear.enriched];
+  const ratios = calcRatios(allOps);
+  return { capital, riskPct, ddPct, maxPos, ratios };
+}
+
+// ── POSITION SIZING CALCULATOR ──
+function calcSizing() {
+  const {capital, riskPct} = getConfig();
+  const ticker = document.getElementById('sz-ticker').value.trim().toUpperCase() || '—';
+  const precio = parseFloat(document.getElementById('sz-precio').value);
+  const stop = parseFloat(document.getElementById('sz-stop').value);
+  const tp = parseFloat(document.getElementById('sz-tp').value);
+  const el = document.getElementById('sz-result');
+
+  if (!precio || !stop || precio <= 0 || stop <= 0) {
+    el.innerHTML = '<div style="color:var(--text3);font-size:12px;padding:10px">Introduce precio de entrada y stop loss para calcular.</div>';
+    return;
+  }
+
+  const isLong = precio > stop;
+  const riskPerShare = Math.abs(precio - stop);
+  const riskE = capital * riskPct;
+  const acciones = Math.floor(riskE / riskPerShare);
+  const capitalInvertido = acciones * precio;
+  const pctCapital = capitalInvertido / capital;
+  const perdidaMax = acciones * riskPerShare;
+  const riskPctReal = perdidaMax / capital;
+
+  let tpHtml = '';
+  if (tp > 0) {
+    const gananciaPerShare = Math.abs(tp - precio);
+    const gananciaTotal = acciones * gananciaPerShare;
+    const rrRatio = gananciaPerShare / riskPerShare;
+    const rentPct = gananciaTotal / capitalInvertido;
+    tpHtml = `
+      <div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px">
+        <div>Take Profit: <strong style="color:var(--bull)">${fmtE(tp)}</strong> (${isLong?'+':'-'}${fmtE(gananciaPerShare)}/acc)</div>
+        <div>Ganancia Potencial: <strong style="color:var(--bull)">${fmtE(gananciaTotal)}</strong> (${fmtPct(rentPct)} sobre invertido)</div>
+        <div>Ratio R:R: <strong style="color:${rrRatio>=2?'var(--bull)':rrRatio>=1?'var(--warn)':'var(--bear)'}">${fmt(rrRatio)}:1</strong>
+          ${rrRatio>=2?' ✅ Excelente':rrRatio>=1.5?' ✅ Bueno':rrRatio>=1?' ⚠️ Justo':' ❌ Malo'}</div>
+      </div>`;
+  }
+
+  el.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div style="padding:16px;background:var(--surface2);border-radius:var(--radius-sm);border:1px solid var(--border)">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);margin-bottom:10px">Resultado para ${ticker}</div>
+        <div style="font-family:var(--mono);font-size:13px;line-height:2.2;color:var(--text2)">
+          <div>Dirección: <strong style="color:${isLong?'var(--bull)':'var(--bear)'}">${isLong?'📈 LONG':'📉 SHORT'}</strong></div>
+          <div>Precio: <strong style="color:var(--text)">${fmtE(precio)}</strong></div>
+          <div>Stop Loss: <strong style="color:var(--bear)">${fmtE(stop)}</strong> (${isLong?'-':'+'}${fmtE(riskPerShare)}/acc)</div>
+          <div>Riesgo permitido: <strong style="color:var(--warn)">${fmtE(riskE)}</strong> (${(riskPct*100).toFixed(2)}% de ${fmtE(capital)})</div>
+        </div>
+      </div>
+      <div style="padding:16px;background:var(--surface2);border-radius:var(--radius-sm);border:1px solid var(--accent);border-opacity:0.3">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--accent);margin-bottom:10px">Tamaño de Posición</div>
+        <div style="font-family:var(--mono);font-size:13px;line-height:2.2;color:var(--text2)">
+          <div>Acciones: <strong style="color:var(--accent);font-size:18px">${acciones}</strong></div>
+          <div>Capital a invertir: <strong style="color:var(--text)">${fmtE(capitalInvertido)}</strong> (${(pctCapital*100).toFixed(1)}% del total)</div>
+          <div>Pérdida máxima: <strong style="color:var(--bear)">${fmtE(perdidaMax)}</strong> (${(riskPctReal*100).toFixed(2)}% del capital)</div>
+          ${tpHtml}
+        </div>
+      </div>
+    </div>`;
+}
+
+// ── RISK MANAGEMENT STRATEGIES ──
+function renderSemaforo() {
+  const {capital,riskPct,maxPos}=getConfig();
+  const rt=riskPct*maxPos; let lv,msg;
+  if(rt<=0.05){lv='verde';msg=`🟢 Riesgo bajo: ${(rt*100).toFixed(1)}% en riesgo máximo`;}
+  else if(rt<=0.12){lv='amarillo';msg=`🟡 Riesgo moderado: ${(rt*100).toFixed(1)}% en riesgo máximo`;}
+  else{lv='rojo';msg=`🔴 Riesgo alto: ${(rt*100).toFixed(1)}% en riesgo — ¡Cuidado!`;}
+  document.getElementById('semaforo-container').innerHTML=`<div class="semaforo ${lv}"><div class="semaforo-dot"></div>${msg}</div>`;
+}
+
+function renderRiskKPIs() {
+  const {capital,riskPct,ddPct,maxPos}=getConfig();
+  const re=capital*riskPct, dm=capital*ddPct, rn=re*maxPos;
+  document.getElementById('kpi-risk').innerHTML=`
+    <div class="kpi blue"><div class="kpi-label">Riesgo/Op</div><div class="kpi-value blue">${fmtE(re)}</div><div class="kpi-sub">${(riskPct*100).toFixed(2)}%</div></div>
+    <div class="kpi yellow"><div class="kpi-label">DD Máx Tolerable</div><div class="kpi-value yellow">${fmtE(dm)}</div><div class="kpi-sub">${(ddPct*100).toFixed(0)}%</div></div>
+    <div class="kpi purple"><div class="kpi-label">Ops Simult. Máx</div><div class="kpi-value">${maxPos}</div></div>
+    <div class="kpi red"><div class="kpi-label">Capital en Riesgo</div><div class="kpi-value ${rn>dm?'red':'green'}">${fmtE(rn)}</div><div class="kpi-sub">con ${maxPos} posiciones</div></div>`;
+}
+
+function calcPctFijo() {
+  const {capital,riskPct}=getConfig(); const sl=parseFloat(document.getElementById('pf-sl').value)||2;
+  const re=capital*riskPct, acc=Math.floor(re/sl);
+  document.getElementById('pf-result').innerHTML=`<div style="padding:14px;background:var(--surface2);border-radius:var(--radius-sm);font-family:var(--mono);font-size:13px;line-height:2">
+    <div>Capital: <strong style="color:var(--accent)">${fmtE(capital)}</strong></div>
+    <div>Riesgo: <strong>${(riskPct*100).toFixed(2)}%</strong> = <strong style="color:var(--warn)">${fmtE(re)}</strong></div>
+    <div>Stop Loss: <strong>${fmtE(sl)}</strong>/acción</div>
+    <div>Acciones: <strong style="color:var(--bull)">${acc}</strong></div></div>`;
+  let h='<div style="font-size:13px;line-height:1.8">',c=capital;
+  for(let i=1;i<=15;i++){c-=c*riskPct;const p=((capital-c)/capital*100).toFixed(1);
+    h+=`<div style="display:flex;justify-content:space-between;padding:4px 8px;border-radius:4px;${p>25?'background:var(--bear-dim)':''}"><span>${i} pérdidas</span><span style="font-family:var(--mono);color:${p>25?'var(--bear)':'var(--text2)'}">-${p}% (${fmtE(c)})</span></div>`;}
+  document.getElementById('pf-racha').innerHTML=h+'</div>';
+}
+
+function calcKelly() {
+  const {ratios,capital}=getConfig(); if(!ratios)return;
+  const W=ratios.winRate, R=ratios.avgWinPct/(ratios.avgLossPct||0.01), k=W-(1-W)/R, hk=k/2, qk=k/4;
+  document.getElementById('kelly-result').innerHTML=`<div style="padding:14px;background:var(--surface2);border-radius:var(--radius-sm);font-family:var(--mono);font-size:13px;line-height:2.2">
+    <div>Win Rate: <strong style="color:var(--bull)">${(W*100).toFixed(1)}%</strong></div>
+    <div>Ratio W/L: <strong style="color:var(--accent)">${fmt(R)}x</strong></div>
+    <div style="border-top:1px solid var(--border);margin:8px 0;padding-top:8px">
+    <div>Full Kelly: <strong style="color:${k>0?'var(--bull)':'var(--bear)'}">${(k*100).toFixed(2)}%</strong>${k<=0?' ⚠️ No edge':''}</div>
+    <div>Half Kelly: <strong style="color:var(--accent)">${(hk*100).toFixed(2)}%</strong> ← Recomendado</div>
+    <div>Quarter Kelly: <strong style="color:var(--text2)">${(qk*100).toFixed(2)}%</strong></div></div></div>`;
+  document.getElementById('kelly-comparison').innerHTML=`<div style="font-size:13px;line-height:2;padding:14px;background:var(--surface2);border-radius:var(--radius-sm)">
+    <div style="display:flex;justify-content:space-between"><span>Full →</span><strong style="font-family:var(--mono)">${fmtE(capital*Math.max(k,0))}</strong></div>
+    <div style="display:flex;justify-content:space-between"><span>Half →</span><strong style="font-family:var(--mono);color:var(--accent)">${fmtE(capital*Math.max(hk,0))}</strong></div>
+    <div style="display:flex;justify-content:space-between"><span>Quarter →</span><strong style="font-family:var(--mono)">${fmtE(capital*Math.max(qk,0))}</strong></div>
+    <div style="margin-top:10px;color:var(--warn);font-size:11px">⚠️ La mayoría de profesionales usan Half Kelly o menos.</div></div>`;
+}
+
+function calcMartingala() {
+  const {capital}=getConfig(); const ap=parseFloat(document.getElementById('mg-apuesta').value)||100;
+  let h='',ac=0,b=ap;
+  for(let i=1;i<=12;i++){ac+=b;const p=(ac/capital*100).toFixed(1),r=ac>=capital;
+    h+=`<tr style="${r?'background:var(--bear-dim)':''}"><td>${i}</td><td style="font-family:var(--mono)">${fmtE(b)}</td><td style="font-family:var(--mono)">${fmtE(ac)}</td><td>${p}%</td><td>${r?'💀 RUINA':ac>capital*.5?'⚠️':'✅'}</td></tr>`;b*=2;}
+  document.getElementById('mg-table').innerHTML=h;
+  document.getElementById('mg-result').innerHTML=`<div style="padding:14px;background:var(--bear-dim);border:1px solid var(--bear-border);border-radius:var(--radius-sm);font-size:13px">
+    <strong style="color:var(--bear)">⚠️ Con ${fmtE(ap)} y ${fmtE(capital)}, ruina en ${Math.ceil(Math.log2(capital/ap))} pérdidas consecutivas.</strong></div>`;
+}
+
+function calcAntiMartingala() {
+  const ap=parseFloat(document.getElementById('am-apuesta').value)||100, rs=parseInt(document.getElementById('am-reset').value)||3;
+  let h='',b=ap,ac=0;
+  for(let i=1;i<=rs+2;i++){ac+=b;h+=`<tr><td>${i}</td><td style="font-family:var(--mono)">${fmtE(b)}</td><td style="font-family:var(--mono)">${fmtE(ac)}</td><td>${i>=rs?'🔄 RESET':'⬆️ Doblar'}</td></tr>`;if(i>=rs)b=ap;else b*=2;}
+  document.getElementById('am-table').innerHTML=h;
+  document.getElementById('am-result').innerHTML=`<div style="padding:14px;background:var(--surface2);border-radius:var(--radius-sm);font-size:13px;color:var(--text2)">Tras <strong>${rs}</strong> ganancias, reset a <strong>${fmtE(ap)}</strong>.</div>`;
+}
+
+function calcFibonacci() {
+  const {capital}=getConfig(); const bs=parseFloat(document.getElementById('fib-base').value)||50;
+  const fibs=[1,1,2,3,5,8,13,21,34,55]; let h='',ac=0;
+  for(let i=0;i<fibs.length;i++){const b=bs*fibs[i];ac+=b;const ov=ac>capital;
+    h+=`<tr style="${ov?'background:var(--bear-dim)':''}"><td>${i+1}</td><td>${fibs[i]}x</td><td style="font-family:var(--mono)">${fmtE(b)}</td><td style="font-family:var(--mono)">${fmtE(ac)}</td><td>${ov?'⚠️':'✅'}</td></tr>`;}
+  document.getElementById('fib-table').innerHTML=h;
+  const ms=fibs.filter((_,i)=>{let s=0;for(let j=0;j<=i;j++)s+=bs*fibs[j];return s<=capital;}).length;
+  document.getElementById('fib-result').innerHTML=`<div style="padding:14px;background:var(--surface2);border-radius:var(--radius-sm);font-size:13px;color:var(--text2)">Aguantas <strong style="color:var(--accent)">${ms} pasos</strong> antes de superar capital.</div>`;
+}
+
+function calcParabolico() {
+  const {capital,riskPct}=getConfig(); const dl=parseFloat(document.getElementById('par-delta').value)/100||0.25;
+  const bs=capital*riskPct; let h='';
+  for(let i=0;i<=8;i++){h+=`<tr><td>Nivel ${i}</td><td style="font-family:var(--mono)">${fmtE(bs*i*dl/riskPct)}</td><td style="font-family:var(--mono)">${fmtE(bs*(1+i*dl))}</td><td>+${(i*dl*100).toFixed(0)}%</td></tr>`;}
+  document.getElementById('par-table').innerHTML=h;
+  document.getElementById('par-result').innerHTML=`<div style="padding:14px;background:var(--surface2);border-radius:var(--radius-sm);font-size:13px;color:var(--text2)">Capital original protegido. Delta: <strong>${(dl*100).toFixed(0)}%</strong>.</div>`;
+}
+
+let volRows=3;
+function addVolRow(){volRows++;renderVolInputs();}
+function renderVolInputs(){
+  let h='<div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;margin-bottom:10px"><div style="font-size:11px;color:var(--text2);font-weight:600">ACTIVO</div><div style="font-size:11px;color:var(--text2);font-weight:600">PRECIO</div><div style="font-size:11px;color:var(--text2);font-weight:600">ATR</div>';
+  for(let i=0;i<volRows;i++){h+=`<input type="text" id="vol-n-${i}" placeholder="Ticker" oninput="calcVol()"><input type="number" id="vol-p-${i}" placeholder="0.00" step="0.01" oninput="calcVol()"><input type="number" id="vol-a-${i}" placeholder="0.00" step="0.01" oninput="calcVol()">`;}
+  document.getElementById('vol-inputs').innerHTML=h+'</div>';
+}
+function calcVol(){
+  const {capital}=getConfig(); let assets=[];
+  for(let i=0;i<volRows;i++){const n=document.getElementById(`vol-n-${i}`)?.value,p=parseFloat(document.getElementById(`vol-p-${i}`)?.value),a=parseFloat(document.getElementById(`vol-a-${i}`)?.value);if(n&&p>0&&a>0)assets.push({n,p,a});}
+  if(!assets.length){document.getElementById('vol-result').innerHTML='';return;}
+  const tiv=assets.reduce((s,x)=>s+1/x.a,0);
+  let h='<div class="table-wrap"><table><thead><tr><th>Activo</th><th>Precio</th><th>ATR</th><th>Peso</th><th>Capital</th><th>Acc.</th></tr></thead><tbody>';
+  assets.forEach(x=>{const w=(1/x.a)/tiv,c=capital*w;h+=`<tr><td><strong>${x.n}</strong></td><td style="font-family:var(--mono)">${fmtE(x.p)}</td><td style="font-family:var(--mono)">${fmt(x.a)}</td><td>${(w*100).toFixed(1)}%</td><td style="font-family:var(--mono)">${fmtE(c)}</td><td>${Math.floor(c/x.p)}</td></tr>`;});
+  document.getElementById('vol-result').innerHTML=h+'</tbody></table></div>';
+}
+
+// ── ADD OPERATION ──
+function addOp(type) {
+  const pf=`add-${type}`, v=document.getElementById(`${pf}-valor`).value.trim(), t=document.getElementById(`${pf}-ticker`).value.trim().toUpperCase(),
+    fe=document.getElementById(`${pf}-fentrada`).value, fs=document.getElementById(`${pf}-fsalida`).value,
+    pe=parseFloat(document.getElementById(`${pf}-pentrada`).value), ps=parseFloat(document.getElementById(`${pf}-psalida`).value),
+    cap=parseFloat(document.getElementById(`${pf}-capital`).value);
+  if(!v||!t||!fe||!pe||!cap){alert('Rellena: Valor, Ticker, F.Entrada, P.Entrada y Capital');return;}
+  if(fs&&ps){const op={valor:v,ticker:t,fe,fs,pe,ps,cap};DATA[type].closed.push(op);DATA[type].enriched=enrichOps(DATA[type].closed,type==='bear');}
+  else{DATA[type].open.push({valor:v,ticker:t,fe,pe,cap,peso:cap/(parseFloat(document.getElementById('capitalTotal').value)||10000)});}
+  ['valor','ticker','fentrada','fsalida','pentrada','psalida','capital'].forEach(f=>{const el=document.getElementById(`${pf}-${f}`);if(el)el.value='';});
+  recalcAll();
+}
+
+// ── CLOSE POSITION MODAL ──
+let closeTarget = { type: null, index: null };
+
+function openCloseModal(type, index) {
+  const op = DATA[type].open[index];
+  if (!op) return;
+  closeTarget = { type, index };
+  document.getElementById('cm-name').textContent = `${op.valor} (${op.ticker})`;
+  document.getElementById('cm-fecha').value = new Date().toISOString().slice(0, 10);
+  document.getElementById('cm-precio').value = '';
+  document.getElementById('cm-preview').innerHTML = `Entrada: ${fmtE(op.pe)} · Capital: ${fmtE(op.cap)}`;
+  const modal = document.getElementById('close-modal');
+  modal.style.display = 'flex';
+  // Live preview
+  document.getElementById('cm-precio').oninput = () => {
+    const ps = parseFloat(document.getElementById('cm-precio').value);
+    if (!ps) { document.getElementById('cm-preview').innerHTML = `Entrada: ${fmtE(op.pe)} · Capital: ${fmtE(op.cap)}`; return; }
+    const acc = op.cap / op.pe;
+    const isBear = type === 'bear';
+    const pl = isBear ? acc * (op.pe - ps) : acc * (ps - op.pe);
+    const pct = isBear ? (op.pe - ps) / op.pe : (ps - op.pe) / op.pe;
+    document.getElementById('cm-preview').innerHTML = `
+      Entrada: ${fmtE(op.pe)} → Salida: ${fmtE(ps)}<br>
+      P/L: <strong style="color:${pl >= 0 ? 'var(--bull)' : 'var(--bear)'}">${fmtE(pl)} (${fmtPct(pct)})</strong>`;
+  };
+}
+
+function closeModal() {
+  document.getElementById('close-modal').style.display = 'none';
+  closeTarget = { type: null, index: null };
+}
+
+function confirmClose() {
+  const { type, index } = closeTarget;
+  if (type === null) return;
+  const ps = parseFloat(document.getElementById('cm-precio').value);
+  const fs = document.getElementById('cm-fecha').value;
+  if (!ps || !fs) { alert('Introduce fecha y precio de salida'); return; }
+  
+  const op = DATA[type].open[index];
+  // Move to closed
+  const closedOp = { valor: op.valor, ticker: op.ticker, fe: op.fe, fs, pe: op.pe, ps, cap: op.cap };
+  DATA[type].closed.push(closedOp);
+  DATA[type].enriched = enrichOps(DATA[type].closed, type === 'bear');
+  // Remove from open
+  DATA[type].open.splice(index, 1);
+  
+  closeModal();
+  recalcAll();
+}
+
+// Click outside modal to close
+document.getElementById('close-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ── NAVIGATION ──
+function switchMain(view) {
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(`view-${view}`).classList.add('active');
+  document.querySelectorAll('.tabs .tab').forEach(t=>{t.classList.remove('active');if(t.dataset.view===view)t.classList.add('active');});
+}
+function switchSub(sub) {
+  document.querySelectorAll('.sub-view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(`sub-${sub}`).classList.add('active');
+  document.querySelectorAll('.sub-tab').forEach(t=>{t.className='sub-tab';if(t.dataset.sub===sub)t.classList.add(sub==='bull'?'active-bull':sub==='bear'?'active-bear':'active-gen');});
+}
+function switchStrat(s) {
+  document.querySelectorAll('.strat-view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(`strat-${s}`).classList.add('active');
+  document.querySelectorAll('.strat-tab').forEach(t=>t.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// ── RECALC ALL ──
+function recalcAll() {
+  document.getElementById('riesgoPctVal').textContent=document.getElementById('riesgoPct').value+'%';
+  document.getElementById('ddPctVal').textContent=document.getElementById('ddPct').value+'%';
+  const cap=parseFloat(document.getElementById('capitalTotal').value)||10000;
+  const pA=parseFloat(document.getElementById('pctAlcista').value)||50, pB=parseFloat(document.getElementById('pctBajista').value)||50;
+  document.getElementById('euroAlcista').textContent=fmtE(cap*pA/100);
+  document.getElementById('euroBajista').textContent=fmtE(cap*pB/100);
+
+  // Bull
+  renderKPIs('kpi-bull',calcRatios(DATA.bull.enriched),'bull');
+  renderTable('tb-bull-closed',DATA.bull.enriched);
+  renderOpenTable('tb-bull-open',DATA.bull.open,'bull');
+  renderPLChart('chart-bull-pl',DATA.bull.enriched,'rgba(16,185,129,0.7)','rgba(244,63,94,0.7)');
+  renderEquityChart('chart-bull-equity',DATA.bull.enriched,'#10b981');
+
+  // Bear
+  renderKPIs('kpi-bear',calcRatios(DATA.bear.enriched),'bear');
+  renderTable('tb-bear-closed',DATA.bear.enriched);
+  renderOpenTable('tb-bear-open',DATA.bear.open,'bear');
+  renderPLChart('chart-bear-pl',DATA.bear.enriched,'rgba(16,185,129,0.7)','rgba(244,63,94,0.7)');
+  renderEquityChart('chart-bear-equity',DATA.bear.enriched,'#f43f5e');
+
+  // General + Projections
+  renderGeneral();
+
+  // Risk
+  renderSemaforo(); renderRiskKPIs(); calcSizing();
+  calcPctFijo(); calcKelly(); calcMartingala(); calcAntiMartingala(); calcFibonacci(); calcParabolico(); calcVol();
+
+  document.getElementById('lastUpdate').textContent='Actualizado: '+new Date().toLocaleString('es-ES');
+}
+
+// ── INIT ──
+renderVolInputs();
+recalcAll();
+</script>
+</div>
+</body>
+</html>
