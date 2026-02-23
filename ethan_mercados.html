@@ -119,6 +119,8 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;hei
 .empty-state{text-align:center;padding:40px 20px;color:var(--text3)}
 .empty-state p{font-size:14px;margin-bottom:8px}
 .empty-state small{font-size:12px}
+.close-pos-btn{font-size:10px;padding:4px 12px;background:var(--bear-dim);color:var(--bear);border:1px solid var(--bear-border);border-radius:var(--radius-sm);cursor:pointer;font-family:var(--font);font-weight:600;transition:all .2s}
+.close-pos-btn:hover{background:var(--bear);color:#fff}
 
 @media(max-width:900px){.g2,.g3{grid-template-columns:1fr}.kpi-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){.app{padding:12px 10px}.kpi-grid{grid-template-columns:1fr}.tabs,.sub-tabs{flex-wrap:wrap}}
@@ -519,11 +521,17 @@ function renderTable(tbId, ops) {
 }
 
 function renderOpenTable(tbId, ops, type) {
-  document.getElementById(tbId).innerHTML = ops.length ? ops.map((o,i) => `<tr>
-    <td><strong>${o.valor}</strong></td><td><span class="ticker">${o.ticker}</span></td>
-    <td>${new Date(o.fe).toLocaleDateString('es-ES')}</td><td>${fmtE(o.pe)}</td>
-    <td>${fmtE(o.cap)}</td><td>${(o.peso*100).toFixed(0)}%</td><td>${(o.cap/o.pe).toFixed(2)}</td>
-    <td><button class="btn btn-sm" onclick="openCloseModal('${type}',${i})" style="font-size:10px;padding:4px 12px;background:var(--bear-dim);color:var(--bear);border:1px solid var(--bear-border);cursor:pointer">✕ Cerrar</button></td></tr>`).join('') : '<tr><td colspan="8" style="text-align:center;color:var(--text3)">—</td></tr>';
+  const tb = document.getElementById(tbId);
+  tb.innerHTML = ops.length ? ops.map((o,i) => '<tr>' +
+    '<td><strong>' + o.valor + '</strong></td>' +
+    '<td><span class="ticker">' + o.ticker + '</span></td>' +
+    '<td>' + new Date(o.fe).toLocaleDateString('es-ES') + '</td>' +
+    '<td>' + fmtE(o.pe) + '</td>' +
+    '<td>' + fmtE(o.cap) + '</td>' +
+    '<td>' + (o.peso*100).toFixed(0) + '%</td>' +
+    '<td>' + (o.cap/o.pe).toFixed(2) + '</td>' +
+    '<td><button class="close-pos-btn" data-type="' + type + '" data-idx="' + i + '">&#10005; Cerrar</button></td>' +
+    '</tr>').join('') : '<tr><td colspan="8" style="text-align:center;color:var(--text3)">&mdash;</td></tr>';
 }
 
 function renderPLChart(canvasId, ops, cPos, cNeg) {
@@ -986,6 +994,16 @@ function recalcAll() {
 
   document.getElementById('lastUpdate').textContent='Actualizado: '+new Date().toLocaleString('es-ES');
 }
+
+// ── EVENT DELEGATION FOR CLOSE BUTTONS ──
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest('.close-pos-btn');
+  if (btn) {
+    var type = btn.getAttribute('data-type');
+    var idx = parseInt(btn.getAttribute('data-idx'));
+    openCloseModal(type, idx);
+  }
+});
 
 // ── INIT ──
 renderVolInputs();
