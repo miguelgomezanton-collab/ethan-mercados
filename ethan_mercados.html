@@ -135,7 +135,10 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;hei
     <div class="brand-icon">E</div>
     <div><h1 style="font-family:'Cormorant Garamond',serif;font-weight:300;letter-spacing:2px">ETHAN <span style="font-weight:600">Mercados</span></h1><p>Cartera & Risk Management</p></div>
   </div>
-  <span style="font-family:var(--mono);font-size:12px;color:var(--text2)" id="lastUpdate"></span>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font-family:var(--mono);font-size:12px;color:var(--text2)" id="lastUpdate"></span>
+    <button class="btn btn-sm btn-outline" onclick="resetAllData()" style="font-size:10px;opacity:0.6">Resetear datos</button>
+  </div>
 </header>
 
 <!-- CAPITAL BAR (siempre visible) -->
@@ -439,11 +442,33 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;hei
 <!-- JAVASCRIPT                                 -->
 <!-- ═══════════════════════════════════════════ -->
 <script>
-// ── DATA (empty — user adds their own) ──
-const DATA = {
-  bull: { closed: [], open: [] },
-  bear: { closed: [], open: [] }
-};
+// ── DATA + PERSISTENCE ──
+var DATA = loadData();
+
+function loadData() {
+  try {
+    var saved = localStorage.getItem('ethan_cartera');
+    if (saved) {
+      var d = JSON.parse(saved);
+      if (d.bull && d.bear) {
+        d.bull.enriched = [];
+        d.bear.enriched = [];
+        return d;
+      }
+    }
+  } catch(e) { console.log('No saved data'); }
+  return { bull: { closed: [], open: [] }, bear: { closed: [], open: [] } };
+}
+
+function saveData() {
+  try {
+    var toSave = {
+      bull: { closed: DATA.bull.closed, open: DATA.bull.open },
+      bear: { closed: DATA.bear.closed, open: DATA.bear.open }
+    };
+    localStorage.setItem('ethan_cartera', JSON.stringify(toSave));
+  } catch(e) { console.log('Save error', e); }
+}
 
 function enrichOps(ops, isBear) {
   return ops.map(op => {
@@ -455,8 +480,8 @@ function enrichOps(ops, isBear) {
     return { ...op, dias, acciones, pl: Math.round(pl * 100) / 100, pct };
   });
 }
-DATA.bull.enriched = [];
-DATA.bear.enriched = [];
+DATA.bull.enriched = enrichOps(DATA.bull.closed, false);
+DATA.bear.enriched = enrichOps(DATA.bear.closed, true);
 
 // ── CALC RATIOS ──
 function calcRatios(ops) {
@@ -877,14 +902,28 @@ function calcVol(){
 
 // ── ADD OPERATION ──
 function addOp(type) {
-  const pf=`add-${type}`, v=document.getElementById(`${pf}-valor`).value.trim(), t=document.getElementById(`${pf}-ticker`).value.trim().toUpperCase(),
-    fe=document.getElementById(`${pf}-fentrada`).value, fs=document.getElementById(`${pf}-fsalida`).value,
-    pe=parseFloat(document.getElementById(`${pf}-pentrada`).value), ps=parseFloat(document.getElementById(`${pf}-psalida`).value),
-    cap=parseFloat(document.getElementById(`${pf}-capital`).value);
-  if(!v||!t||!fe||!pe||!cap){alert('Rellena: Valor, Ticker, F.Entrada, P.Entrada y Capital');return;}
-  if(fs&&ps){const op={valor:v,ticker:t,fe,fs,pe,ps,cap};DATA[type].closed.push(op);DATA[type].enriched=enrichOps(DATA[type].closed,type==='bear');}
-  else{DATA[type].open.push({valor:v,ticker:t,fe,pe,cap,peso:cap/(parseFloat(document.getElementById('capitalTotal').value)||10000)});}
-  ['valor','ticker','fentrada','fsalida','pentrada','psalida','capital'].forEach(f=>{const el=document.getElementById(`${pf}-${f}`);if(el)el.value='';});
+  var pf = 'add-' + type;
+  var v = document.getElementById(pf + '-valor').value.trim();
+  var t = document.getElementById(pf + '-ticker').value.trim().toUpperCase();
+  var fe = document.getElementById(pf + '-fentrada').value;
+  var fs = document.getElementById(pf + '-fsalida').value;
+  var pe = parseFloat(document.getElementById(pf + '-pentrada').value);
+  var ps = parseFloat(document.getElementById(pf + '-psalida').value);
+  var cap = parseFloat(document.getElementById(pf + '-capital').value);
+  if (!v || !t || !fe || !pe || !cap) { alert('Rellena: Valor, Ticker, F.Entrada, P.Entrada y Capital'); return; }
+  if (fs && ps) {
+    DATA[type].closed.push({ valor:v, ticker:t, fe:fe, fs:fs, pe:pe, ps:ps, cap:cap });
+    DATA[type].enriched = enrichOps(DATA[type].closed, type === 'bear');
+  } else {
+    var peso = cap / (parseFloat(document.getElementById('capitalTotal').value) || 10000);
+    DATA[type].open.push({ valor:v, ticker:t, fe:fe, pe:pe, cap:cap, peso:peso });
+  }
+  var fields = ['valor','ticker','fentrada','fsalida','pentrada','psalida','capital'];
+  for (var fi = 0; fi < fields.length; fi++) {
+    var el = document.getElementById(pf + '-' + fields[fi]);
+    if (el) el.value = '';
+  }
+  saveData();
   recalcAll();
 }
 
@@ -935,6 +974,7 @@ function confirmClose() {
   // Remove from open
   DATA[type].open.splice(index, 1);
   
+  saveData();
   closeModal();
   recalcAll();
 }
@@ -993,6 +1033,7 @@ function recalcAll() {
   calcPctFijo(); calcKelly(); calcMartingala(); calcAntiMartingala(); calcFibonacci(); calcParabolico(); calcVol();
 
   document.getElementById('lastUpdate').textContent='Actualizado: '+new Date().toLocaleString('es-ES');
+  saveConfig();
 }
 
 // ── EVENT DELEGATION FOR CLOSE BUTTONS ──
@@ -1006,6 +1047,41 @@ document.addEventListener('click', function(e) {
 });
 
 // ── INIT ──
+// Load saved capital config
+try {
+  var savedConfig = localStorage.getItem('ethan_config');
+  if (savedConfig) {
+    var cfg = JSON.parse(savedConfig);
+    if (cfg.capital) document.getElementById('capitalTotal').value = cfg.capital;
+    if (cfg.pctA) document.getElementById('pctAlcista').value = cfg.pctA;
+    if (cfg.pctB) document.getElementById('pctBajista').value = cfg.pctB;
+    if (cfg.riesgo) document.getElementById('riesgoPct').value = cfg.riesgo;
+    if (cfg.dd) document.getElementById('ddPct').value = cfg.dd;
+    if (cfg.maxPos) document.getElementById('maxPos').value = cfg.maxPos;
+  }
+} catch(e) {}
+
+function saveConfig() {
+  try {
+    localStorage.setItem('ethan_config', JSON.stringify({
+      capital: document.getElementById('capitalTotal').value,
+      pctA: document.getElementById('pctAlcista').value,
+      pctB: document.getElementById('pctBajista').value,
+      riesgo: document.getElementById('riesgoPct').value,
+      dd: document.getElementById('ddPct').value,
+      maxPos: document.getElementById('maxPos').value
+    }));
+  } catch(e) {}
+}
+
+function resetAllData() {
+  if (!confirm('¿Borrar TODAS las operaciones? Esta acción no se puede deshacer.')) return;
+  DATA.bull = { closed: [], open: [], enriched: [] };
+  DATA.bear = { closed: [], open: [], enriched: [] };
+  saveData();
+  recalcAll();
+}
+
 renderVolInputs();
 recalcAll();
 </script>
