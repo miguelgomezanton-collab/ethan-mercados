@@ -488,6 +488,10 @@ html, body { height: 100%; overflow: hidden; background: var(--bg-deep); }
         <span class="tab-icon">▤</span>
         <span class="tab-label">Fundamental</span>
       </button>
+      <button class="tab-btn" onclick="switchTab('alertas')" id="tab-alertas">
+        <span class="tab-icon">🔔</span>
+        <span class="tab-label">Alertas</span>
+      </button>
     </div>
 
     <div class="topbar-right">
@@ -506,6 +510,7 @@ html, body { height: 100%; overflow: hidden; background: var(--bg-deep); }
     <iframe class="module-frame"        id="frame-portfolio"  data-src="ethan_mercados.html"></iframe>
     <iframe class="module-frame"        id="frame-risk"       data-src="risk.html"></iframe>
     <iframe class="module-frame"        id="frame-fundamental" data-src="fundamental.html"></iframe>
+    <iframe class="module-frame"        id="frame-alertas"     data-src="alertas.html"></iframe>
   </div>
 
   <div class="status-bar">
@@ -559,8 +564,8 @@ if (checkSession()) showApp();
 /* ══════════════════════════════════════════════════════════
    NAV
    ══════════════════════════════════════════════════════════ */
-const TABS = ['screener','macro','portfolio','risk','fundamental'];
-const LABELS = {screener:'SCREENER',macro:'ANÁLISIS MACRO',portfolio:'CARTERA',risk:'RISK MANAGEMENT',fundamental:'ANÁLISIS FUNDAMENTAL'};
+const TABS = ['screener','macro','portfolio','risk','fundamental','alertas'];
+const LABELS = {screener:'SCREENER',macro:'ANÁLISIS MACRO',portfolio:'CARTERA',risk:'RISK MANAGEMENT',fundamental:'ANÁLISIS FUNDAMENTAL',alertas:'ALERTAS'};
 const loaded = new Set(['screener']);
 
 function switchTab(id) {
@@ -585,7 +590,7 @@ const ck = () => { const e=document.getElementById('clock'); if(e) e.textContent
 setInterval(ck,1000); ck();
 document.addEventListener('keydown', e => {
   if (document.getElementById('login-screen').style.display!=='none') return;
-  if (e.altKey && e.key>='1' && e.key<='5') { e.preventDefault(); switchTab(TABS[+e.key-1]); }
+  if (e.altKey && e.key>='1' && e.key<='6') { e.preventDefault(); switchTab(TABS[+e.key-1]); }
 });
 </script>
 </body>

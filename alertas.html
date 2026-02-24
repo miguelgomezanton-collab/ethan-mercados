@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ETHAN · Alertas</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#040e0e;--surface:#071717;--surface2:#0b1f1f;--surface3:#0f2828;
+  --border:#1a3c3c;--border2:#245050;
+  --teal:#40d9c0;--teal-dim:rgba(64,217,192,0.08);--teal-glow:rgba(64,217,192,0.20);
+  --green:#4ade80;--green-dim:rgba(74,222,128,0.10);
+  --red:#f47174;--red-dim:rgba(244,113,116,0.10);
+  --amber:#fbbf24;--amber-dim:rgba(251,191,36,0.10);
+  --blue:#38bdf8;
+  --text:#d0e8e4;--text2:#9cb8b4;--text3:#4a706a;
+  --mono:'IBM Plex Mono',monospace;--sans:'Montserrat',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);padding:24px;min-height:100vh}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.header h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:24px;letter-spacing:1px;color:var(--text)}
+.header h2 span{color:var(--teal);font-weight:600}
+.btn{padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:var(--sans);transition:all .2s}
+.btn-teal{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(64,217,192,0.3)}.btn-teal:hover{background:var(--teal-glow)}
+.btn-sm{padding:6px 12px;font-size:11px}
+
+/* STATUS BAR */
+.status{display:flex;gap:16px;align-items:center;padding:14px 18px;background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:20px;flex-wrap:wrap}
+.status-item{font-size:12px;font-family:var(--mono);color:var(--text2)}
+.status-item strong{color:var(--text)}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;font-family:var(--mono)}
+.badge-alert{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(251,191,36,0.3)}
+.badge-ready{background:var(--green-dim);color:var(--green);border:1px solid rgba(74,222,128,0.3)}
+.badge-none{background:var(--surface2);color:var(--text3);border:1px solid var(--border)}
+.pulse{width:8px;height:8px;border-radius:50%;animation:pulse 2s infinite}
+.pulse-amber{background:var(--amber)}
+.pulse-green{background:var(--green)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* ALERT CARDS */
+.alerts-grid{display:grid;gap:14px}
+.alert-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;transition:all .2s}
+.alert-card:hover{border-color:var(--border2)}
+.alert-card.signal-inminente{border-left:3px solid var(--amber)}
+.alert-card.signal-ready{border-left:3px solid var(--green)}
+.alert-card.signal-high{border-left:3px solid var(--teal)}
+
+.alert-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.alert-ticker{font-family:var(--mono);font-weight:600;font-size:16px;color:var(--text);background:var(--surface2);padding:3px 10px;border-radius:5px;letter-spacing:1px}
+.alert-name{font-size:13px;color:var(--text2);margin-left:10px}
+.alert-price{font-family:var(--mono);font-size:13px;color:var(--text2)}
+.alert-score{font-family:var(--mono);font-weight:700;font-size:20px}
+
+.alert-body{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+@media(max-width:700px){.alert-body{grid-template-columns:1fr}}
+
+.tf-block{background:var(--surface2);border-radius:8px;padding:12px 14px}
+.tf-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:8px;font-weight:600}
+.cond{display:flex;justify-content:space-between;align-items:center;padding:3px 0;font-size:12px;font-family:var(--mono)}
+.cond-ok{color:var(--green)}.cond-fail{color:var(--red)}.cond-val{color:var(--text2)}
+
+.alert-reason{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px}
+.reason-inminente{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(251,191,36,0.2)}
+.reason-ready{background:var(--green-dim);color:var(--green);border:1px solid rgba(74,222,128,0.2)}
+.reason-high{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(64,217,192,0.2)}
+
+/* EMPTY / LOADING */
+.empty{text-align:center;padding:60px 20px;color:var(--text3)}
+.empty p{font-size:15px;margin-bottom:8px}
+.empty small{font-size:12px}
+.loading{text-align:center;padding:40px;color:var(--text2)}
+.spinner{width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.progress-bar{height:4px;background:var(--surface2);border-radius:2px;margin:12px 0;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--green));border-radius:2px;transition:width .3s}
+
+/* NO ALERTS */
+.all-clear{text-align:center;padding:40px;background:var(--surface);border:1px solid var(--border);border-radius:10px}
+.all-clear-icon{font-size:48px;margin-bottom:12px}
+.all-clear p{color:var(--text2);font-size:14px}
+
+/* ALL VALUES TABLE */
+.summary-table{width:100%;border-collapse:collapse;margin-top:20px;font-size:12px}
+.summary-table th{background:var(--surface2);padding:8px 12px;text-align:left;font-weight:600;color:var(--text2);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;border-bottom:1px solid var(--border)}
+.summary-table td{padding:8px 12px;border-bottom:1px solid var(--border);white-space:nowrap;font-family:var(--mono);font-size:11px}
+.summary-table tr:hover td{background:var(--surface2)}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h2>🔔 <span>Alertas</span> del Sistema</h2>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span id="lastScan" style="font-size:11px;color:var(--text3);font-family:var(--mono)"></span>
+    <button class="btn btn-teal" onclick="runScan()">⟲ Escanear Ahora</button>
+  </div>
+</div>
+
+<div class="status" id="statusBar">
+  <div class="status-item">Valores en watchlist: <strong id="st-total">—</strong></div>
+  <div class="status-item">Escaneados: <strong id="st-scanned">—</strong></div>
+  <div id="st-badges"></div>
+</div>
+
+<div id="progress" style="display:none">
+  <div class="loading">
+    <div class="spinner"></div>
+    <div id="scanText">Escaneando valores...</div>
+    <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+    <div id="scanDetail" style="font-size:11px;color:var(--text3);margin-top:6px"></div>
+  </div>
+</div>
+
+<div id="alertsContainer"></div>
+
+<div id="summaryContainer" style="margin-top:24px"></div>
+
+<script>
+// ══════════════════════════════════════════════
+// INDICATOR FUNCTIONS (same as ethan-app)
+// ══════════════════════════════════════════════
+function sma(arr, p) {
+  return arr.map(function(_, i) {
+    if (i < p - 1) return null;
+    var sl = arr.slice(i - p + 1, i + 1).filter(function(v) { return v != null && !isNaN(v); });
+    return sl.length === p ? sl.reduce(function(a, b) { return a + b; }, 0) / p : null;
+  });
+}
+
+function ema(arr, p) {
+  var k = 2 / (p + 1), out = new Array(arr.length).fill(null);
+  var s = arr.findIndex(function(v) { return v != null && !isNaN(v); });
+  if (s < 0) return out;
+  out[s] = arr[s];
+  for (var i = s + 1; i < arr.length; i++) {
+    var v = (arr[i] != null && !isNaN(arr[i])) ? arr[i] : out[i - 1];
+    out[i] = v * k + out[i - 1] * (1 - k);
+  }
+  return out;
+}
+
+function calcMACD(closes, f, s, sig) {
+  f = f || 12; s = s || 26; sig = sig || 9;
+  var ef = ema(closes, f), es = ema(closes, s);
+  var m = ef.map(function(v, i) { return (v != null && es[i] != null) ? v - es[i] : null; });
+  var sl = ema(m.map(function(v) { return v || 0; }), sig);
+  return { m: m, sl: sl };
+}
+
+function calcRSI(closes, p) {
+  p = p || 14;
+  var out = new Array(closes.length).fill(null);
+  if (closes.length < p + 1) return out;
+  var g = 0, l = 0;
+  for (var i = 1; i <= p; i++) { var d = closes[i] - closes[i - 1]; d > 0 ? g += d : l -= d; }
+  var ag = g / p, al = l / p;
+  out[p] = al === 0 ? 100 : 100 - (100 / (1 + ag / al));
+  for (var i = p + 1; i < closes.length; i++) {
+    var d = closes[i] - closes[i - 1];
+    ag = (ag * (p - 1) + (d > 0 ? d : 0)) / p;
+    al = (al * (p - 1) + (d < 0 ? -d : 0)) / p;
+    out[i] = al === 0 ? 100 : 100 - (100 / (1 + ag / al));
+  }
+  return out;
+}
+
+function calcStoch(highs, lows, closes, p) {
+  p = p || 14;
+  var rawK = closes.map(function(c, i) {
+    if (i < p - 1) return null;
+    var hh = Math.max.apply(null, highs.slice(i - p + 1, i + 1));
+    var ll = Math.min.apply(null, lows.slice(i - p + 1, i + 1));
+    return hh === ll ? 50 : (c - ll) / (hh - ll) * 100;
+  });
+  var k = sma(rawK, 3);
+  var d = sma(k.map(function(v) { return v || 0; }), 3);
+  return { k: k, d: d };
+}
+
+function resample(ts, opens, highs, lows, closes, vols, freq) {
+  var groups = {};
+  ts.forEach(function(t, i) {
+    var dd = new Date(t * 1000);
+    var key;
+    if (freq === 'W') {
+      var day = dd.getDay();
+      var diff = dd.getDate() - day + (day === 0 ? -6 : 1);
+      var mo = new Date(+dd); mo.setDate(diff);
+      key = mo.toISOString().slice(0, 10);
+    } else {
+      key = dd.getFullYear() + '-' + String(dd.getMonth() + 1).padStart(2, '0');
+    }
+    if (!groups[key]) { groups[key] = { o: opens[i], h: highs[i], l: lows[i], c: closes[i], v: vols[i] }; }
+    else { groups[key].h = Math.max(groups[key].h, highs[i]); groups[key].l = Math.min(groups[key].l, lows[i]); groups[key].c = closes[i]; groups[key].v += vols[i]; }
+  });
+  var keys = Object.keys(groups).sort();
+  return {
+    closes: keys.map(function(k) { return groups[k].c; }),
+    highs: keys.map(function(k) { return groups[k].h; }),
+    lows: keys.map(function(k) { return groups[k].l; }),
+  };
+}
+
+// ══════════════════════════════════════════════
+// FETCH
+// ══════════════════════════════════════════════
+function fetchData(ticker) {
+  var yUrl = 'https://query1.finance.yahoo.com/v8/finance/chart/' + encodeURIComponent(ticker) + '?interval=1d&range=10y&events=history';
+  var proxies = [
+    function(u) { return 'https://corsproxy.io/?' + encodeURIComponent(u); },
+    function(u) { return 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u); },
+    function(u) { return 'https://thingproxy.freeboard.io/fetch/' + u; }
+  ];
+
+  return new Promise(function(resolve, reject) {
+    var idx = 0;
+    function tryNext() {
+      if (idx >= proxies.length) { reject(new Error('No proxy available')); return; }
+      var url = proxies[idx](yUrl);
+      idx++;
+      fetch(url, { signal: AbortSignal.timeout(12000) })
+        .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+        .then(function(txt) {
+          var j = JSON.parse(txt);
+          if (j.chart && j.chart.error) throw new Error(j.chart.error.description);
+          var res = j.chart.result[0];
+          var q = res.indicators.quote[0];
+          var adj = (res.indicators.adjclose && res.indicators.adjclose[0]) ? res.indicators.adjclose[0].adjclose : q.close;
+          var ratio = adj.map(function(a, i) { return (q.close[i] && a) ? a / q.close[i] : 1; });
+          var valid = res.timestamp.map(function(_, i) { return i; }).filter(function(i) {
+            return adj[i] != null && q.high[i] != null && q.low[i] != null && !isNaN(adj[i]);
+          });
+          resolve({
+            name: res.meta.longName || ticker,
+            timestamps: valid.map(function(i) { return res.timestamp[i]; }),
+            opens: valid.map(function(i) { return q.open[i] * ratio[i]; }),
+            highs: valid.map(function(i) { return q.high[i] * ratio[i]; }),
+            lows: valid.map(function(i) { return q.low[i] * ratio[i]; }),
+            closes: valid.map(function(i) { return adj[i]; }),
+            vols: valid.map(function(i) { return q.volume[i]; }),
+          });
+        })
+        .catch(function() { tryNext(); });
+    }
+    tryNext();
+  });
+}
+
+// ══════════════════════════════════════════════
+// ANALYSIS (same conditions as ETHAN system)
+// ══════════════════════════════════════════════
+function analyze(raw) {
+  var closes = raw.closes, highs = raw.highs, lows = raw.lows, vols = raw.vols, timestamps = raw.timestamps;
+  var n = closes.length;
+  var W = resample(timestamps, raw.opens, highs, lows, closes, vols, 'W');
+  var M = resample(timestamps, raw.opens, highs, lows, closes, vols, 'M');
+
+  // Daily
+  var d_mc = calcMACD(closes);
+  var d_r14 = calcRSI(closes, 14);
+  var di = n - 1;
+
+  // Weekly
+  var w_mc = calcMACD(W.closes);
+  var w_s89 = calcStoch(W.highs, W.lows, W.closes, 89);
+  var w_r14 = calcRSI(W.closes, 14);
+  var w_sma10 = sma(W.closes, 10), w_sma20 = sma(W.closes, 20);
+  var wi = W.closes.length - 1;
+
+  // Monthly
+  var m_mc = calcMACD(M.closes);
+  var m_s89 = calcStoch(M.highs, M.lows, M.closes, 89);
+  var m_s8 = calcStoch(M.highs, M.lows, M.closes, 8);
+  var m_r14 = calcRSI(M.closes, 14);
+  var m_sma10 = sma(M.closes, 10);
+  var mi = M.closes.length - 1;
+
+  function fmt2(v) { return v != null && !isNaN(v) ? v.toFixed(2) : '—'; }
+
+  // Monthly conditions
+  var mc_macd = { ok: m_mc.m[mi] > 0 && m_mc.m[mi] > m_mc.sl[mi], label: 'MACD>0↑', val: fmt2(m_mc.m[mi]) };
+  var mc_s89 = { ok: (m_s89.k[mi] > 80 && m_s89.k[mi] > m_s89.d[mi]) || m_s89.k[mi] > 92, label: 'Stoch89>80', val: fmt2(m_s89.k[mi]) };
+  var mc_rsi = { ok: m_r14[mi] > 65, label: 'RSI>65', val: fmt2(m_r14[mi]) };
+  var mc_s8 = { ok: m_s8.k[mi] > 78, label: 'Stoch8>78', val: fmt2(m_s8.k[mi]) };
+  var mc_precio = { ok: m_sma10[mi] != null && M.closes[mi] > m_sma10[mi], label: 'P>SMA10', val: fmt2(M.closes[mi]) };
+  var mensualOk = mc_macd.ok && mc_s89.ok && mc_rsi.ok && mc_s8.ok && mc_precio.ok;
+
+  // Weekly conditions
+  var sc_macd = { ok: w_mc.m[wi] > 0 && w_mc.m[wi] > w_mc.sl[wi], label: 'MACD>0↑', val: fmt2(w_mc.m[wi]) };
+  var sc_s89 = { ok: (w_s89.k[wi] > 85 && w_s89.k[wi] > w_s89.d[wi]) || w_s89.k[wi] > 92, label: 'Stoch89>85', val: fmt2(w_s89.k[wi]) };
+  var sc_rsi = { ok: w_r14[wi] > 67, label: 'RSI>67', val: fmt2(w_r14[wi]) };
+  var sc_precio = { ok: w_sma20[wi] != null && W.closes[wi] > w_sma20[wi], label: 'P>SMA20', val: fmt2(W.closes[wi]) };
+  var semanalOk = sc_macd.ok && sc_s89.ok && sc_rsi.ok && sc_precio.ok;
+
+  // Daily timing
+  var dc_macd_pos = d_mc.m[di] > 0;
+  var dc_macd_cross = di > 0 && d_mc.m[di] > d_mc.sl[di] && d_mc.m[di - 1] <= d_mc.sl[di - 1];
+  var dc_rsi57 = d_r14[di] > 57;
+  var dailyReady = dc_macd_pos && dc_macd_cross && dc_rsi57;
+
+  // Score
+  var score = 0;
+  if (mc_macd.ok) score++; if (mc_s89.ok) score++; if (mc_rsi.ok) score++; if (mc_s8.ok) score++; if (mc_precio.ok) score++;
+  if (sc_macd.ok) score++; if (sc_s89.ok) score++; if (sc_rsi.ok) score++; if (sc_precio.ok) score++;
+  if (mensualOk && semanalOk) score++;
+
+  return {
+    ticker: raw.ticker, name: raw.name, price: closes[di],
+    score: score, mensualOk: mensualOk, semanalOk: semanalOk, dailyReady: dailyReady,
+    mc: [mc_macd, mc_s89, mc_rsi, mc_s8, mc_precio],
+    sc: [sc_macd, sc_s89, sc_rsi, sc_precio],
+    dc: {
+      macd_pos: { ok: dc_macd_pos, label: 'MACD>0', val: fmt2(d_mc.m[di]) },
+      macd_cross: { ok: dc_macd_cross, label: 'MACD↑ cruza', val: dc_macd_cross ? 'SÍ' : 'NO' },
+      rsi57: { ok: dc_rsi57, label: 'RSI>57', val: fmt2(d_r14[di]) }
+    },
+    stopSemanal: w_sma10[wi]
+  };
+}
+
+// ══════════════════════════════════════════════
+// SCAN ENGINE
+// ══════════════════════════════════════════════
+var scanResults = [];
+
+function getWatchlist() {
+  try { return JSON.parse(localStorage.getItem('ethan_watchlist_v1')) || []; }
+  catch(e) { return []; }
+}
+
+async function runScan() {
+  var tickers = getWatchlist();
+  if (!tickers.length) {
+    document.getElementById('alertsContainer').innerHTML = '<div class="empty"><p>No hay valores en la watchlist</p><small>Añade valores desde el módulo Screener primero</small></div>';
+    return;
+  }
+
+  document.getElementById('st-total').textContent = tickers.length;
+  document.getElementById('progress').style.display = 'block';
+  document.getElementById('alertsContainer').innerHTML = '';
+  document.getElementById('summaryContainer').innerHTML = '';
+  scanResults = [];
+
+  for (var i = 0; i < tickers.length; i++) {
+    var t = tickers[i];
+    document.getElementById('scanText').textContent = 'Escaneando ' + t + '...';
+    document.getElementById('scanDetail').textContent = (i + 1) + ' de ' + tickers.length;
+    document.getElementById('progFill').style.width = ((i + 1) / tickers.length * 100) + '%';
+
+    try {
+      var raw = await fetchData(t);
+      raw.ticker = t;
+      var result = analyze(raw);
+      scanResults.push(result);
+    } catch (e) {
+      scanResults.push({ ticker: t, name: t, error: e.message, score: 0 });
+    }
+
+    // Small delay to avoid rate limits
+    if (i < tickers.length - 1) {
+      await new Promise(function(r) { setTimeout(r, 300); });
+    }
+  }
+
+  document.getElementById('progress').style.display = 'none';
+  document.getElementById('st-scanned').textContent = scanResults.length;
+  document.getElementById('lastScan').textContent = new Date().toLocaleString('es-ES');
+  renderAlerts();
+  renderSummary();
+}
+
+// ══════════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════════
+function renderAlerts() {
+  var alerts = [];
+
+  scanResults.forEach(function(r) {
+    if (r.error) return;
+    var reasons = [];
+
+    // Alert 1: Mensual + Semanal OK, waiting for daily
+    if (r.mensualOk && r.semanalOk && !r.dailyReady) {
+      reasons.push({ type: 'inminente', icon: '⚡', text: 'SEÑAL INMINENTE — Mensual y Semanal OK, solo falta cruce MACD diario' });
+    }
+    // Alert 2: Full signal
+    if (r.mensualOk && r.semanalOk && r.dailyReady) {
+      reasons.push({ type: 'ready', icon: '🟢', text: 'SEÑAL ACTIVA — Todas las condiciones cumplidas. ¡Entrada válida!' });
+    }
+    // Alert 3: Score >= 8
+    if (r.score >= 8 && !(r.mensualOk && r.semanalOk)) {
+      reasons.push({ type: 'high', icon: '🎯', text: 'SCORE ' + r.score + '/10 — Muy cerca de cumplir todas las condiciones' });
+    }
+
+    if (reasons.length > 0) {
+      alerts.push({ result: r, reasons: reasons });
+    }
+  });
+
+  // Sort: ready first, then inminente, then high
+  var priority = { ready: 0, inminente: 1, high: 2 };
+  alerts.sort(function(a, b) {
+    return priority[a.reasons[0].type] - priority[b.reasons[0].type];
+  });
+
+  var container = document.getElementById('alertsContainer');
+
+  // Count badges
+  var nReady = alerts.filter(function(a) { return a.reasons.some(function(r) { return r.type === 'ready'; }); }).length;
+  var nInminente = alerts.filter(function(a) { return a.reasons.some(function(r) { return r.type === 'inminente'; }); }).length;
+  var nHigh = alerts.filter(function(a) { return a.reasons.some(function(r) { return r.type === 'high'; }); }).length;
+
+  var badgesHtml = '';
+  if (nReady > 0) badgesHtml += '<span class="badge badge-ready"><span class="pulse pulse-green"></span>' + nReady + ' señal activa</span>';
+  if (nInminente > 0) badgesHtml += '<span class="badge badge-alert"><span class="pulse pulse-amber"></span>' + nInminente + ' inminente</span>';
+  if (nHigh > 0) badgesHtml += '<span class="badge badge-alert" style="background:var(--teal-dim);color:var(--teal);border-color:rgba(64,217,192,0.3)">' + nHigh + ' score alto</span>';
+  if (alerts.length === 0) badgesHtml += '<span class="badge badge-none">Sin alertas activas</span>';
+  document.getElementById('st-badges').innerHTML = badgesHtml;
+
+  if (alerts.length === 0) {
+    container.innerHTML = '<div class="all-clear"><div class="all-clear-icon">✅</div><p>Ningún valor de tu watchlist cumple condiciones de alerta ahora mismo.</p><p style="font-size:12px;color:var(--text3);margin-top:8px">Revisa la tabla resumen abajo para ver el estado de todos.</p></div>';
+    return;
+  }
+
+  var html = '<div class="alerts-grid">';
+  alerts.forEach(function(a) {
+    var r = a.result;
+    var mainType = a.reasons[0].type;
+    var scoreColor = r.score >= 9 ? 'var(--green)' : r.score >= 7 ? 'var(--amber)' : 'var(--text2)';
+
+    html += '<div class="alert-card signal-' + mainType + '">';
+    html += '<div class="alert-top">';
+    html += '<div><span class="alert-ticker">' + r.ticker + '</span><span class="alert-name">' + r.name + '</span></div>';
+    html += '<div style="display:flex;align-items:center;gap:16px">';
+    html += '<span class="alert-price">' + r.price.toFixed(2) + '</span>';
+    html += '<span class="alert-score" style="color:' + scoreColor + '">' + r.score + '<span style="font-size:12px;color:var(--text3)">/10</span></span>';
+    html += '</div></div>';
+
+    // Conditions grid
+    html += '<div class="alert-body">';
+
+    // Monthly
+    html += '<div class="tf-block"><div class="tf-label">Mensual ' + (r.mensualOk ? '✅' : '') + '</div>';
+    r.mc.forEach(function(c) {
+      html += '<div class="cond"><span class="' + (c.ok ? 'cond-ok' : 'cond-fail') + '">' + (c.ok ? '✓' : '✗') + ' ' + c.label + '</span><span class="cond-val">' + c.val + '</span></div>';
+    });
+    html += '</div>';
+
+    // Weekly
+    html += '<div class="tf-block"><div class="tf-label">Semanal ' + (r.semanalOk ? '✅' : '') + '</div>';
+    r.sc.forEach(function(c) {
+      html += '<div class="cond"><span class="' + (c.ok ? 'cond-ok' : 'cond-fail') + '">' + (c.ok ? '✓' : '✗') + ' ' + c.label + '</span><span class="cond-val">' + c.val + '</span></div>';
+    });
+    html += '</div>';
+
+    // Daily
+    html += '<div class="tf-block"><div class="tf-label">Diario ' + (r.dailyReady ? '✅' : '') + '</div>';
+    html += '<div class="cond"><span class="' + (r.dc.macd_pos.ok ? 'cond-ok' : 'cond-fail') + '">' + (r.dc.macd_pos.ok ? '✓' : '✗') + ' ' + r.dc.macd_pos.label + '</span><span class="cond-val">' + r.dc.macd_pos.val + '</span></div>';
+    html += '<div class="cond"><span class="' + (r.dc.macd_cross.ok ? 'cond-ok' : 'cond-fail') + '">' + (r.dc.macd_cross.ok ? '✓' : '✗') + ' ' + r.dc.macd_cross.label + '</span><span class="cond-val">' + r.dc.macd_cross.val + '</span></div>';
+    html += '<div class="cond"><span class="' + (r.dc.rsi57.ok ? 'cond-ok' : 'cond-fail') + '">' + (r.dc.rsi57.ok ? '✓' : '✗') + ' ' + r.dc.rsi57.label + '</span><span class="cond-val">' + r.dc.rsi57.val + '</span></div>';
+    html += '</div>';
+
+    html += '</div>'; // alert-body
+
+    // Reasons
+    a.reasons.forEach(function(reason) {
+      html += '<div class="alert-reason reason-' + reason.type + '">' + reason.icon + ' ' + reason.text + '</div>';
+    });
+
+    html += '</div>'; // alert-card
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function renderSummary() {
+  if (!scanResults.length) return;
+  var sorted = scanResults.slice().sort(function(a, b) { return (b.score || 0) - (a.score || 0); });
+
+  var html = '<div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:8px">📋 Resumen Completo (' + sorted.length + ' valores)</div>';
+  html += '<div style="overflow-x:auto;border:1px solid var(--border);border-radius:10px"><table class="summary-table"><thead><tr>';
+  html += '<th>Ticker</th><th>Nombre</th><th>Precio</th><th>Score</th><th>Mensual</th><th>Semanal</th><th>Diario</th><th>Estado</th>';
+  html += '</tr></thead><tbody>';
+
+  sorted.forEach(function(r) {
+    if (r.error) {
+      html += '<tr><td>' + r.ticker + '</td><td colspan="7" style="color:var(--red)">Error: ' + r.error + '</td></tr>';
+      return;
+    }
+    var estado, estadoColor;
+    if (r.mensualOk && r.semanalOk && r.dailyReady) { estado = '🟢 ENTRADA'; estadoColor = 'var(--green)'; }
+    else if (r.mensualOk && r.semanalOk) { estado = '⚡ INMINENTE'; estadoColor = 'var(--amber)'; }
+    else if (r.score >= 8) { estado = '🎯 CERCA'; estadoColor = 'var(--teal)'; }
+    else if (r.score >= 6) { estado = '👁 VIGILAR'; estadoColor = 'var(--text2)'; }
+    else { estado = '—'; estadoColor = 'var(--text3)'; }
+
+    html += '<tr>';
+    html += '<td style="font-weight:600">' + r.ticker + '</td>';
+    html += '<td style="font-family:var(--sans);color:var(--text2)">' + r.name + '</td>';
+    html += '<td>' + r.price.toFixed(2) + '</td>';
+    html += '<td style="font-weight:700;color:' + (r.score >= 8 ? 'var(--green)' : r.score >= 6 ? 'var(--amber)' : 'var(--text3)') + '">' + r.score + '/10</td>';
+    html += '<td style="color:' + (r.mensualOk ? 'var(--green)' : 'var(--red)') + '">' + (r.mensualOk ? '✅' : '❌') + '</td>';
+    html += '<td style="color:' + (r.semanalOk ? 'var(--green)' : 'var(--red)') + '">' + (r.semanalOk ? '✅' : '❌') + '</td>';
+    html += '<td style="color:' + (r.dailyReady ? 'var(--green)' : 'var(--red)') + '">' + (r.dailyReady ? '✅' : '❌') + '</td>';
+    html += '<td style="font-weight:600;color:' + estadoColor + '">' + estado + '</td>';
+    html += '</tr>';
+  });
+
+  html += '</tbody></table></div>';
+  document.getElementById('summaryContainer').innerHTML = html;
+}
+
+// Auto-scan on load
+runScan();
+</script>
+</body>
+</html>
