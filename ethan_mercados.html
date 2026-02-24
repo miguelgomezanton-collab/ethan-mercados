@@ -255,81 +255,65 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;hei
 
   <!-- SUB: GENERAL + ANÁLISIS INSTITUCIONAL -->
   <div class="sub-view" id="sub-general">
-    
-    <!-- KPIs resumen -->
     <div class="kpi-grid" id="kpi-general"></div>
 
-    <!-- Comparativa Alcista vs Bajista -->
     <div class="g2 mb-md">
       <div class="chart-box"><div class="card-title"><span>⚖️</span> Comparativa Alcista vs Bajista</div><canvas id="chart-compare"></canvas></div>
       <div class="chart-box"><div class="card-title"><span>📈</span> Equity Curve Combinada</div><canvas id="chart-general-equity"></canvas></div>
     </div>
 
-    <!-- ═══ BLOQUE 1: RENTABILIDAD ═══ -->
+    <!-- BLOQUE 1: RENTABILIDAD -->
     <div class="card mb-md" style="border-color:var(--accent)">
       <div class="card-title" style="font-size:15px;margin-bottom:16px"><span>📊</span> 1. RENTABILIDAD</div>
-      <div class="g2 mb-sm">
-        <div id="rent-serie-mensual"></div>
-        <div id="rent-serie-anual"></div>
-      </div>
+      <div class="g2 mb-sm"><div id="rent-serie-mensual"></div><div id="rent-serie-anual"></div></div>
       <div class="kpi-grid mb-sm" id="kpi-rent"></div>
       <div class="g2 mb-sm">
-        <div class="chart-box"><div class="card-title"><span>📅</span> Rentabilidad Mensual</div><canvas id="chart-rent-mensual"></canvas></div>
-        <div class="chart-box"><div class="card-title"><span>🔄</span> Rolling Returns</div><canvas id="chart-rolling"></canvas></div>
+        <div class="chart-box"><div class="card-title"><span>📅</span> Rentabilidad Mensual (% cartera)</div><canvas id="chart-rent-mensual"></canvas></div>
+        <div class="chart-box"><div class="card-title"><span>🔄</span> Rolling Returns (temporal)</div><canvas id="chart-rolling"></canvas></div>
       </div>
       <div id="rent-benchmark"></div>
     </div>
 
-    <!-- ═══ BLOQUE 2: RIESGO ═══ -->
+    <!-- BLOQUE 2: RIESGO -->
     <div class="card mb-md" style="border-color:var(--bear)">
       <div class="card-title" style="font-size:15px;margin-bottom:16px"><span>⚠️</span> 2. RIESGO (nivel fondo)</div>
       <div class="kpi-grid mb-sm" id="kpi-riesgo"></div>
       <div class="g2 mb-sm">
-        <div class="chart-box"><div class="card-title"><span>📉</span> Drawdown Histórico</div><canvas id="chart-drawdown"></canvas></div>
+        <div class="chart-box"><div class="card-title"><span>📉</span> Drawdown Histórico (% cartera)</div><canvas id="chart-drawdown"></canvas></div>
         <div class="chart-box"><div class="card-title"><span>📊</span> Distribución de Retornos</div><canvas id="chart-distrib"></canvas></div>
       </div>
       <div id="risk-detail"></div>
     </div>
 
-    <!-- ═══ BLOQUE 3: EFICIENCIA RIESGO-RETORNO ═══ -->
+    <!-- BLOQUE 3: EFICIENCIA -->
     <div class="card mb-md" style="border-color:var(--warn)">
       <div class="card-title" style="font-size:15px;margin-bottom:16px"><span>⚡</span> 3. EFICIENCIA RIESGO-RETORNO</div>
       <div class="kpi-grid mb-sm" id="kpi-eficiencia"></div>
       <div id="eficiencia-detail"></div>
     </div>
 
-    <!-- ═══ BLOQUE 4: PROBABILIDAD & ROBUSTEZ ═══ -->
+    <!-- BLOQUE 4: PROBABILIDAD -->
     <div class="card mb-md" style="border-color:rgba(168,85,247,0.5)">
       <div class="card-title" style="font-size:15px;margin-bottom:16px"><span>🎯</span> 4. PROBABILIDAD & ROBUSTEZ</div>
       <div class="kpi-grid mb-sm" id="kpi-prob"></div>
       <div class="g2 mb-sm">
-        <div class="chart-box"><div class="card-title"><span>🎲</span> Monte Carlo (1000 simulaciones)</div><canvas id="chart-montecarlo"></canvas></div>
+        <div class="chart-box"><div class="card-title"><span>🎲</span> Monte Carlo (1000 sims · sizing real)</div><canvas id="chart-montecarlo"></canvas></div>
         <div class="chart-box"><div class="card-title"><span>📈</span> Prob. de Alcanzar Objetivo</div><canvas id="chart-prob-obj"></canvas></div>
       </div>
-      <div class="g2 mb-sm">
-        <div id="stress-test"></div>
-        <div id="prob-detail"></div>
-      </div>
+      <div class="g2 mb-sm"><div id="stress-test"></div><div id="prob-detail"></div></div>
     </div>
 
-    <!-- ═══ PROYECCIONES (se mantiene) ═══ -->
+    <!-- PROYECCIONES -->
     <div class="card mb-md">
       <div class="card-title" style="font-size:15px;margin-bottom:16px"><span>🚀</span> PROYECCIONES & ESCENARIOS</div>
       <div class="kpi-grid mb-sm" id="kpi-proj"></div>
       <div class="g2 mb-sm">
-        <div>
-          <p style="font-size:12px;color:var(--text2);margin-bottom:14px">Basado en rentabilidad media × sizing actual, con reinversión compuesta.</p>
-          <div id="proj-table"></div>
-        </div>
+        <div><p style="font-size:12px;color:var(--text2);margin-bottom:14px">Basado en rentabilidad media × sizing actual, con reinversión compuesta.</p><div id="proj-table"></div></div>
         <div class="chart-box"><div class="card-title"><span>📈</span> Curva de Crecimiento</div><canvas id="chart-projection"></canvas></div>
       </div>
-      <div class="g2">
-        <div id="dd-analysis"></div>
-        <div id="scenarios"></div>
-      </div>
+      <div class="g2"><div id="dd-analysis"></div><div id="scenarios"></div></div>
     </div>
 
-    <!-- Serie mensual limpia (hidden, para export) -->
     <div id="serie-mensual-raw" style="display:none"></div>
   </div>
 </div>
@@ -617,162 +601,165 @@ function renderEquityChart(canvasId, ops, color) {
   });
 }
 
-// ── GENERAL VIEW (INSTITUTIONAL ANALYTICS) ──
 
-// Helper: group operations by month → returns [{month:'2024-05', ops:[], rentAcum:X}, ...]
+// ── INSTITUTIONAL ANALYTICS (v2 — corrected) ──
+
+// FIX 1: Portfolio-level impact per operation (P/L ÷ total capital)
+function enrichPortfolioImpact(ops, totalCapital) {
+  return ops.map(o => ({ ...o, impactoCartera: o.pl / totalCapital, pesoOp: o.cap / totalCapital }));
+}
+
+// Monthly series using portfolio-level impacts (not position returns)
 function buildMonthlySeries(ops) {
   if (!ops.length) return [];
-  const sorted = [...ops].sort((a,b) => new Date(a.fs) - new Date(b.fs));
-  const months = {};
-  sorted.forEach(op => {
-    const m = op.fs.substring(0,7); // 'YYYY-MM'
+  var sorted = ops.slice().sort(function(a,b){ return new Date(a.fs) - new Date(b.fs); });
+  var months = {};
+  sorted.forEach(function(op) {
+    var m = op.fs.substring(0,7);
     if (!months[m]) months[m] = [];
     months[m].push(op);
   });
-  const series = [];
-  let acum = 0;
-  Object.keys(months).sort().forEach(m => {
-    const mOps = months[m];
-    const rentMes = mOps.reduce((s,o) => s + o.pct, 0) / mOps.length; // avg return that month
-    const plMes = mOps.reduce((s,o) => s + o.pl, 0);
-    acum += plMes;
-    series.push({ month: m, ops: mOps, rentMes, plMes, acum, nOps: mOps.length });
+  var series = [];
+  Object.keys(months).sort().forEach(function(m) {
+    var mOps = months[m];
+    var rentMes = mOps.reduce(function(s,o){ return s + o.impactoCartera; }, 0);
+    var rentPosMedia = mOps.reduce(function(s,o){ return s + o.pct; }, 0) / mOps.length;
+    var plMes = mOps.reduce(function(s,o){ return s + o.pl; }, 0);
+    series.push({ month: m, rentMes: rentMes, rentPosMedia: rentPosMedia, plMes: plMes, nOps: mOps.length });
   });
+  var acumF = 1;
+  series.forEach(function(m) { acumF *= (1 + m.rentMes); m.acumPct = acumF - 1; });
   return series;
 }
 
-// Helper: group by year
 function buildAnnualSeries(monthly) {
-  const years = {};
-  monthly.forEach(m => {
-    const y = m.month.substring(0,4);
-    if (!years[y]) years[y] = { ops: 0, rentSum: 0, plSum: 0 };
-    years[y].ops += m.nOps;
-    years[y].rentSum += m.rentMes * m.nOps;
-    years[y].plSum += m.plMes;
+  var years = {};
+  monthly.forEach(function(m) {
+    var y = m.month.substring(0,4);
+    if (!years[y]) years[y] = { nOps: 0, rc: 1, pl: 0 };
+    years[y].nOps += m.nOps;
+    years[y].rc *= (1 + m.rentMes);
+    years[y].pl += m.plMes;
   });
-  return Object.keys(years).sort().map(y => ({
-    year: y,
-    nOps: years[y].ops,
-    rentMedia: years[y].ops > 0 ? years[y].rentSum / years[y].ops : 0,
-    plTotal: years[y].plSum
-  }));
+  return Object.keys(years).sort().map(function(y) {
+    return { year: y, nOps: years[y].nOps, rentAnual: years[y].rc - 1, plTotal: years[y].pl };
+  });
 }
 
-// Helper: rolling returns (window = N operations)
-function calcRolling(ops, window) {
-  if (ops.length < window) return [];
-  const result = [];
-  for (let i = window; i <= ops.length; i++) {
-    const slice = ops.slice(i - window, i);
-    const cumRet = slice.reduce((s,o) => s * (1 + o.pct), 1) - 1;
-    result.push({ idx: i, ret: cumRet, endDate: slice[slice.length-1].fs });
+// FIX 5: Rolling by CALENDAR MONTHS, not by op count
+function calcRollingMonths(monthly, windowMonths) {
+  if (monthly.length < windowMonths) return [];
+  var result = [];
+  for (var i = windowMonths; i <= monthly.length; i++) {
+    var slice = monthly.slice(i - windowMonths, i);
+    var cum = 1;
+    slice.forEach(function(m){ cum *= (1 + m.rentMes); });
+    result.push({ endMonth: slice[slice.length-1].month, ret: cum - 1 });
   }
   return result;
 }
 
-// Helper: max drawdown on equity curve
-function calcDrawdownSeries(ops) {
-  if (!ops.length) return { maxDD: 0, ddDuration: 0, ddSeries: [], peakSeries: [] };
-  let equity = [0], peak = 0, maxDD = 0, ddStart = 0, ddEnd = 0, maxDDDuration = 0;
-  let currentDDStart = 0, inDD = false;
-  const ddSeries = [], peakSeries = [];
-  
-  ops.forEach((o, i) => {
-    equity.push(equity[i] + o.pl);
-    const eq = equity[i+1];
-    if (eq > peak) { 
-      peak = eq; 
-      if (inDD) {
-        const dur = i - currentDDStart;
-        if (dur > maxDDDuration) maxDDDuration = dur;
-        inDD = false;
-      }
-    } else if (!inDD) {
-      inDD = true;
-      currentDDStart = i;
-    }
-    const dd = peak > 0 ? (eq - peak) / peak : (peak === 0 && eq < 0) ? eq / (ops[0].cap || 1) : 0;
-    if (dd < maxDD) { maxDD = dd; ddStart = currentDDStart; ddEnd = i; }
+// FIX 2: Drawdown on portfolio % using growth factor (starts at 1.0, never divides by 0)
+function calcDrawdownSeries(opsP) {
+  if (!opsP.length) return { maxDD: 0, ddDuration: 0, ddSeries: [], eqFactors: [] };
+  var factor = 1, peak = 1, maxDD = 0, maxDur = 0;
+  var ddStart = -1, inDD = false;
+  var eqFactors = [1], ddSeries = [];
+  opsP.forEach(function(o, i) {
+    factor *= (1 + o.impactoCartera);
+    eqFactors.push(factor);
+    if (factor > peak) {
+      peak = factor;
+      if (inDD) { maxDur = Math.max(maxDur, i - ddStart); inDD = false; }
+    } else if (!inDD) { inDD = true; ddStart = i; }
+    var dd = (factor - peak) / peak;
+    if (dd < maxDD) maxDD = dd;
     ddSeries.push(dd);
-    peakSeries.push(peak);
   });
-  if (inDD) {
-    const dur = ops.length - currentDDStart;
-    if (dur > maxDDDuration) maxDDDuration = dur;
-  }
-  return { maxDD, ddDuration: maxDDDuration, ddSeries, peakSeries, equity };
+  if (inDD) maxDur = Math.max(maxDur, opsP.length - ddStart);
+  return { maxDD: maxDD, ddDuration: maxDur, ddSeries: ddSeries, eqFactors: eqFactors };
 }
 
-// Helper: downside deviation
-function calcDownsideDeviation(rents, mar = 0) {
-  const neg = rents.filter(r => r < mar).map(r => (r - mar) ** 2);
-  return neg.length ? Math.sqrt(neg.reduce((s,x) => s+x, 0) / rents.length) : 0;
+function calcDownsideDeviation(impacts) {
+  var neg = impacts.filter(function(r){ return r < 0; }).map(function(r){ return r*r; });
+  return neg.length ? Math.sqrt(neg.reduce(function(s,x){ return s+x; }, 0) / impacts.length) : 0;
 }
 
-// Helper: VaR parametric 95%
-function calcVaR95(rents) {
-  if (!rents.length) return 0;
-  const mean = rents.reduce((s,r) => s+r, 0) / rents.length;
-  const std = Math.sqrt(rents.reduce((s,r) => s + (r-mean)**2, 0) / rents.length);
+function calcVaR95(impacts) {
+  if (!impacts.length) return 0;
+  var mean = impacts.reduce(function(s,r){ return s+r; }, 0) / impacts.length;
+  var std = Math.sqrt(impacts.reduce(function(s,r){ return s + (r-mean)*(r-mean); }, 0) / impacts.length);
   return mean - 1.645 * std;
 }
 
-// Helper: Monte Carlo simulation
-function monteCarloSim(rents, nSims, nOps, startCap) {
-  const paths = [];
-  const finals = [];
-  for (let s = 0; s < nSims; s++) {
-    let cap = startCap;
-    const path = [cap];
-    for (let i = 0; i < nOps; i++) {
-      const r = rents[Math.floor(Math.random() * rents.length)];
-      cap *= (1 + r);
+// FIX 4: Monte Carlo uses portfolio impacts (already sized), not position returns
+function monteCarloSim(impacts, nSims, nOps, startCap) {
+  var paths = [], finals = [];
+  for (var s = 0; s < nSims; s++) {
+    var cap = startCap, path = [cap];
+    for (var i = 0; i < nOps; i++) {
+      cap *= (1 + impacts[Math.floor(Math.random() * impacts.length)]);
+      if (cap < 0) cap = 0;
       path.push(cap);
     }
-    paths.push(path);
-    finals.push(cap);
+    paths.push(path); finals.push(cap);
   }
-  finals.sort((a,b) => a - b);
+  finals.sort(function(a,b){ return a-b; });
+  var probDD20 = 0;
+  paths.forEach(function(p) {
+    var pk = p[0];
+    for (var i = 1; i < p.length; i++) {
+      if (p[i] > pk) pk = p[i];
+      if (pk > 0 && (p[i] - pk) / pk < -0.20) { probDD20++; break; }
+    }
+  });
   return {
-    paths,
-    finals,
-    p5: finals[Math.floor(nSims * 0.05)],
-    p25: finals[Math.floor(nSims * 0.25)],
-    p50: finals[Math.floor(nSims * 0.50)],
-    p75: finals[Math.floor(nSims * 0.75)],
+    paths: paths, finals: finals,
+    p5:  finals[Math.floor(nSims * 0.05)],  p25: finals[Math.floor(nSims * 0.25)],
+    p50: finals[Math.floor(nSims * 0.50)],  p75: finals[Math.floor(nSims * 0.75)],
     p95: finals[Math.floor(nSims * 0.95)],
-    probLoss: finals.filter(f => f < startCap).length / nSims,
-    probDD20: paths.filter(p => {
-      let pk = p[0];
-      for (let i = 1; i < p.length; i++) {
-        if (p[i] > pk) pk = p[i];
-        if (pk > 0 && (p[i] - pk) / pk < -0.20) return true;
-      }
-      return false;
-    }).length / nSims
+    probLoss: finals.filter(function(f){ return f < startCap; }).length / nSims,
+    probDD20: probDD20 / nSims
   };
 }
 
-// Helper: stress test (simulate N consecutive worst ops)
-function stressTest(rents, nWorst) {
-  const sorted = [...rents].sort((a,b) => a - b);
-  const worst = sorted.slice(0, nWorst);
-  let cap = 1;
-  worst.forEach(r => cap *= (1+r));
-  return cap - 1; // total loss pct
+// FIX 7: Stress test on portfolio impacts, clear naming
+function stressTest(impacts, nWorst) {
+  var sorted = impacts.slice().sort(function(a,b){ return a-b; });
+  var worst = sorted.slice(0, Math.min(nWorst, sorted.length));
+  var cap = 1;
+  worst.forEach(function(r){ cap *= (1+r); });
+  return cap - 1;
 }
 
+// FIX 6: Export CSV
+function exportMonthlySeries() {
+  try {
+    var raw = JSON.parse(document.getElementById('serie-mensual-raw').textContent);
+    if (!raw.length) { alert('No hay datos'); return; }
+    var csv = 'Mes,Operaciones,Rent_Cartera_Pct,Rent_Pos_Media_Pct,PL_EUR,Acumulado_Pct\n';
+    raw.forEach(function(m) {
+      csv += m.month+','+m.nOps+','+(m.rentMes*100).toFixed(4)+','+(m.rentPosMedia*100).toFixed(4)+','+m.plMes.toFixed(2)+','+(m.acumPct*100).toFixed(4)+'\n';
+    });
+    var blob = new Blob([csv], {type:'text/csv'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'serie_mensual_ethan.csv';
+    a.click();
+  } catch(e) { alert('Error: '+e.message); }
+}
+
+// ── RENDER GENERAL ──
 function renderGeneral() {
-  const rb = calcRatios(DATA.bull.enriched), rr = calcRatios(DATA.bear.enriched);
-  const allOps = [...DATA.bull.enriched,...DATA.bear.enriched].sort((a,b)=>new Date(a.fe)-new Date(b.fe));
-  const rg = calcRatios(allOps);
+  var rb = calcRatios(DATA.bull.enriched), rr = calcRatios(DATA.bear.enriched);
+  var allOps = DATA.bull.enriched.concat(DATA.bear.enriched).sort(function(a,b){ return new Date(a.fe)-new Date(b.fe); });
+  var rg = calcRatios(allOps);
   renderKPIs('kpi-general', rg, 'general');
 
-  // Radar chart (same as before)
+  // Radar
   destroyChart('chart-compare');
   if (rb || rr) {
-    const mkData = r => [r?.winRate*100||0,(r?.rentMedia||0)*100,(r?.esperanza||0)*100,r?.sharpe||0,Math.min(r?.profitFactor||0,10)];
+    var mkData = function(r) { return [r?r.winRate*100:0,(r?r.rentMedia:0)*100,(r?r.esperanza:0)*100,r?r.sharpe:0,Math.min(r?r.profitFactor:0,10)]; };
     charts['chart-compare'] = new Chart(document.getElementById('chart-compare').getContext('2d'), {
       type:'radar',data:{labels:['Win Rate','Rent. Media %','Esperanza %','Sharpe','Profit Factor'],
         datasets:[{label:'Alcista',data:mkData(rb),borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.1)',pointBackgroundColor:'#10b981'},
@@ -781,310 +768,281 @@ function renderGeneral() {
     });
   }
 
-  // Combined equity
+  // Combined equity (€)
   destroyChart('chart-general-equity');
   if (allOps.length) {
-    let eq=[0]; allOps.forEach((o,i)=>eq.push(eq[i]+o.pl));
+    var eq=[0]; allOps.forEach(function(o,i){ eq.push(eq[i]+o.pl); });
     charts['chart-general-equity'] = new Chart(document.getElementById('chart-general-equity').getContext('2d'), {
-      type:'line',data:{labels:eq.map((_,i)=>i===0?'Inicio':'Op '+i),datasets:[{label:'Combinada',data:eq,borderColor:'#38bdf8',tension:.3,pointRadius:3,fill:false}]},
-      options:{responsive:true,plugins:{legend:{labels:{color:'#e8ecf4'}}},scales:{y:{ticks:{callback:v=>'€'+v,color:'#8896ab'},grid:{color:'rgba(255,255,255,0.04)'}},x:{ticks:{color:'#8896ab'},grid:{display:false}}}}
+      type:'line',data:{labels:eq.map(function(_,i){ return i===0?'Inicio':'Op '+i; }),datasets:[{label:'P/L Acumulado (€)',data:eq,borderColor:'#38bdf8',tension:.3,pointRadius:3,fill:false}]},
+      options:{responsive:true,plugins:{legend:{labels:{color:'#e8ecf4'}}},scales:{y:{ticks:{callback:function(v){return '€'+v;},color:'#8896ab'},grid:{color:'rgba(255,255,255,0.04)'}},x:{ticks:{color:'#8896ab'},grid:{display:false}}}}
     });
   }
 
+  // Empty guard
   if (!rg || allOps.length < 2) {
     ['rent-serie-mensual','rent-serie-anual','kpi-rent','rent-benchmark','kpi-riesgo','risk-detail',
-     'kpi-eficiencia','eficiencia-detail','kpi-prob','stress-test','prob-detail'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.innerHTML = '<div class="empty-state"><small>Necesitas operaciones cerradas para ver análisis</small></div>';
+     'kpi-eficiencia','eficiencia-detail','kpi-prob','stress-test','prob-detail'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.innerHTML = '<div class="empty-state"><small>Necesitas operaciones cerradas</small></div>';
     });
-    ['chart-rent-mensual','chart-rolling','chart-drawdown','chart-distrib','chart-montecarlo','chart-prob-obj'].forEach(id => destroyChart(id));
+    ['chart-rent-mensual','chart-rolling','chart-drawdown','chart-distrib','chart-montecarlo','chart-prob-obj'].forEach(function(id){ destroyChart(id); });
     renderProjections();
     return;
   }
 
-  const rents = allOps.map(o => o.pct);
-  const { capital } = getConfig();
+  var cap0 = getConfig().capital;
+  var allOpsP = enrichPortfolioImpact(allOps, cap0);
+  var impacts = allOpsP.map(function(o){ return o.impactoCartera; });
 
-  // ═══════════════════════════════════════════
-  // BLOQUE 1: RENTABILIDAD
-  // ═══════════════════════════════════════════
-  const monthly = buildMonthlySeries(allOps);
-  const annual = buildAnnualSeries(monthly);
-
-  // Save raw monthly series (the gold)
+  // ═══ BLOQUE 1: RENTABILIDAD ═══
+  var monthly = buildMonthlySeries(allOpsP);
+  var annual = buildAnnualSeries(monthly);
   document.getElementById('serie-mensual-raw').textContent = JSON.stringify(monthly);
 
-  // Serie mensual table
-  const smEl = document.getElementById('rent-serie-mensual');
-  let smH = '<div style="padding:16px;background:var(--surface2);border-radius:var(--radius-sm);max-height:300px;overflow-y:auto"><div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px">Serie Mensual</div>';
-  smH += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:4px;font-size:11px;font-family:var(--mono);color:var(--text3);padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:6px"><span>Mes</span><span>Ops</span><span>Rent.</span><span>P/L</span></div>';
-  monthly.forEach(m => {
-    smH += `<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:4px;font-size:11px;font-family:var(--mono);padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.02)">
-      <span style="color:var(--text2)">${m.month}</span><span style="color:var(--text3)">${m.nOps}</span>
-      <span style="color:${m.rentMes>=0?'var(--bull)':'var(--bear)'}">${(m.rentMes*100).toFixed(2)}%</span>
-      <span style="color:${m.plMes>=0?'var(--bull)':'var(--bear)'}">${fmtE(m.plMes)}</span></div>`;
+  // Serie mensual table + export
+  var smEl = document.getElementById('rent-serie-mensual');
+  var smH = '<div style="padding:16px;background:var(--surface2);border-radius:var(--radius-sm);max-height:300px;overflow-y:auto">' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">' +
+    '<div style="font-size:12px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:0.5px">Serie Mensual</div>' +
+    '<button class="btn btn-sm btn-outline" onclick="exportMonthlySeries()" style="font-size:10px;padding:4px 10px">📥 CSV</button></div>' +
+    '<div style="display:grid;grid-template-columns:1fr .5fr 1fr 1fr 1fr;gap:4px;font-size:10px;font-family:var(--mono);color:var(--text3);padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:6px"><span>Mes</span><span>Ops</span><span>Cartera</span><span>P/L</span><span>Acum.</span></div>';
+  monthly.forEach(function(m) {
+    smH += '<div style="display:grid;grid-template-columns:1fr .5fr 1fr 1fr 1fr;gap:4px;font-size:10px;font-family:var(--mono);padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.02)">' +
+      '<span style="color:var(--text2)">'+m.month+'</span><span style="color:var(--text3)">'+m.nOps+'</span>' +
+      '<span style="color:'+(m.rentMes>=0?'var(--bull)':'var(--bear)')+'">'+(m.rentMes*100).toFixed(2)+'%</span>' +
+      '<span style="color:'+(m.plMes>=0?'var(--bull)':'var(--bear)')+'">'+fmtE(m.plMes)+'</span>' +
+      '<span style="color:'+(m.acumPct>=0?'var(--bull)':'var(--bear)')+'">'+(m.acumPct*100).toFixed(2)+'%</span></div>';
   });
   smEl.innerHTML = smH + '</div>';
 
-  // Serie anual table
-  const saEl = document.getElementById('rent-serie-anual');
-  let saH = '<div style="padding:16px;background:var(--surface2);border-radius:var(--radius-sm)"><div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px">Serie Anual</div>';
-  saH += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:4px;font-size:11px;font-family:var(--mono);color:var(--text3);padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:6px"><span>Año</span><span>Ops</span><span>Rent.Med</span><span>P/L</span></div>';
-  annual.forEach(a => {
-    saH += `<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:4px;font-size:11px;font-family:var(--mono);padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.02)">
-      <span style="color:var(--text);font-weight:600">${a.year}</span><span style="color:var(--text3)">${a.nOps}</span>
-      <span style="color:${a.rentMedia>=0?'var(--bull)':'var(--bear)'}">${(a.rentMedia*100).toFixed(2)}%</span>
-      <span style="color:${a.plTotal>=0?'var(--bull)':'var(--bear)'}">${fmtE(a.plTotal)}</span></div>`;
+  // Serie anual
+  var saEl = document.getElementById('rent-serie-anual');
+  var saH = '<div style="padding:16px;background:var(--surface2);border-radius:var(--radius-sm)"><div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px">Serie Anual (compuesta)</div>' +
+    '<div style="display:grid;grid-template-columns:1fr .6fr 1fr 1fr;gap:4px;font-size:11px;font-family:var(--mono);color:var(--text3);padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:6px"><span>Año</span><span>Ops</span><span>Rent.</span><span>P/L</span></div>';
+  annual.forEach(function(a) {
+    saH += '<div style="display:grid;grid-template-columns:1fr .6fr 1fr 1fr;gap:4px;font-size:11px;font-family:var(--mono);padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.02)">' +
+      '<span style="color:var(--text);font-weight:600">'+a.year+'</span><span style="color:var(--text3)">'+a.nOps+'</span>' +
+      '<span style="color:'+(a.rentAnual>=0?'var(--bull)':'var(--bear)')+'">'+(a.rentAnual*100).toFixed(2)+'%</span>' +
+      '<span style="color:'+(a.plTotal>=0?'var(--bull)':'var(--bear)')+'">'+fmtE(a.plTotal)+'</span></div>';
   });
   saEl.innerHTML = saH + '</div>';
 
-  // Rent KPIs
-  const totalDays = (new Date(allOps[allOps.length-1].fs) - new Date(allOps[0].fe)) / 86400000;
-  const years = Math.max(totalDays / 365.25, 1/12);
-  const cumReturn = allOps.reduce((s,o) => s * (1+o.pct), 1) - 1;
-  const annReturn = Math.pow(1 + cumReturn, 1/years) - 1;
-  const benchReturn = 0.10; // S&P500 ~10% anualizado como benchmark por defecto
-  const excessReturn = annReturn - benchReturn;
-  
-  // Tracking Error (std of excess returns approx)
-  const avgRentAnual = rg.rentMedia * rg.opsAnio;
-  const trackingError = rg.stdRent * Math.sqrt(rg.opsAnio);
-  const infoRatio = trackingError > 0 ? excessReturn / trackingError : 0;
+  // FIX 2: Rent acumulada compuesta sobre cartera (no sobre posición)
+  var totalDays = (new Date(allOps[allOps.length-1].fs) - new Date(allOps[0].fe)) / 86400000;
+  var yrs = Math.max(totalDays / 365.25, 1/12);
+  var cumReturn = monthly.length ? monthly[monthly.length-1].acumPct : 0;
+  var annReturn = Math.pow(1 + cumReturn, 1/yrs) - 1;
+  var benchReturn = 0.10;
+  var excessReturn = annReturn - benchReturn;
+  var meanImp = impacts.reduce(function(s,r){return s+r;},0) / impacts.length;
+  var stdImp = Math.sqrt(impacts.reduce(function(s,r){return s+(r-meanImp)*(r-meanImp);},0) / impacts.length);
+  var volAnual = stdImp * Math.sqrt(rg.opsAnio);
+  var tError = volAnual;
+  var infoR = tError > 0 ? excessReturn / tError : 0;
+  var r12m = calcRollingMonths(monthly, 12);
+  var r36m = calcRollingMonths(monthly, 36);
 
-  document.getElementById('kpi-rent').innerHTML = `
-    <div class="kpi green"><div class="kpi-label">Rent. Acumulada</div><div class="kpi-value ${cumReturn>=0?'green':'red'}">${(cumReturn*100).toFixed(2)}%</div><div class="kpi-sub">${allOps.length} ops · ${(years).toFixed(1)} años</div></div>
-    <div class="kpi blue"><div class="kpi-label">Rent. Anualizada</div><div class="kpi-value ${annReturn>=0?'green':'red'}">${(annReturn*100).toFixed(2)}%</div><div class="kpi-sub">CAGR compuesto</div></div>
-    <div class="kpi yellow"><div class="kpi-label">Exceso vs Bench</div><div class="kpi-value ${excessReturn>=0?'green':'red'}">${(excessReturn*100).toFixed(2)}%</div><div class="kpi-sub">vs S&P500 10%</div></div>
-    <div class="kpi blue"><div class="kpi-label">Tracking Error</div><div class="kpi-value">${(trackingError*100).toFixed(2)}%</div></div>
-    <div class="kpi purple"><div class="kpi-label">Information Ratio</div><div class="kpi-value ${infoRatio>=0?'green':'red'}">${fmt(infoRatio)}</div><div class="kpi-sub">${infoRatio>0.5?'✅ Bueno':infoRatio>0?'⚠️ Bajo':'❌ Negativo'}</div></div>
-    <div class="kpi blue"><div class="kpi-label">Rent. Media/Op</div><div class="kpi-value ${rg.rentMedia>=0?'green':'red'}">${fmtPct(rg.rentMedia)}</div><div class="kpi-sub">${fmt(rg.diasMedio,0)}d · ${fmt(rg.opsAnio,1)} ops/año</div></div>`;
+  document.getElementById('kpi-rent').innerHTML =
+    '<div class="kpi green"><div class="kpi-label">Rent. Acumulada</div><div class="kpi-value '+(cumReturn>=0?'green':'red')+'">'+(cumReturn*100).toFixed(2)+'%</div><div class="kpi-sub">'+allOps.length+' ops · '+yrs.toFixed(1)+' años</div></div>' +
+    '<div class="kpi blue"><div class="kpi-label">Rent. Anualizada</div><div class="kpi-value '+(annReturn>=0?'green':'red')+'">'+(annReturn*100).toFixed(2)+'%</div><div class="kpi-sub">CAGR sobre cartera</div></div>' +
+    '<div class="kpi yellow"><div class="kpi-label">Exceso vs Bench</div><div class="kpi-value '+(excessReturn>=0?'green':'red')+'">'+(excessReturn*100).toFixed(2)+'%</div><div class="kpi-sub">vs S&P500 10%</div></div>' +
+    '<div class="kpi blue"><div class="kpi-label">Tracking Error</div><div class="kpi-value">'+(tError*100).toFixed(2)+'%</div><div class="kpi-sub">vol. cartera anualiz.</div></div>' +
+    '<div class="kpi purple"><div class="kpi-label">Information Ratio</div><div class="kpi-value '+(infoR>=0?'green':'red')+'">'+fmt(infoR)+'</div><div class="kpi-sub">'+(infoR>0.5?'✅ Bueno':infoR>0?'⚠️ Bajo':'❌ Negativo')+'</div></div>' +
+    '<div class="kpi blue"><div class="kpi-label">Impacto Medio/Op</div><div class="kpi-value '+(meanImp>=0?'green':'red')+'">'+(meanImp*100).toFixed(3)+'%</div><div class="kpi-sub">sobre total cartera</div></div>';
 
-  // Monthly returns chart
+  // Monthly chart (portfolio %)
   destroyChart('chart-rent-mensual');
   charts['chart-rent-mensual'] = new Chart(document.getElementById('chart-rent-mensual').getContext('2d'), {
-    type:'bar', data:{labels:monthly.map(m=>m.month),datasets:[{data:monthly.map(m=>m.rentMes*100),backgroundColor:monthly.map(m=>m.rentMes>=0?'rgba(74,222,128,0.7)':'rgba(244,113,116,0.7)'),borderRadius:3}]},
-    options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y.toFixed(2)+'%'}}},scales:{y:{ticks:{callback:v=>v.toFixed(1)+'%',color:'#8896ab'},grid:{color:'rgba(255,255,255,0.04)'}},x:{ticks:{color:'#8896ab',maxRotation:45,font:{size:9}},grid:{display:false}}}}
+    type:'bar', data:{labels:monthly.map(function(m){return m.month;}),datasets:[{data:monthly.map(function(m){return m.rentMes*100;}),backgroundColor:monthly.map(function(m){return m.rentMes>=0?'rgba(74,222,128,0.7)':'rgba(244,113,116,0.7)';}),borderRadius:3}]},
+    options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.y.toFixed(2)+'% cartera';}}}},scales:{y:{ticks:{callback:function(v){return v.toFixed(1)+'%';},color:'#8896ab'},grid:{color:'rgba(255,255,255,0.04)'}},x:{ticks:{color:'#8896ab',maxRotation:45,font:{size:9}},grid:{display:false}}}}
   });
 
-  // Rolling returns chart
+  // Rolling chart — FIX 5: temporal 12m/36m
   destroyChart('chart-rolling');
-  const r12 = calcRolling(allOps, Math.min(12, allOps.length));
-  const r36 = calcRolling(allOps, Math.min(36, allOps.length));
-  const rollingDatasets = [];
-  if (r12.length) rollingDatasets.push({label:'Rolling 12 ops',data:r12.map(r=>r.ret*100),borderColor:'#40d9c0',tension:.3,pointRadius:0,fill:false,borderWidth:2});
-  if (r36.length) rollingDatasets.push({label:'Rolling 36 ops',data:r36.map(r=>r.ret*100),borderColor:'#f59e0b',tension:.3,pointRadius:0,fill:false,borderWidth:2,borderDash:[5,3]});
-  if (rollingDatasets.length) {
-    const maxLen = Math.max(r12.length, r36.length);
+  var rDS = [];
+  if (r12m.length) rDS.push({label:'Rolling 12 meses',data:r12m.map(function(r){return r.ret*100;}),borderColor:'#40d9c0',tension:.3,pointRadius:0,fill:false,borderWidth:2});
+  if (r36m.length) rDS.push({label:'Rolling 36 meses',data:r36m.map(function(r){return r.ret*100;}),borderColor:'#f59e0b',tension:.3,pointRadius:0,fill:false,borderWidth:2,borderDash:[5,3]});
+  if (rDS.length) {
+    var rLabels = (r12m.length >= (r36m.length||0) ? r12m : r36m).map(function(r){return r.endMonth;});
     charts['chart-rolling'] = new Chart(document.getElementById('chart-rolling').getContext('2d'), {
-      type:'line', data:{labels:Array.from({length:maxLen},(_,i)=>''+i),datasets:rollingDatasets},
-      options:{responsive:true,plugins:{legend:{labels:{color:'#e8ecf4',font:{size:10}}}},scales:{y:{ticks:{callback:v=>v.toFixed(0)+'%',color:'#8896ab'},grid:{color:'rgba(255,255,255,0.04)'}},x:{display:false}}}
+      type:'line', data:{labels:rLabels, datasets:rDS},
+      options:{responsive:true,plugins:{legend:{labels:{color:'#e8ecf4',font:{size:10}}}},scales:{y:{ticks:{callback:function(v){return v.toFixed(0)+'%';},color:'#8896ab'},grid:{color:'rgba(255,255,255,0.04)'}},x:{ticks:{color:'#8896ab',maxRotation:45,font:{size:8}},grid:{display:false}}}}
     });
   }
 
-  // Benchmark detail
-  document.getElementById('rent-benchmark').innerHTML = `<div style="padding:12px;background:var(--surface2);border-radius:var(--radius-sm);font-size:12px;color:var(--text2);display:flex;gap:20px;flex-wrap:wrap">
-    <span>📌 Benchmark: S&P 500 (10% anualizado)</span>
-    <span>Exceso: <strong style="color:${excessReturn>=0?'var(--bull)':'var(--bear)'}"> ${(excessReturn*100).toFixed(2)}%</strong></span>
-    <span>Info Ratio: <strong style="color:var(--accent)">${fmt(infoRatio)}</strong></span>
-    <span>Track. Error: <strong>${(trackingError*100).toFixed(2)}%</strong></span></div>`;
+  // Benchmark note
+  document.getElementById('rent-benchmark').innerHTML = '<div style="padding:12px;background:var(--surface2);border-radius:var(--radius-sm);font-size:12px;color:var(--text2);display:flex;gap:20px;flex-wrap:wrap;align-items:center">' +
+    '<span>📌 Benchmark: S&P 500 (10% anualizado)</span>' +
+    '<span>Exceso: <strong style="color:'+(excessReturn>=0?'var(--bull)':'var(--bear)')+'"> '+(excessReturn*100).toFixed(2)+'%</strong></span>' +
+    '<span>Info Ratio: <strong style="color:var(--accent)">'+fmt(infoR)+'</strong></span>' +
+    '<span style="color:var(--text3);font-size:10px">· Todos los % calculados sobre capital total, no sobre posición</span></div>';
 
-  // ═══════════════════════════════════════════
-  // BLOQUE 2: RIESGO
-  // ═══════════════════════════════════════════
-  const dd = calcDrawdownSeries(allOps);
-  const volAnual = rg.stdRent * Math.sqrt(rg.opsAnio);
-  const downsideDev = calcDownsideDeviation(rents);
-  const downsideDevAnual = downsideDev * Math.sqrt(rg.opsAnio);
-  const var95 = calcVaR95(rents);
-  
-  // Beta vs benchmark (approx using correlation concept with market)
-  // Since we don't have benchmark series, we approximate beta = vol_fund / vol_market * correlation
-  // Using vol_market ≈ 15% and assumed correlation ≈ 0.6
-  const volMarket = 0.15;
-  const betaApprox = (volAnual / volMarket) * 0.6;
-  const corrApprox = 0.6; // placeholder — would need real benchmark data
+  // ═══ BLOQUE 2: RIESGO (sin Beta/Correlación falsos — FIX 3) ═══
+  var dd = calcDrawdownSeries(allOpsP);
+  var dsDev = calcDownsideDeviation(impacts);
+  var dsDevAn = dsDev * Math.sqrt(rg.opsAnio);
+  var var95 = calcVaR95(impacts);
 
-  document.getElementById('kpi-riesgo').innerHTML = `
-    <div class="kpi yellow"><div class="kpi-label">Volatilidad Anualizada</div><div class="kpi-value yellow">${(volAnual*100).toFixed(2)}%</div><div class="kpi-sub">σ × √(ops/año)</div></div>
-    <div class="kpi red"><div class="kpi-label">Máximo Drawdown</div><div class="kpi-value red">${(dd.maxDD*100).toFixed(2)}%</div><div class="kpi-sub">equity curve</div></div>
-    <div class="kpi red"><div class="kpi-label">Duración DD</div><div class="kpi-value red">${dd.ddDuration} ops</div><div class="kpi-sub">operaciones en DD</div></div>
-    <div class="kpi yellow"><div class="kpi-label">Downside Dev.</div><div class="kpi-value yellow">${(downsideDevAnual*100).toFixed(2)}%</div><div class="kpi-sub">anualizada</div></div>
-    <div class="kpi red"><div class="kpi-label">VaR 95%</div><div class="kpi-value red">${(var95*100).toFixed(2)}%</div><div class="kpi-sub">por operación</div></div>
-    <div class="kpi blue"><div class="kpi-label">Beta (aprox)</div><div class="kpi-value">${fmt(betaApprox)}</div><div class="kpi-sub">vs mercado</div></div>
-    <div class="kpi blue"><div class="kpi-label">Correlación</div><div class="kpi-value">${fmt(corrApprox)}</div><div class="kpi-sub">estimada</div></div>
-    <div class="kpi purple"><div class="kpi-label">Desv. Estándar/Op</div><div class="kpi-value">${(rg.stdRent*100).toFixed(2)}%</div></div>`;
+  document.getElementById('kpi-riesgo').innerHTML =
+    '<div class="kpi yellow"><div class="kpi-label">Volatilidad Anualizada</div><div class="kpi-value yellow">'+(volAnual*100).toFixed(2)+'%</div><div class="kpi-sub">σ cartera × √(ops/año)</div></div>' +
+    '<div class="kpi red"><div class="kpi-label">Máximo Drawdown</div><div class="kpi-value red">'+(dd.maxDD*100).toFixed(2)+'%</div><div class="kpi-sub">sobre capital total</div></div>' +
+    '<div class="kpi red"><div class="kpi-label">Duración DD</div><div class="kpi-value red">'+dd.ddDuration+' ops</div><div class="kpi-sub">en drawdown</div></div>' +
+    '<div class="kpi yellow"><div class="kpi-label">Downside Dev.</div><div class="kpi-value yellow">'+(dsDevAn*100).toFixed(2)+'%</div><div class="kpi-sub">anualizada · cartera</div></div>' +
+    '<div class="kpi red"><div class="kpi-label">VaR 95%</div><div class="kpi-value red">'+(var95*100).toFixed(2)+'%</div><div class="kpi-sub">por op · cartera</div></div>' +
+    '<div class="kpi purple"><div class="kpi-label">σ por Operación</div><div class="kpi-value">'+(stdImp*100).toFixed(3)+'%</div><div class="kpi-sub">desv. impacto cartera</div></div>';
 
-  // Drawdown chart
+  // Drawdown chart — FIX 2: portfolio %
   destroyChart('chart-drawdown');
   charts['chart-drawdown'] = new Chart(document.getElementById('chart-drawdown').getContext('2d'), {
-    type:'line', data:{labels:dd.ddSeries.map((_,i)=>'Op '+(i+1)),datasets:[{label:'Drawdown',data:dd.ddSeries.map(d=>d*100),borderColor:'#f47174',backgroundColor:'rgba(244,113,116,0.15)',fill:true,tension:.3,pointRadius:0,borderWidth:2}]},
-    options:{responsive:true,plugins:{legend:{labels:{color:'#e8ecf4'}}},scales:{y:{ticks:{callback:v=>v.toFixed(1)+'%',color:'#8896ab'},grid:{color:'rgba(255,255,255,0.04)'}},x:{ticks:{color:'#8896ab',font:{size:9}},grid:{display:false}}}}
+    type:'line', data:{labels:dd.ddSeries.map(function(_,i){return 'Op '+(i+1);}),datasets:[{label:'Drawdown (% cartera)',data:dd.ddSeries.map(function(d){return d*100;}),borderColor:'#f47174',backgroundColor:'rgba(244,113,116,0.15)',fill:true,tension:.3,pointRadius:0,borderWidth:2}]},
+    options:{responsive:true,plugins:{legend:{labels:{color:'#e8ecf4'}}},scales:{y:{ticks:{callback:function(v){return v.toFixed(1)+'%';},color:'#8896ab'},grid:{color:'rgba(255,255,255,0.04)'}},x:{ticks:{color:'#8896ab',font:{size:9}},grid:{display:false}}}}
   });
 
-  // Distribution chart
+  // Distribution — portfolio impacts
   destroyChart('chart-distrib');
-  const bins = 20;
-  const minR = Math.min(...rents), maxR = Math.max(...rents);
-  const binWidth = (maxR - minR) / bins || 0.01;
-  const histogram = Array(bins).fill(0);
-  rents.forEach(r => { const b = Math.min(Math.floor((r - minR) / binWidth), bins-1); histogram[b]++; });
-  const binLabels = Array.from({length:bins}, (_,i) => ((minR + i*binWidth)*100).toFixed(1)+'%');
-  const binColors = Array.from({length:bins}, (_,i) => {
-    const mid = minR + (i+0.5)*binWidth;
-    return mid >= 0 ? 'rgba(74,222,128,0.6)' : 'rgba(244,113,116,0.6)';
-  });
+  var nBins = Math.min(20, Math.max(5, Math.ceil(Math.sqrt(impacts.length))));
+  var minI = Math.min.apply(null,impacts), maxI = Math.max.apply(null,impacts);
+  var binW = (maxI - minI) / nBins || 0.001;
+  var hist = new Array(nBins).fill(0);
+  impacts.forEach(function(r){ var b = Math.min(Math.floor((r-minI)/binW), nBins-1); hist[b]++; });
+  var bLabels = [], bColors = [];
+  for (var bi=0; bi<nBins; bi++) {
+    bLabels.push(((minI+bi*binW)*100).toFixed(2)+'%');
+    bColors.push((minI+(bi+0.5)*binW)>=0?'rgba(74,222,128,0.6)':'rgba(244,113,116,0.6)');
+  }
   charts['chart-distrib'] = new Chart(document.getElementById('chart-distrib').getContext('2d'), {
-    type:'bar', data:{labels:binLabels,datasets:[{data:histogram,backgroundColor:binColors,borderRadius:2}]},
-    options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{ticks:{color:'#8896ab'},grid:{color:'rgba(255,255,255,0.04)'}},x:{ticks:{color:'#8896ab',maxRotation:45,font:{size:8}},grid:{display:false}}}}
+    type:'bar', data:{labels:bLabels,datasets:[{data:hist,backgroundColor:bColors,borderRadius:2}]},
+    options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{ticks:{color:'#8896ab'},grid:{color:'rgba(255,255,255,0.04)'}},x:{ticks:{color:'#8896ab',maxRotation:45,font:{size:7}},grid:{display:false}}}}
   });
 
-  // Risk detail
-  document.getElementById('risk-detail').innerHTML = `<div style="padding:12px;background:var(--surface2);border-radius:var(--radius-sm);font-size:12px;color:var(--text2);display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
-    <div>Skewness: <strong style="color:var(--text);font-family:var(--mono)">${fmt(rents.reduce((s,r) => s + Math.pow((r-rg.rentMedia)/rg.stdRent, 3), 0) / rents.length)}</strong></div>
-    <div>Kurtosis: <strong style="color:var(--text);font-family:var(--mono)">${fmt(rents.reduce((s,r) => s + Math.pow((r-rg.rentMedia)/rg.stdRent, 4), 0) / rents.length - 3)}</strong></div>
-    <div>Máx Rachas Perd.: <strong style="color:var(--bear);font-family:var(--mono)">${rg.maxConsecLoss}</strong></div>
-    <div>Profit Factor: <strong style="color:var(--accent);font-family:var(--mono)">${rg.profitFactor===Infinity?'∞':fmt(rg.profitFactor)}</strong></div>
-    <div>AvgWin: <strong style="color:var(--bull);font-family:var(--mono)">${fmtPct(rg.avgWinPct)}</strong></div>
-    <div>AvgLoss: <strong style="color:var(--bear);font-family:var(--mono)">-${(rg.avgLossPct*100).toFixed(2)}%</strong></div></div>`;
+  // Risk detail — skewness, kurtosis on portfolio impacts
+  var skew = stdImp > 0 ? impacts.reduce(function(s,r){return s+Math.pow((r-meanImp)/stdImp,3);},0)/impacts.length : 0;
+  var kurt = stdImp > 0 ? impacts.reduce(function(s,r){return s+Math.pow((r-meanImp)/stdImp,4);},0)/impacts.length - 3 : 0;
+  document.getElementById('risk-detail').innerHTML = '<div style="padding:12px;background:var(--surface2);border-radius:var(--radius-sm);font-size:12px;color:var(--text2);display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">' +
+    '<div>Skewness: <strong style="color:var(--text);font-family:var(--mono)">'+fmt(skew)+'</strong> <span style="font-size:10px;color:var(--text3)">'+(skew>0.2?'(cola dcha ✅)':skew<-0.2?'(cola izda ⚠️)':'(simétrico)')+'</span></div>' +
+    '<div>Kurtosis: <strong style="color:var(--text);font-family:var(--mono)">'+fmt(kurt)+'</strong> <span style="font-size:10px;color:var(--text3)">'+(kurt>1?'(colas pesadas ⚠️)':'(normal)')+'</span></div>' +
+    '<div>Máx Rachas Perd.: <strong style="color:var(--bear);font-family:var(--mono)">'+rg.maxConsecLoss+'</strong></div>' +
+    '<div>Profit Factor: <strong style="color:var(--accent);font-family:var(--mono)">'+(rg.profitFactor===Infinity?'∞':fmt(rg.profitFactor))+'</strong></div>' +
+    '<div>AvgWin/pos: <strong style="color:var(--bull);font-family:var(--mono)">'+fmtPct(rg.avgWinPct)+'</strong></div>' +
+    '<div>AvgLoss/pos: <strong style="color:var(--bear);font-family:var(--mono)">-'+(rg.avgLossPct*100).toFixed(2)+'%</strong></div>' +
+    '<div style="grid-column:span 3;padding-top:8px;border-top:1px solid var(--border);font-size:10px;color:var(--text3)">⚠️ Riesgo calculado sobre impacto real en cartera (P/L ÷ Capital Total). No incluye Beta ni Correlación — requieren serie de benchmark real.</div></div>';
 
-  // ═══════════════════════════════════════════
-  // BLOQUE 3: EFICIENCIA RIESGO-RETORNO
-  // ═══════════════════════════════════════════
-  const rfRate = 0.03; // risk-free ~3%
-  const rfPerOp = rfRate / rg.opsAnio;
-  const sharpeAnual = volAnual > 0 ? (annReturn - rfRate) / volAnual : 0;
-  const sortinoAnual = downsideDevAnual > 0 ? (annReturn - rfRate) / downsideDevAnual : 0;
-  const calmar = dd.maxDD !== 0 ? annReturn / Math.abs(dd.maxDD) : 0;
-  const retOverDD = dd.maxDD !== 0 ? annReturn / Math.abs(dd.maxDD) : 0;
+  // ═══ BLOQUE 3: EFICIENCIA ═══
+  var rfRate = 0.03;
+  var sharpeA = volAnual > 0 ? (annReturn - rfRate) / volAnual : 0;
+  var sortinoA = dsDevAn > 0 ? (annReturn - rfRate) / dsDevAn : 0;
+  var calmar = dd.maxDD !== 0 ? annReturn / Math.abs(dd.maxDD) : 0;
 
-  document.getElementById('kpi-eficiencia').innerHTML = `
-    <div class="kpi green"><div class="kpi-label">Sharpe Ratio</div><div class="kpi-value ${sharpeAnual>1?'green':sharpeAnual>0.5?'yellow':'red'}">${fmt(sharpeAnual)}</div><div class="kpi-sub">${sharpeAnual>1?'✅ Excelente':sharpeAnual>0.5?'⚠️ Aceptable':'❌ Bajo'} · anualizado</div></div>
-    <div class="kpi green"><div class="kpi-label">Sortino Ratio</div><div class="kpi-value ${sortinoAnual>1.5?'green':sortinoAnual>0.5?'yellow':'red'}">${fmt(sortinoAnual)}</div><div class="kpi-sub">${sortinoAnual>1.5?'✅ Excelente':sortinoAnual>0.5?'⚠️ Aceptable':'❌ Bajo'}</div></div>
-    <div class="kpi yellow"><div class="kpi-label">Calmar Ratio</div><div class="kpi-value ${calmar>1?'green':calmar>0.5?'yellow':'red'}">${fmt(calmar)}</div><div class="kpi-sub">CAGR / Máx DD</div></div>
-    <div class="kpi blue"><div class="kpi-label">Ret. Anual / Máx DD</div><div class="kpi-value">${fmt(retOverDD)}</div><div class="kpi-sub">${retOverDD>2?'✅ Muy bueno':retOverDD>1?'⚠️ Correcto':'❌ Bajo'}</div></div>`;
+  document.getElementById('kpi-eficiencia').innerHTML =
+    '<div class="kpi green"><div class="kpi-label">Sharpe Ratio</div><div class="kpi-value '+(sharpeA>1?'green':sharpeA>0.5?'yellow':'red')+'">'+fmt(sharpeA)+'</div><div class="kpi-sub">'+(sharpeA>1?'✅ Excelente':sharpeA>0.5?'⚠️ Aceptable':'❌ Bajo')+' · anualizado</div></div>' +
+    '<div class="kpi green"><div class="kpi-label">Sortino Ratio</div><div class="kpi-value '+(sortinoA>1.5?'green':sortinoA>0.5?'yellow':'red')+'">'+fmt(sortinoA)+'</div><div class="kpi-sub">'+(sortinoA>1.5?'✅ Excelente':sortinoA>0.5?'⚠️ Aceptable':'❌ Bajo')+'</div></div>' +
+    '<div class="kpi yellow"><div class="kpi-label">Calmar Ratio</div><div class="kpi-value '+(calmar>1?'green':calmar>0.5?'yellow':'red')+'">'+fmt(calmar)+'</div><div class="kpi-sub">CAGR / Máx DD</div></div>' +
+    '<div class="kpi blue"><div class="kpi-label">Ret. Anual / Máx DD</div><div class="kpi-value">'+fmt(calmar)+'</div><div class="kpi-sub">'+(calmar>2?'✅ Muy bueno':calmar>1?'⚠️ Correcto':'❌ Bajo')+'</div></div>';
 
-  document.getElementById('eficiencia-detail').innerHTML = `<div style="padding:16px;background:var(--surface2);border-radius:var(--radius-sm);font-size:12px;color:var(--text2)">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-      <div><div style="font-weight:600;color:var(--accent);margin-bottom:8px">Interpretación Sharpe</div>
-        <div style="line-height:2">< 0.5: Malo — difícil justificar el riesgo<br>0.5–1.0: Aceptable — fondos promedio<br>1.0–2.0: Bueno — top quartile<br>> 2.0: Excepcional — muy raro sostenerlo</div></div>
-      <div><div style="font-weight:600;color:var(--accent);margin-bottom:8px">Interpretación Calmar</div>
-        <div style="line-height:2">< 0.5: Alto riesgo relativo a retorno<br>0.5–1.0: Equilibrado<br>1.0–3.0: Buen control de pérdidas<br>> 3.0: Excelente — muy buscado por fondos</div></div>
-    </div>
-    <div style="margin-top:12px;padding:10px;background:var(--accent-glow);border:1px solid rgba(59,130,246,0.3);border-radius:var(--radius-sm)">
-      <strong style="color:var(--accent)">Tu narrativa:</strong> Sharpe ${fmt(sharpeAnual)} · Sortino ${fmt(sortinoAnual)} · Calmar ${fmt(calmar)}.
-      ${calmar > 1 ? 'El fondo tiene un excelente control del drawdown relativo a su retorno.' : 
-        sharpeAnual > 0.5 ? 'Rentabilidad aceptable pero hay margen para mejorar el control de caídas.' : 
-        'Necesitas más operaciones o mejorar el edge para alcanzar ratios atractivos.'}</div></div>`;
+  document.getElementById('eficiencia-detail').innerHTML = '<div style="padding:16px;background:var(--surface2);border-radius:var(--radius-sm);font-size:12px;color:var(--text2)">' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">' +
+    '<div><div style="font-weight:600;color:var(--accent);margin-bottom:8px">Interpretación Sharpe</div><div style="line-height:2">&lt; 0.5: Malo — difícil justificar el riesgo<br>0.5–1.0: Aceptable — fondos promedio<br>1.0–2.0: Bueno — top quartile<br>&gt; 2.0: Excepcional — muy raro sostenerlo</div></div>' +
+    '<div><div style="font-weight:600;color:var(--accent);margin-bottom:8px">Interpretación Calmar</div><div style="line-height:2">&lt; 0.5: Alto riesgo relativo a retorno<br>0.5–1.0: Equilibrado<br>1.0–3.0: Buen control de pérdidas<br>&gt; 3.0: Excelente — muy buscado por fondos</div></div></div>' +
+    '<div style="margin-top:12px;padding:10px;background:var(--accent-glow);border:1px solid rgba(59,130,246,0.3);border-radius:var(--radius-sm)">' +
+    '<strong style="color:var(--accent)">Tu narrativa:</strong> Sharpe '+fmt(sharpeA)+' · Sortino '+fmt(sortinoA)+' · Calmar '+fmt(calmar)+'. ' +
+    (calmar>1?'Excelente control del drawdown relativo a retorno.':sharpeA>0.5?'Rentabilidad aceptable, margen para mejorar control de caídas.':'Necesitas más operaciones o mejorar el edge.')+'</div></div>';
 
-  // ═══════════════════════════════════════════
-  // BLOQUE 4: PROBABILIDAD & ROBUSTEZ
-  // ═══════════════════════════════════════════
-  const nOps5y = Math.round(rg.opsAnio * 5);
-  const nOps10y = Math.round(rg.opsAnio * 10);
-  const nOps15y = Math.round(rg.opsAnio * 15);
-  
-  // Monte Carlo
-  const mc5 = monteCarloSim(rents, 1000, nOps5y, capital);
-  const mc10 = monteCarloSim(rents, 500, nOps10y, capital);
-  const mc15 = monteCarloSim(rents, 500, nOps15y, capital);
+  // ═══ BLOQUE 4: PROBABILIDAD & ROBUSTEZ ═══
+  var nOps5y = Math.round(rg.opsAnio * 5);
+  var nOps10y = Math.round(rg.opsAnio * 10);
+  var nOps15y = Math.round(rg.opsAnio * 15);
 
-  // Probability of reaching 2x, 3x, 5x
-  const prob2x5 = mc5.finals.filter(f => f >= capital*2).length / mc5.finals.length;
-  const prob2x10 = mc10.finals.filter(f => f >= capital*2).length / mc10.finals.length;
-  const prob3x10 = mc10.finals.filter(f => f >= capital*3).length / mc10.finals.length;
-  const prob5x15 = mc15.finals.filter(f => f >= capital*5).length / mc15.finals.length;
+  // FIX 4: Monte Carlo con portfolio impacts (sizing real)
+  var mc5 = monteCarloSim(impacts, 1000, nOps5y, cap0);
+  var mc10 = monteCarloSim(impacts, 500, nOps10y, cap0);
+  var mc15 = monteCarloSim(impacts, 500, nOps15y, cap0);
 
-  // Stress tests
-  const stress3 = stressTest(rents, 3);
-  const stress5 = stressTest(rents, 5);
-  const stress10 = stressTest(rents, Math.min(10, rents.length));
-  // Simulated "2008" = 6 worst ops consecutively, "2020" = 4 worst ops
-  const stress2008 = stressTest(rents, Math.min(6, rents.length));
-  const stress2020 = stressTest(rents, Math.min(4, rents.length));
+  var p2x5  = mc5.finals.filter(function(f){return f>=cap0*2;}).length / mc5.finals.length;
+  var p2x10 = mc10.finals.filter(function(f){return f>=cap0*2;}).length / mc10.finals.length;
+  var p3x10 = mc10.finals.filter(function(f){return f>=cap0*3;}).length / mc10.finals.length;
+  var p5x15 = mc15.finals.filter(function(f){return f>=cap0*5;}).length / mc15.finals.length;
 
-  document.getElementById('kpi-prob').innerHTML = `
-    <div class="kpi green"><div class="kpi-label">P(2x en 5 años)</div><div class="kpi-value green">${(prob2x5*100).toFixed(1)}%</div><div class="kpi-sub">Monte Carlo 1000 sims</div></div>
-    <div class="kpi green"><div class="kpi-label">P(2x en 10 años)</div><div class="kpi-value green">${(prob2x10*100).toFixed(1)}%</div></div>
-    <div class="kpi blue"><div class="kpi-label">P(3x en 10 años)</div><div class="kpi-value blue">${(prob3x10*100).toFixed(1)}%</div></div>
-    <div class="kpi purple"><div class="kpi-label">P(5x en 15 años)</div><div class="kpi-value purple">${(prob5x15*100).toFixed(1)}%</div></div>
-    <div class="kpi red"><div class="kpi-label">P(DD > 20%)</div><div class="kpi-value red">${(mc5.probDD20*100).toFixed(1)}%</div><div class="kpi-sub">en horizonte 5Y</div></div>
-    <div class="kpi yellow"><div class="kpi-label">P(perder capital)</div><div class="kpi-value ${mc5.probLoss>0.3?'red':'yellow'}">${(mc5.probLoss*100).toFixed(1)}%</div><div class="kpi-sub">en 5 años</div></div>
-    <div class="kpi blue"><div class="kpi-label">Mediana 5Y</div><div class="kpi-value green">${fmtK(mc5.p50)}</div><div class="kpi-sub">×${(mc5.p50/capital).toFixed(2)}</div></div>
-    <div class="kpi blue"><div class="kpi-label">P95 / P5 (5Y)</div><div class="kpi-value">${fmtK(mc5.p95)}</div><div class="kpi-sub">peor: ${fmtK(mc5.p5)}</div></div>`;
+  // FIX 7: Stress tests on portfolio impacts, honest naming
+  var st3 = stressTest(impacts, 3);
+  var st5 = stressTest(impacts, 5);
+  var st10 = stressTest(impacts, Math.min(10, impacts.length));
+  var stCrisis = stressTest(impacts, Math.min(6, impacts.length));
+  var stCrash = stressTest(impacts, Math.min(4, impacts.length));
 
-  // Monte Carlo chart (show 50 sample paths + percentile bands)
+  document.getElementById('kpi-prob').innerHTML =
+    '<div class="kpi green"><div class="kpi-label">P(2x en 5 años)</div><div class="kpi-value green">'+(p2x5*100).toFixed(1)+'%</div><div class="kpi-sub">1000 simulaciones</div></div>' +
+    '<div class="kpi green"><div class="kpi-label">P(2x en 10 años)</div><div class="kpi-value green">'+(p2x10*100).toFixed(1)+'%</div></div>' +
+    '<div class="kpi blue"><div class="kpi-label">P(3x en 10 años)</div><div class="kpi-value blue">'+(p3x10*100).toFixed(1)+'%</div></div>' +
+    '<div class="kpi purple"><div class="kpi-label">P(5x en 15 años)</div><div class="kpi-value purple">'+(p5x15*100).toFixed(1)+'%</div></div>' +
+    '<div class="kpi red"><div class="kpi-label">P(DD &gt; 20%)</div><div class="kpi-value red">'+(mc5.probDD20*100).toFixed(1)+'%</div><div class="kpi-sub">horizonte 5Y</div></div>' +
+    '<div class="kpi yellow"><div class="kpi-label">P(perder capital)</div><div class="kpi-value '+(mc5.probLoss>0.3?'red':'yellow')+'">'+(mc5.probLoss*100).toFixed(1)+'%</div><div class="kpi-sub">en 5 años</div></div>' +
+    '<div class="kpi blue"><div class="kpi-label">Mediana 5Y</div><div class="kpi-value green">'+fmtK(mc5.p50)+'</div><div class="kpi-sub">×'+(mc5.p50/cap0).toFixed(2)+'</div></div>' +
+    '<div class="kpi blue"><div class="kpi-label">P95 / P5 (5Y)</div><div class="kpi-value">'+fmtK(mc5.p95)+'</div><div class="kpi-sub">peor: '+fmtK(mc5.p5)+'</div></div>';
+
+  // Monte Carlo chart
   destroyChart('chart-montecarlo');
-  const nShow = 50;
-  const mcDatasets = [];
-  for (let i = 0; i < Math.min(nShow, mc5.paths.length); i++) {
-    mcDatasets.push({data:mc5.paths[i], borderColor:'rgba(64,217,192,0.08)', borderWidth:1, pointRadius:0, tension:.1, fill:false});
+  var mcDS = [];
+  var nShow = Math.min(50, mc5.paths.length);
+  for (var si=0; si<nShow; si++) {
+    mcDS.push({data:mc5.paths[si],borderColor:'rgba(64,217,192,0.08)',borderWidth:1,pointRadius:0,tension:.1,fill:false});
   }
-  // Percentile paths
-  const pLen = nOps5y + 1;
-  const p5Path=[], p50Path=[], p95Path=[];
-  for (let step = 0; step < pLen; step++) {
-    const vals = mc5.paths.map(p => p[Math.min(step, p.length-1)]).sort((a,b)=>a-b);
-    p5Path.push(vals[Math.floor(vals.length*0.05)]);
-    p50Path.push(vals[Math.floor(vals.length*0.50)]);
-    p95Path.push(vals[Math.floor(vals.length*0.95)]);
+  var pLen = nOps5y + 1;
+  var p5P=[], p50P=[], p95P=[];
+  for (var step=0; step<pLen; step++) {
+    var vals = mc5.paths.map(function(p){return p[Math.min(step,p.length-1)];}).sort(function(a,b){return a-b;});
+    p5P.push(vals[Math.floor(vals.length*0.05)]);
+    p50P.push(vals[Math.floor(vals.length*0.50)]);
+    p95P.push(vals[Math.floor(vals.length*0.95)]);
   }
-  mcDatasets.push({label:'P95',data:p95Path,borderColor:'#4ade80',borderWidth:2,pointRadius:0,tension:.3,fill:false,borderDash:[5,3]});
-  mcDatasets.push({label:'Mediana',data:p50Path,borderColor:'#40d9c0',borderWidth:2.5,pointRadius:0,tension:.3,fill:false});
-  mcDatasets.push({label:'P5',data:p5Path,borderColor:'#f47174',borderWidth:2,pointRadius:0,tension:.3,fill:false,borderDash:[5,3]});
-  
-  const mcLabels = Array.from({length:pLen}, (_,i) => i % Math.round(rg.opsAnio) === 0 ? `Año ${Math.round(i/rg.opsAnio)}` : '');
+  mcDS.push({label:'P95',data:p95P,borderColor:'#4ade80',borderWidth:2,pointRadius:0,tension:.3,fill:false,borderDash:[5,3]});
+  mcDS.push({label:'Mediana',data:p50P,borderColor:'#40d9c0',borderWidth:2.5,pointRadius:0,tension:.3,fill:false});
+  mcDS.push({label:'P5',data:p5P,borderColor:'#f47174',borderWidth:2,pointRadius:0,tension:.3,fill:false,borderDash:[5,3]});
+  var opsPerY = Math.max(1, Math.round(rg.opsAnio));
+  var mcL = [];
+  for (var li=0; li<pLen; li++) mcL.push(li % opsPerY === 0 ? 'Año '+Math.round(li/opsPerY) : '');
   charts['chart-montecarlo'] = new Chart(document.getElementById('chart-montecarlo').getContext('2d'), {
-    type:'line', data:{labels:mcLabels, datasets:mcDatasets},
-    options:{responsive:true,plugins:{legend:{labels:{color:'#e8ecf4',font:{size:10},filter:item=>item.text}}},
-      scales:{y:{ticks:{callback:v=>fmtK(v),color:'#8896ab'},grid:{color:'rgba(255,255,255,0.04)'}},x:{ticks:{color:'#8896ab',maxTicksLimit:6},grid:{display:false}}}}
+    type:'line', data:{labels:mcL, datasets:mcDS},
+    options:{responsive:true,plugins:{legend:{labels:{color:'#e8ecf4',font:{size:10},filter:function(item){return item.text;}}}},
+      scales:{y:{ticks:{callback:function(v){return fmtK(v);},color:'#8896ab'},grid:{color:'rgba(255,255,255,0.04)'}},x:{ticks:{color:'#8896ab',maxTicksLimit:6},grid:{display:false}}}}
   });
 
   // Prob objective chart
   destroyChart('chart-prob-obj');
-  const objectives = [
-    {label:'2x 5Y', val:prob2x5}, {label:'2x 10Y', val:prob2x10}, {label:'3x 10Y', val:prob3x10}, {label:'5x 15Y', val:prob5x15}
-  ];
+  var objs = [{l:'2x 5Y',v:p2x5},{l:'2x 10Y',v:p2x10},{l:'3x 10Y',v:p3x10},{l:'5x 15Y',v:p5x15}];
   charts['chart-prob-obj'] = new Chart(document.getElementById('chart-prob-obj').getContext('2d'), {
-    type:'bar', data:{labels:objectives.map(o=>o.label),datasets:[{data:objectives.map(o=>o.val*100),backgroundColor:objectives.map(o=>o.val>0.7?'rgba(74,222,128,0.7)':o.val>0.4?'rgba(251,191,36,0.7)':'rgba(244,113,116,0.7)'),borderRadius:6}]},
-    options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y.toFixed(1)+'%'}}},
-      scales:{y:{max:100,ticks:{callback:v=>v+'%',color:'#8896ab'},grid:{color:'rgba(255,255,255,0.04)'}},x:{ticks:{color:'#8896ab'},grid:{display:false}}}}
+    type:'bar', data:{labels:objs.map(function(o){return o.l;}),datasets:[{data:objs.map(function(o){return o.v*100;}),backgroundColor:objs.map(function(o){return o.v>0.7?'rgba(74,222,128,0.7)':o.v>0.4?'rgba(251,191,36,0.7)':'rgba(244,113,116,0.7)';}),borderRadius:6}]},
+    options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.y.toFixed(1)+'%';}}}},
+      scales:{y:{max:100,ticks:{callback:function(v){return v+'%';},color:'#8896ab'},grid:{color:'rgba(255,255,255,0.04)'}},x:{ticks:{color:'#8896ab'},grid:{display:false}}}}
   });
 
-  // Stress test
-  document.getElementById('stress-test').innerHTML = `<div style="padding:16px;background:var(--surface2);border-radius:var(--radius-sm)">
-    <div style="font-size:12px;font-weight:600;color:var(--bear);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px">🧪 Stress Tests Históricos</div>
-    <div style="font-size:12px;line-height:2.2;font-family:var(--mono);color:var(--text2)">
-      <div style="display:flex;justify-content:space-between;padding:4px 8px;border-radius:4px;background:rgba(244,113,116,0.05)">
-        <span>3 peores ops consecutivas</span><strong style="color:var(--bear)">${(stress3*100).toFixed(2)}%</strong></div>
-      <div style="display:flex;justify-content:space-between;padding:4px 8px">
-        <span>5 peores ops consecutivas</span><strong style="color:var(--bear)">${(stress5*100).toFixed(2)}%</strong></div>
-      <div style="display:flex;justify-content:space-between;padding:4px 8px;border-radius:4px;background:rgba(244,113,116,0.05)">
-        <span>Escenario "Crisis 2008"</span><strong style="color:var(--bear)">${(stress2008*100).toFixed(2)}%</strong></div>
-      <div style="display:flex;justify-content:space-between;padding:4px 8px">
-        <span>Escenario "COVID 2020"</span><strong style="color:var(--bear)">${(stress2020*100).toFixed(2)}%</strong></div>
-      <div style="display:flex;justify-content:space-between;padding:4px 8px;border-radius:4px;background:rgba(244,113,116,0.05)">
-        <span>10 peores ops</span><strong style="color:var(--bear)">${(stress10*100).toFixed(2)}%</strong></div>
-    </div>
-    <div style="margin-top:10px;padding:8px;font-size:11px;color:var(--text3)">* Crisis simuladas usando tus N peores operaciones reales de forma consecutiva</div></div>`;
+  // Stress test — FIX 7: honest labels, portfolio impacts
+  document.getElementById('stress-test').innerHTML = '<div style="padding:16px;background:var(--surface2);border-radius:var(--radius-sm)">' +
+    '<div style="font-size:12px;font-weight:600;color:var(--bear);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px">🧪 Stress Tests</div>' +
+    '<div style="font-size:10px;color:var(--text3);margin-bottom:12px">Simulaciones: tus N peores operaciones (impacto real en cartera) aplicadas consecutivamente.</div>' +
+    '<div style="font-size:12px;line-height:2.2;font-family:var(--mono);color:var(--text2)">' +
+    '<div style="display:flex;justify-content:space-between;padding:4px 8px;border-radius:4px;background:rgba(244,113,116,0.05)"><span>3 peores ops seguidas</span><strong style="color:var(--bear)">'+(st3*100).toFixed(2)+'%</strong></div>' +
+    '<div style="display:flex;justify-content:space-between;padding:4px 8px"><span>5 peores ops seguidas</span><strong style="color:var(--bear)">'+(st5*100).toFixed(2)+'%</strong></div>' +
+    '<div style="display:flex;justify-content:space-between;padding:4px 8px;border-radius:4px;background:rgba(244,113,116,0.05)"><span>Sim. crisis severa (6 peores)</span><strong style="color:var(--bear)">'+(stCrisis*100).toFixed(2)+'%</strong></div>' +
+    '<div style="display:flex;justify-content:space-between;padding:4px 8px"><span>Sim. crash rápido (4 peores)</span><strong style="color:var(--bear)">'+(stCrash*100).toFixed(2)+'%</strong></div>' +
+    '<div style="display:flex;justify-content:space-between;padding:4px 8px;border-radius:4px;background:rgba(244,113,116,0.05)"><span>Escenario extremo (10 peores)</span><strong style="color:var(--bear)">'+(st10*100).toFixed(2)+'%</strong></div></div></div>';
 
   // Prob detail
-  document.getElementById('prob-detail').innerHTML = `<div style="padding:16px;background:var(--surface2);border-radius:var(--radius-sm)">
-    <div style="font-size:12px;font-weight:600;color:rgba(168,85,247,1);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px">📊 Distribución Monte Carlo 5Y</div>
-    <div style="font-size:12px;line-height:2.2;font-family:var(--mono);color:var(--text2)">
-      <div style="display:flex;justify-content:space-between"><span>Percentil 5 (peor caso)</span><strong style="color:var(--bear)">${fmtK(mc5.p5)}</strong></div>
-      <div style="display:flex;justify-content:space-between"><span>Percentil 25</span><strong style="color:var(--warn)">${fmtK(mc5.p25)}</strong></div>
-      <div style="display:flex;justify-content:space-between"><span>Mediana (P50)</span><strong style="color:var(--accent)">${fmtK(mc5.p50)}</strong></div>
-      <div style="display:flex;justify-content:space-between"><span>Percentil 75</span><strong style="color:var(--bull)">${fmtK(mc5.p75)}</strong></div>
-      <div style="display:flex;justify-content:space-between"><span>Percentil 95 (mejor caso)</span><strong style="color:var(--bull)">${fmtK(mc5.p95)}</strong></div>
-    </div>
-    <div style="margin-top:12px;padding:10px;background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.25);border-radius:var(--radius-sm);font-size:11px;color:var(--text2)">
-      <strong style="color:rgba(168,85,247,1)">Resumen:</strong> Con ${(mc5.probLoss*100).toFixed(0)}% prob. de perder capital y mediana de ×${(mc5.p50/capital).toFixed(2)} en 5 años.
-      ${mc5.probDD20 > 0.5 ? '⚠️ Alta probabilidad de drawdown >20%.' : '✅ Riesgo de drawdown >20% contenido.'}
-    </div></div>`;
+  document.getElementById('prob-detail').innerHTML = '<div style="padding:16px;background:var(--surface2);border-radius:var(--radius-sm)">' +
+    '<div style="font-size:12px;font-weight:600;color:rgba(168,85,247,1);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px">📊 Distribución Monte Carlo 5Y</div>' +
+    '<div style="font-size:12px;line-height:2.2;font-family:var(--mono);color:var(--text2)">' +
+    '<div style="display:flex;justify-content:space-between"><span>Percentil 5 (peor caso)</span><strong style="color:var(--bear)">'+fmtK(mc5.p5)+'</strong></div>' +
+    '<div style="display:flex;justify-content:space-between"><span>Percentil 25</span><strong style="color:var(--warn)">'+fmtK(mc5.p25)+'</strong></div>' +
+    '<div style="display:flex;justify-content:space-between"><span>Mediana (P50)</span><strong style="color:var(--accent)">'+fmtK(mc5.p50)+'</strong></div>' +
+    '<div style="display:flex;justify-content:space-between"><span>Percentil 75</span><strong style="color:var(--bull)">'+fmtK(mc5.p75)+'</strong></div>' +
+    '<div style="display:flex;justify-content:space-between"><span>Percentil 95 (mejor caso)</span><strong style="color:var(--bull)">'+fmtK(mc5.p95)+'</strong></div></div>' +
+    '<div style="margin-top:12px;padding:10px;background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.25);border-radius:var(--radius-sm);font-size:11px;color:var(--text2)">' +
+    '<strong style="color:rgba(168,85,247,1)">Resumen:</strong> '+(mc5.probLoss*100).toFixed(0)+'% prob. de perder capital. Mediana ×'+(mc5.p50/cap0).toFixed(2)+' en 5 años. ' +
+    (mc5.probDD20>0.5?'⚠️ Alta probabilidad de DD &gt;20%.':'✅ Riesgo de DD &gt;20% contenido.') +
+    '<div style="margin-top:6px;color:var(--text3);font-size:10px">Simulaciones con tus retornos reales (impacto en cartera con sizing actual).</div></div></div>';
 
-  // Continue with projections
   renderProjections();
 }
+
 
 // ── PROJECTIONS (inside General) ──
 function renderProjections() {
