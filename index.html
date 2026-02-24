@@ -488,9 +488,9 @@ html, body { height: 100%; overflow: hidden; background: var(--bg-deep); }
         <span class="tab-icon">▤</span>
         <span class="tab-label">Fundamental</span>
       </button>
-      <button class="tab-btn" onclick="switchTab('alertas')" id="tab-alertas">
-        <span class="tab-icon">🔔</span>
-        <span class="tab-label">Alertas</span>
+      <button class="tab-btn" onclick="switchTab('sectors')" id="tab-sectors">
+        <span class="tab-icon">🏭</span>
+        <span class="tab-label">Sectores</span>
       </button>
     </div>
 
@@ -510,7 +510,7 @@ html, body { height: 100%; overflow: hidden; background: var(--bg-deep); }
     <iframe class="module-frame"        id="frame-portfolio"  data-src="ethan_mercados.html"></iframe>
     <iframe class="module-frame"        id="frame-risk"       data-src="risk.html"></iframe>
     <iframe class="module-frame"        id="frame-fundamental" data-src="fundamental.html"></iframe>
-    <iframe class="module-frame"        id="frame-alertas"     data-src="alertas.html"></iframe>
+    <iframe class="module-frame"        id="frame-sectors"     data-src="sectors.html"></iframe>
   </div>
 
   <div class="status-bar">
@@ -564,8 +564,8 @@ if (checkSession()) showApp();
 /* ══════════════════════════════════════════════════════════
    NAV
    ══════════════════════════════════════════════════════════ */
-const TABS = ['screener','macro','portfolio','risk','fundamental','alertas'];
-const LABELS = {screener:'SCREENER',macro:'ANÁLISIS MACRO',portfolio:'CARTERA',risk:'RISK MANAGEMENT',fundamental:'ANÁLISIS FUNDAMENTAL',alertas:'ALERTAS'};
+const TABS = ['screener','macro','portfolio','risk','fundamental','sectors'];
+const LABELS = {screener:'SCREENER',macro:'ANÁLISIS MACRO',portfolio:'CARTERA',risk:'RISK MANAGEMENT',fundamental:'ANÁLISIS FUNDAMENTAL',sectors:'SECTORES USA'};
 const loaded = new Set(['screener']);
 
 function switchTab(id) {
