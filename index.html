@@ -480,10 +480,7 @@ html, body { height: 100%; overflow: hidden; background: var(--bg-deep); }
         <span class="tab-icon">◫</span>
         <span class="tab-label">Cartera</span>
       </button>
-      <button class="tab-btn" onclick="switchTab('risk')" id="tab-risk">
-        <span class="tab-icon">⚡</span>
-        <span class="tab-label">Risk Mgmt</span>
-      </button>
+
       <button class="tab-btn" onclick="switchTab('fundamental')" id="tab-fundamental">
         <span class="tab-icon">▤</span>
         <span class="tab-label">Fundamental</span>
@@ -505,10 +502,533 @@ html, body { height: 100%; overflow: hidden; background: var(--bg-deep); }
       <div class="loader-ring"></div>
       <div class="loader-text">Cargando módulo...</div>
     </div>
-    <iframe class="module-frame active" id="frame-screener"  src="ethan-app.html"></iframe>
+    <iframe class="module-frame active" id="frame-screener" srcdoc="<!DOCTYPE html>
+<html lang=&quot;es&quot;>
+<head>
+<meta charset=&quot;UTF-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+<title>ETHAN · Screener S&amp;P 500</title>
+<style>
+:root {
+  --bg: #06080c;
+  --s1: #0d1117;
+  --s2: #161b22;
+  --border: #1c2535;
+  --green: #00ff87;
+  --red: #ff3b5c;
+  --yellow: #fbbf24;
+  --text: #d4dbe8;
+  --text2: #5a6478;
+  --text3: #2e3440;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  padding: 24px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+
+.subtitle {
+  font-size: 11px;
+  color: var(--text2);
+  margin-top: 4px;
+  letter-spacing: 1px;
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn {
+  background: var(--green);
+  color: var(--bg);
+  border: none;
+  padding: 10px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn:hover { opacity: 0.9; }
+.btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.status {
+  font-size: 11px;
+  color: var(--text2);
+  letter-spacing: 1px;
+}
+
+.progress-bar {
+  height: 4px;
+  background: var(--s2);
+  margin-bottom: 20px;
+  overflow: hidden;
+  display: none;
+}
+
+.progress-bar.active { display: block; }
+
+.progress-fill {
+  height: 100%;
+  background: var(--green);
+  transition: width 0.3s;
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+}
+
+.filter label {
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.filter select, .filter input {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 6px 10px;
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.results-table thead {
+  background: var(--s2);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.results-table th {
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text2);
+  border-bottom: 1px solid var(--border);
+}
+
+.results-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.results-table tr:hover {
+  background: var(--s1);
+}
+
+.ticker-cell {
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.score-cell {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.score-green { color: var(--green); }
+.score-yellow { color: var(--yellow); }
+.score-gray { color: var(--text2); }
+
+.estado-listo { color: var(--green); }
+.estado-espera { color: var(--yellow); }
+.estado-cerca { color: var(--text2); }
+
+.sector-cell {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+.sector-strong {
+  color: var(--green);
+  opacity: 1;
+  font-weight: 600;
+}
+
+.btn-add {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text2);
+  padding: 4px 10px;
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-add:hover {
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text2);
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+</style>
+</head>
+<body>
+
+<div class=&quot;header&quot;>
+  <div>
+    <div class=&quot;title&quot;>🔍 SCREENER S&amp;P 500</div>
+    <div class=&quot;subtitle&quot;>Escaneo automático de oportunidades</div>
+  </div>
+  <div class=&quot;controls&quot;>
+    <span class=&quot;status&quot; id=&quot;status&quot;>Listo</span>
+    <button class=&quot;btn&quot; onclick=&quot;startScan()&quot; id=&quot;scanBtn&quot;>ESCANEAR</button>
+  </div>
+</div>
+
+<div class=&quot;progress-bar&quot; id=&quot;progressBar&quot;>
+  <div class=&quot;progress-fill&quot; id=&quot;progressFill&quot;></div>
+</div>
+
+<div class=&quot;filters&quot;>
+  <div class=&quot;filter&quot;>
+    <label>Score Mínimo:</label>
+    <select id=&quot;filterScore&quot; onchange=&quot;renderResults()&quot;>
+      <option value=&quot;0&quot;>Todos</option>
+      <option value=&quot;6&quot;>≥ 6</option>
+      <option value=&quot;7&quot; selected>≥ 7</option>
+      <option value=&quot;8&quot;>≥ 8</option>
+      <option value=&quot;9&quot;>≥ 9</option>
+      <option value=&quot;10&quot;>= 10</option>
+    </select>
+  </div>
+  <div class=&quot;filter&quot;>
+    <label>Estado:</label>
+    <select id=&quot;filterEstado&quot; onchange=&quot;renderResults()&quot;>
+      <option value=&quot;all&quot;>Todos</option>
+      <option value=&quot;ready&quot;>Solo LISTO</option>
+      <option value=&quot;diario&quot;>Espera Diario</option>
+      <option value=&quot;close&quot;>Cerca</option>
+    </select>
+  </div>
+  <div class=&quot;filter&quot;>
+    <label>Sector:</label>
+    <select id=&quot;filterSector&quot; onchange=&quot;renderResults()&quot;>
+      <option value=&quot;all&quot;>Todos</option>
+      <option value=&quot;XLK&quot;>Technology</option>
+      <option value=&quot;XLF&quot;>Financials</option>
+      <option value=&quot;XLV&quot;>Health Care</option>
+      <option value=&quot;XLE&quot;>Energy</option>
+      <option value=&quot;XLY&quot;>Consumer Discr.</option>
+      <option value=&quot;XLP&quot;>Consumer Staples</option>
+      <option value=&quot;XLI&quot;>Industrials</option>
+      <option value=&quot;XLB&quot;>Materials</option>
+      <option value=&quot;XLU&quot;>Utilities</option>
+      <option value=&quot;XLRE&quot;>Real Estate</option>
+      <option value=&quot;XLC&quot;>Communication</option>
+    </select>
+  </div>
+</div>
+
+<div id=&quot;resultsContainer&quot;>
+  <div class=&quot;empty-state&quot;>
+    <div>Haz clic en <strong>ESCANEAR</strong> para buscar oportunidades en el S&amp;P 500</div>
+  </div>
+</div>
+
+<script>
+// Lista del S&amp;P 500
+const SP500 = [&quot;MMM&quot;,&quot;AOS&quot;,&quot;ABT&quot;,&quot;ABBV&quot;,&quot;ACN&quot;,&quot;ADBE&quot;,&quot;AMD&quot;,&quot;AES&quot;,&quot;AFL&quot;,&quot;A&quot;,&quot;APD&quot;,&quot;ABNB&quot;,&quot;AKAM&quot;,&quot;ALB&quot;,&quot;ARE&quot;,&quot;ALGN&quot;,&quot;ALLE&quot;,&quot;LNT&quot;,&quot;ALL&quot;,&quot;GOOGL&quot;,&quot;GOOG&quot;,&quot;MO&quot;,&quot;AMZN&quot;,&quot;AMCR&quot;,&quot;AEE&quot;,&quot;AAL&quot;,&quot;AEP&quot;,&quot;AXP&quot;,&quot;AIG&quot;,&quot;AMT&quot;,&quot;AWK&quot;,&quot;AMP&quot;,&quot;AME&quot;,&quot;AMGN&quot;,&quot;APH&quot;,&quot;ADI&quot;,&quot;ANSS&quot;,&quot;AON&quot;,&quot;APA&quot;,&quot;AAPL&quot;,&quot;AMAT&quot;,&quot;APTV&quot;,&quot;ACGL&quot;,&quot;ADM&quot;,&quot;ANET&quot;,&quot;AJG&quot;,&quot;AIZ&quot;,&quot;T&quot;,&quot;ATO&quot;,&quot;ADSK&quot;,&quot;ADP&quot;,&quot;AZO&quot;,&quot;AVB&quot;,&quot;AVY&quot;,&quot;AXON&quot;,&quot;BKR&quot;,&quot;BALL&quot;,&quot;BAC&quot;,&quot;BBWI&quot;,&quot;BAX&quot;,&quot;BDX&quot;,&quot;BRK-B&quot;,&quot;BBY&quot;,&quot;TECH&quot;,&quot;BIIB&quot;,&quot;BIO&quot;,&quot;BLK&quot;,&quot;BX&quot;,&quot;BK&quot;,&quot;BA&quot;,&quot;BKNG&quot;,&quot;BWA&quot;,&quot;BSX&quot;,&quot;BMY&quot;,&quot;AVGO&quot;,&quot;BR&quot;,&quot;BRO&quot;,&quot;BF-B&quot;,&quot;BG&quot;,&quot;CHRW&quot;,&quot;CDNS&quot;,&quot;CZR&quot;,&quot;CPT&quot;,&quot;CPB&quot;,&quot;COF&quot;,&quot;CAH&quot;,&quot;KMX&quot;,&quot;CCL&quot;,&quot;CARR&quot;,&quot;CTLT&quot;,&quot;CAT&quot;,&quot;CBOE&quot;,&quot;CBRE&quot;,&quot;CDW&quot;,&quot;CE&quot;,&quot;COR&quot;,&quot;CNC&quot;,&quot;CNP&quot;,&quot;CF&quot;,&quot;CHTR&quot;,&quot;CVX&quot;,&quot;CMG&quot;,&quot;CB&quot;,&quot;CHD&quot;,&quot;CI&quot;,&quot;CINF&quot;,&quot;CTAS&quot;,&quot;CSCO&quot;,&quot;C&quot;,&quot;CFG&quot;,&quot;CLX&quot;,&quot;CME&quot;,&quot;CMS&quot;,&quot;KO&quot;,&quot;CTSH&quot;,&quot;CL&quot;,&quot;CMCSA&quot;,&quot;CMA&quot;,&quot;CAG&quot;,&quot;COP&quot;,&quot;ED&quot;,&quot;STZ&quot;,&quot;CEG&quot;,&quot;COO&quot;,&quot;CPRT&quot;,&quot;GLW&quot;,&quot;CPAY&quot;,&quot;CTVA&quot;,&quot;CSGP&quot;,&quot;COST&quot;,&quot;CTRA&quot;,&quot;CRWD&quot;,&quot;CCI&quot;,&quot;CSX&quot;,&quot;CMI&quot;,&quot;CVS&quot;,&quot;DHR&quot;,&quot;DRI&quot;,&quot;DVA&quot;,&quot;DAY&quot;,&quot;DECK&quot;,&quot;DE&quot;,&quot;DELL&quot;,&quot;DAL&quot;,&quot;DVN&quot;,&quot;DXCM&quot;,&quot;FANG&quot;,&quot;DLR&quot;,&quot;DFS&quot;,&quot;DG&quot;,&quot;DLTR&quot;,&quot;D&quot;,&quot;DPZ&quot;,&quot;DOV&quot;,&quot;DOW&quot;,&quot;DHI&quot;,&quot;DTE&quot;,&quot;DUK&quot;,&quot;DD&quot;,&quot;EMN&quot;,&quot;ETN&quot;,&quot;EBAY&quot;,&quot;ECL&quot;,&quot;EIX&quot;,&quot;EW&quot;,&quot;EA&quot;,&quot;ELV&quot;,&quot;EMR&quot;,&quot;ENPH&quot;,&quot;ETR&quot;,&quot;EOG&quot;,&quot;EPAM&quot;,&quot;EQT&quot;,&quot;EFX&quot;,&quot;EQIX&quot;,&quot;EQR&quot;,&quot;ESS&quot;,&quot;EL&quot;,&quot;ETSY&quot;,&quot;EG&quot;,&quot;EVRG&quot;,&quot;ES&quot;,&quot;EXC&quot;,&quot;EXPE&quot;,&quot;EXPD&quot;,&quot;EXR&quot;,&quot;XOM&quot;,&quot;FFIV&quot;,&quot;FDS&quot;,&quot;FICO&quot;,&quot;FAST&quot;,&quot;FRT&quot;,&quot;FDX&quot;,&quot;FITB&quot;,&quot;FSLR&quot;,&quot;FE&quot;,&quot;FIS&quot;,&quot;FI&quot;,&quot;FLT&quot;,&quot;FMC&quot;,&quot;F&quot;,&quot;FTNT&quot;,&quot;FTV&quot;,&quot;FOXA&quot;,&quot;FOX&quot;,&quot;BEN&quot;,&quot;FCX&quot;,&quot;GRMN&quot;,&quot;IT&quot;,&quot;GE&quot;,&quot;GEHC&quot;,&quot;GEN&quot;,&quot;GD&quot;,&quot;GIS&quot;,&quot;GM&quot;,&quot;GPC&quot;,&quot;GILD&quot;,&quot;GPN&quot;,&quot;GL&quot;,&quot;GDDY&quot;,&quot;GS&quot;,&quot;HAL&quot;,&quot;HIG&quot;,&quot;HAS&quot;,&quot;HCA&quot;,&quot;DOC&quot;,&quot;HSIC&quot;,&quot;HSY&quot;,&quot;HES&quot;,&quot;HPE&quot;,&quot;HLT&quot;,&quot;HOLX&quot;,&quot;HD&quot;,&quot;HON&quot;,&quot;HRL&quot;,&quot;HST&quot;,&quot;HWM&quot;,&quot;HPQ&quot;,&quot;HUBB&quot;,&quot;HUM&quot;,&quot;HBAN&quot;,&quot;HII&quot;,&quot;IBM&quot;,&quot;IEX&quot;,&quot;IDXX&quot;,&quot;ITW&quot;,&quot;INCY&quot;,&quot;IR&quot;,&quot;PODD&quot;,&quot;INTC&quot;,&quot;ICE&quot;,&quot;IFF&quot;,&quot;IP&quot;,&quot;IPG&quot;,&quot;INTU&quot;,&quot;ISRG&quot;,&quot;IVZ&quot;,&quot;INVH&quot;,&quot;IQV&quot;,&quot;IRM&quot;,&quot;JBHT&quot;,&quot;JBL&quot;,&quot;JKHY&quot;,&quot;J&quot;,&quot;JNJ&quot;,&quot;JCI&quot;,&quot;JPM&quot;,&quot;JNPR&quot;,&quot;K&quot;,&quot;KVUE&quot;,&quot;KDP&quot;,&quot;KEY&quot;,&quot;KEYS&quot;,&quot;KMB&quot;,&quot;KIM&quot;,&quot;KMI&quot;,&quot;KKR&quot;,&quot;KLAC&quot;,&quot;KHC&quot;,&quot;KR&quot;,&quot;LHX&quot;,&quot;LH&quot;,&quot;LRCX&quot;,&quot;LW&quot;,&quot;LVS&quot;,&quot;LDOS&quot;,&quot;LEN&quot;,&quot;LIN&quot;,&quot;LYV&quot;,&quot;LKQ&quot;,&quot;LMT&quot;,&quot;L&quot;,&quot;LOW&quot;,&quot;LULU&quot;,&quot;LYB&quot;,&quot;MTB&quot;,&quot;MRO&quot;,&quot;MPC&quot;,&quot;MKTX&quot;,&quot;MAR&quot;,&quot;MMC&quot;,&quot;MLM&quot;,&quot;MAS&quot;,&quot;MA&quot;,&quot;MTCH&quot;,&quot;MKC&quot;,&quot;MCD&quot;,&quot;MCK&quot;,&quot;MDT&quot;,&quot;MRK&quot;,&quot;META&quot;,&quot;MET&quot;,&quot;MTD&quot;,&quot;MGM&quot;,&quot;MCHP&quot;,&quot;MU&quot;,&quot;MSFT&quot;,&quot;MAA&quot;,&quot;MRNA&quot;,&quot;MHK&quot;,&quot;MOH&quot;,&quot;TAP&quot;,&quot;MDLZ&quot;,&quot;MPWR&quot;,&quot;MNST&quot;,&quot;MCO&quot;,&quot;MS&quot;,&quot;MOS&quot;,&quot;MSI&quot;,&quot;MSCI&quot;,&quot;NDAQ&quot;,&quot;NTAP&quot;,&quot;NFLX&quot;,&quot;NEM&quot;,&quot;NWSA&quot;,&quot;NWS&quot;,&quot;NEE&quot;,&quot;NKE&quot;,&quot;NI&quot;,&quot;NDSN&quot;,&quot;NSC&quot;,&quot;NTRS&quot;,&quot;NOC&quot;,&quot;NCLH&quot;,&quot;NRG&quot;,&quot;NUE&quot;,&quot;NVDA&quot;,&quot;NVR&quot;,&quot;NXPI&quot;,&quot;ORLY&quot;,&quot;OXY&quot;,&quot;ODFL&quot;,&quot;OMC&quot;,&quot;ON&quot;,&quot;OKE&quot;,&quot;ORCL&quot;,&quot;OTIS&quot;,&quot;PCAR&quot;,&quot;PKG&quot;,&quot;PANW&quot;,&quot;PARA&quot;,&quot;PH&quot;,&quot;PAYX&quot;,&quot;PAYC&quot;,&quot;PYPL&quot;,&quot;PNR&quot;,&quot;PEP&quot;,&quot;PFE&quot;,&quot;PCG&quot;,&quot;PM&quot;,&quot;PSX&quot;,&quot;PNW&quot;,&quot;PNC&quot;,&quot;POOL&quot;,&quot;PPG&quot;,&quot;PPL&quot;,&quot;PFG&quot;,&quot;PG&quot;,&quot;PGR&quot;,&quot;PLD&quot;,&quot;PRU&quot;,&quot;PEG&quot;,&quot;PTC&quot;,&quot;PSA&quot;,&quot;PHM&quot;,&quot;QRVO&quot;,&quot;PWR&quot;,&quot;QCOM&quot;,&quot;DGX&quot;,&quot;RL&quot;,&quot;RJF&quot;,&quot;RTX&quot;,&quot;O&quot;,&quot;REG&quot;,&quot;REGN&quot;,&quot;RF&quot;,&quot;RSG&quot;,&quot;RMD&quot;,&quot;RVTY&quot;,&quot;ROK&quot;,&quot;ROL&quot;,&quot;ROP&quot;,&quot;ROST&quot;,&quot;RCL&quot;,&quot;SPGI&quot;,&quot;CRM&quot;,&quot;SBAC&quot;,&quot;SLB&quot;,&quot;STX&quot;,&quot;SRE&quot;,&quot;NOW&quot;,&quot;SHW&quot;,&quot;SPG&quot;,&quot;SWKS&quot;,&quot;SJM&quot;,&quot;SW&quot;,&quot;SNA&quot;,&quot;SOLV&quot;,&quot;SO&quot;,&quot;LUV&quot;,&quot;SWK&quot;,&quot;SBUX&quot;,&quot;STT&quot;,&quot;STLD&quot;,&quot;STE&quot;,&quot;SYK&quot;,&quot;SMCI&quot;,&quot;SYF&quot;,&quot;SNPS&quot;,&quot;SYY&quot;,&quot;TMUS&quot;,&quot;TROW&quot;,&quot;TTWO&quot;,&quot;TPR&quot;,&quot;TRGP&quot;,&quot;TGT&quot;,&quot;TEL&quot;,&quot;TDY&quot;,&quot;TFX&quot;,&quot;TER&quot;,&quot;TSLA&quot;,&quot;TXN&quot;,&quot;TXT&quot;,&quot;TMO&quot;,&quot;TJX&quot;,&quot;TSCO&quot;,&quot;TT&quot;,&quot;TDG&quot;,&quot;TRV&quot;,&quot;TRMB&quot;,&quot;TFC&quot;,&quot;TYL&quot;,&quot;TSN&quot;,&quot;USB&quot;,&quot;UBER&quot;,&quot;UDR&quot;,&quot;ULTA&quot;,&quot;UNP&quot;,&quot;UAL&quot;,&quot;UPS&quot;,&quot;URI&quot;,&quot;UNH&quot;,&quot;UHS&quot;,&quot;VLO&quot;,&quot;VTR&quot;,&quot;VRSN&quot;,&quot;VRSK&quot;,&quot;VZ&quot;,&quot;VRTX&quot;,&quot;VLTO&quot;,&quot;VFC&quot;,&quot;VTRS&quot;,&quot;VICI&quot;,&quot;V&quot;,&quot;VST&quot;,&quot;VMC&quot;,&quot;WRB&quot;,&quot;GWW&quot;,&quot;WAB&quot;,&quot;WBA&quot;,&quot;WMT&quot;,&quot;DIS&quot;,&quot;WBD&quot;,&quot;WM&quot;,&quot;WAT&quot;,&quot;WEC&quot;,&quot;WFC&quot;,&quot;WELL&quot;,&quot;WST&quot;,&quot;WDC&quot;,&quot;WY&quot;,&quot;WMB&quot;,&quot;WTW&quot;,&quot;WYNN&quot;,&quot;XEL&quot;,&quot;XYL&quot;,&quot;YUM&quot;,&quot;ZBRA&quot;,&quot;ZBH&quot;,&quot;ZTS&quot;];
+
+// Mapeo de sectores (principales del S&amp;P 500)
+const SECTOR_MAP = {
+  'AAPL':'XLK','MSFT':'XLK','NVDA':'XLK','AVGO':'XLK','ADBE':'XLK','CRM':'XLK','CSCO':'XLK','ACN':'XLK','AMD':'XLK','INTC':'XLK','QCOM':'XLK','INTU':'XLK','AMAT':'XLK','TXN':'XLK','NOW':'XLK','PANW':'XLK','SNPS':'XLK','CDNS':'XLK',
+  'BRK-B':'XLF','JPM':'XLF','V':'XLF','MA':'XLF','BAC':'XLF','WFC':'XLF','GS':'XLF','MS':'XLF','AXP':'XLF','C':'XLF','BLK':'XLF','SPGI':'XLF','PGR':'XLF','CB':'XLF','MMC':'XLF',
+  'LLY':'XLV','UNH':'XLV','JNJ':'XLV','ABBV':'XLV','MRK':'XLV','TMO':'XLV','ABT':'XLV','DHR':'XLV','PFE':'XLV','BMY':'XLV','AMGN':'XLV','GILD':'XLV','CVS':'XLV','ISRG':'XLV','VRTX':'XLV',
+  'XOM':'XLE','CVX':'XLE','COP':'XLE','SLB':'XLE','EOG':'XLE','MPC':'XLE','PSX':'XLE','VLO':'XLE','OXY':'XLE','HAL':'XLE',
+  'AMZN':'XLY','TSLA':'XLY','HD':'XLY','MCD':'XLY','NKE':'XLY','LOW':'XLY','SBUX':'XLY','TJX':'XLY','BKNG':'XLY','CMG':'XLY',
+  'PG':'XLP','KO':'XLP','PEP':'XLP','COST':'XLP','WMT':'XLP','PM':'XLP','MO':'XLP','MDLZ':'XLP','CL':'XLP','KMB':'XLP',
+  'CAT':'XLI','RTX':'XLI','HON':'XLI','UNP':'XLI','BA':'XLI','GE':'XLI','LMT':'XLI','DE':'XLI','UPS':'XLI','ETN':'XLI',
+  'LIN':'XLB','APD':'XLB','SHW':'XLB','FCX':'XLB','ECL':'XLB','NEM':'XLB','DOW':'XLB','DD':'XLB',
+  'NEE':'XLU','SO':'XLU','DUK':'XLU','CEG':'XLU','SRE':'XLU','AEP':'XLU','D':'XLU','PEG':'XLU',
+  'PLD':'XLRE','AMT':'XLRE','EQIX':'XLRE','CCI':'XLRE','PSA':'XLRE','DLR':'XLRE','O':'XLRE',
+  'META':'XLC','GOOGL':'XLC','GOOG':'XLC','NFLX':'XLC','DIS':'XLC','CMCSA':'XLC','T':'XLC','VZ':'XLC','TMUS':'XLC'
+};
+
+const SECTOR_NAMES = {
+  'XLK':'Tech','XLF':'Financials','XLV':'Health','XLE':'Energy','XLY':'Consumer D','XLP':'Consumer S','XLI':'Industrials','XLB':'Materials','XLU':'Utilities','XLRE':'Real Estate','XLC':'Comm'
+};
+
+let scanResults = [];
+let scanning = false;
+
+// Indicadores (copiados del sistema ETHAN)
+function sma(arr,p){return arr.map((_,i)=>{if(i<p-1)return null;const sl=arr.slice(i-p+1,i+1).filter(v=>v!=null&amp;&amp;!isNaN(v));return sl.length===p?sl.reduce((a,b)=>a+b,0)/p:null;});}
+function ema(arr,p){const k=2/(p+1),out=new Array(arr.length).fill(null);let s=arr.findIndex(v=>v!=null&amp;&amp;!isNaN(v));if(s<0)return out;out[s]=arr[s];for(let i=s+1;i<arr.length;i++){const v=(arr[i]!=null&amp;&amp;!isNaN(arr[i]))?arr[i]:out[i-1];out[i]=v*k+out[i-1]*(1-k);}return out;}
+function macd(closes){const ef=ema(closes,12),es=ema(closes,26);const m=ef.map((v,i)=>(v!=null&amp;&amp;es[i]!=null)?v-es[i]:null);const sl=ema(m.map(v=>v??0),9);return{m,sl};}
+function rsi(closes,p=14){const out=new Array(closes.length).fill(null);if(closes.length<p+1)return out;let g=0,l=0;for(let i=1;i<=p;i++){const d=closes[i]-closes[i-1];d>0?g+=d:l-=d;}let ag=g/p,al=l/p;out[p]=al===0?100:100-(100/(1+ag/al));for(let i=p+1;i<closes.length;i++){const d=closes[i]-closes[i-1];ag=(ag*(p-1)+(d>0?d:0))/p;al=(al*(p-1)+(d<0?-d:0))/p;out[i]=al===0?100:100-(100/(1+ag/al));}return out;}
+function stoch(highs,lows,closes,p){const rawK=closes.map((c,i)=>{if(i<p-1)return null;const hh=Math.max(...highs.slice(i-p+1,i+1));const ll=Math.min(...lows.slice(i-p+1,i+1));return hh===ll?50:(c-ll)/(hh-ll)*100;});const k=sma(rawK,3);const d=sma(k.map(v=>v??0),3);return{k,d};}
+function resample(ts,opens,highs,lows,closes,vols,freq){const groups={};ts.forEach((t,i)=>{const dd=new Date(t*1000);let key;if(freq==='W'){const day=dd.getDay();const diff=dd.getDate()-day+(day===0?-6:1);const mo=new Date(+dd);mo.setDate(diff);key=mo.toISOString().slice(0,10);}else{key=`${dd.getFullYear()}-${String(dd.getMonth()+1).padStart(2,'0')}`;}if(!groups[key]){groups[key]={o:opens[i],h:highs[i],l:lows[i],c:closes[i],v:vols[i]};}else{groups[key].h=Math.max(groups[key].h,highs[i]);groups[key].l=Math.min(groups[key].l,lows[i]);groups[key].c=closes[i];groups[key].v+=vols[i];}});const keys=Object.keys(groups).sort();return{dates:keys,opens:keys.map(k=>groups[k].o),highs:keys.map(k=>groups[k].h),lows:keys.map(k=>groups[k].l),closes:keys.map(k=>groups[k].c),vols:keys.map(k=>groups[k].v)};}
+
+async function fetchData(ticker){
+  const yUrl=`https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&amp;range=10y&amp;events=history`;
+  const proxies=[
+    u=>`https://corsproxy.io/?${encodeURIComponent(u)}`,
+    u=>`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
+    u=>`https://thingproxy.freeboard.io/fetch/${u}`,
+  ];
+  let lastErr;
+  for(const fn of proxies){
+    try{
+      const r=await fetch(fn(yUrl),{signal:AbortSignal.timeout(12000)});
+      if(!r.ok)throw new Error(`HTTP ${r.status}`);
+      const j=JSON.parse(await r.text());
+      if(j.chart?.error)throw new Error(j.chart.error.description);
+      const res=j.chart.result[0];
+      const q=res.indicators.quote[0];
+      const adj=res.indicators.adjclose?.[0]?.adjclose||q.close;
+      const ratio=adj.map((a,i)=>(q.close[i]&amp;&amp;a)?a/q.close[i]:1);
+      return{
+        timestamps:res.timestamp,
+        opens:q.open.map((v,i)=>v*ratio[i]),
+        highs:q.high.map((v,i)=>v*ratio[i]),
+        lows:q.low.map((v,i)=>v*ratio[i]),
+        closes:adj,
+        vols:q.volume,
+      };
+    }catch(e){lastErr=e;}
+  }
+  throw lastErr||new Error('Sin conexión');
+}
+
+function analyzeQuick(raw){
+  const{timestamps,opens,highs,lows,closes,vols}=raw;
+  const n=closes.length;
+  const W=resample(timestamps,opens,highs,lows,closes,vols,'W');
+  const M=resample(timestamps,opens,highs,lows,closes,vols,'M');
+  
+  const m_macd=macd(M.closes);
+  const m_s89=stoch(M.highs,M.lows,M.closes,89);
+  const m_s8=stoch(M.highs,M.lows,M.closes,8);
+  const m_rsi=rsi(M.closes,14);
+  const m_sma10=sma(M.closes,10);
+  const mi=M.closes.length-1;
+  
+  const w_macd=macd(W.closes);
+  const w_s89=stoch(W.highs,W.lows,W.closes,89);
+  const w_rsi=rsi(W.closes,14);
+  const w_sma20=sma(W.closes,20);
+  const wi=W.closes.length-1;
+  
+  const d_macd=macd(closes);
+  const d_rsi=rsi(closes,14);
+  const di=n-1;
+  
+  let score=0;
+  const mc_ok=[
+    m_macd.m[mi]>0&amp;&amp;m_macd.m[mi]>m_macd.sl[mi],
+    (m_s89.k[mi]>80&amp;&amp;m_s89.k[mi]>m_s89.d[mi])||m_s89.k[mi]>92,
+    m_rsi[mi]>65,
+    m_s8.k[mi]>78,
+    m_sma10[mi]&amp;&amp;M.closes[mi]>m_sma10[mi]
+  ];
+  const sc_ok=[
+    w_macd.m[wi]>0&amp;&amp;w_macd.m[wi]>w_macd.sl[wi],
+    (w_s89.k[wi]>85&amp;&amp;w_s89.k[wi]>w_s89.d[wi])||w_s89.k[wi]>92,
+    w_rsi[wi]>67,
+    w_sma20[wi]&amp;&amp;W.closes[wi]>w_sma20[wi]
+  ];
+  
+  score=mc_ok.filter(x=>x).length+sc_ok.filter(x=>x).length;
+  
+  const mensualOk=mc_ok.every(x=>x);
+  const semanalOk=sc_ok.every(x=>x);
+  const dailyReady=d_macd.m[di]>d_macd.sl[di]&amp;&amp;d_macd.m[di-1]<=d_macd.sl[di-1]&amp;&amp;d_rsi[di]>57&amp;&amp;d_macd.m[di]>0;
+  
+  let estado='watching';
+  if(mensualOk&amp;&amp;semanalOk&amp;&amp;dailyReady)estado='ready';
+  else if(mensualOk&amp;&amp;semanalOk)estado='diario';
+  else if(score>=7)estado='close';
+  
+  return{score,estado,price:closes[di]};
+}
+
+async function startScan(){
+  if(scanning)return;
+  scanning=true;
+  scanResults=[];
+  
+  const btn=document.getElementById('scanBtn');
+  const status=document.getElementById('status');
+  const progress=document.getElementById('progressBar');
+  const fill=document.getElementById('progressFill');
+  
+  btn.disabled=true;
+  progress.classList.add('active');
+  fill.style.width='0%';
+  
+  document.getElementById('resultsContainer').innerHTML=`
+    <div class=&quot;empty-state&quot;>
+      <div class=&quot;spinner&quot;></div>
+      <div>Escaneando S&amp;P 500...</div>
+    </div>
+  `;
+  
+  for(let i=0;i<SP500.length;i++){
+    const ticker=SP500[i];
+    const pct=((i+1)/SP500.length*100).toFixed(1);
+    
+    fill.style.width=pct+'%';
+    status.textContent=`${ticker} (${i+1}/${SP500.length})`;
+    
+    try{
+      const raw=await fetchData(ticker);
+      const result=analyzeQuick(raw);
+      result.ticker=ticker;
+      result.sector=SECTOR_MAP[ticker]||null;
+      scanResults.push(result);
+      
+      if(result.score>=7){
+        renderResults();
+      }
+    }catch(err){
+      // Ignorar errores y continuar
+    }
+  }
+  
+  scanning=false;
+  btn.disabled=false;
+  progress.classList.remove('active');
+  status.textContent=`Completado: ${scanResults.length} valores escaneados`;
+  renderResults();
+}
+
+function renderResults(){
+  const minScore=parseInt(document.getElementById('filterScore').value);
+  const filterEstado=document.getElementById('filterEstado').value;
+  const filterSector=document.getElementById('filterSector').value;
+  
+  let filtered=scanResults.filter(r=>{
+    if(r.score<minScore)return false;
+    if(filterEstado!=='all'&amp;&amp;r.estado!==filterEstado)return false;
+    if(filterSector!=='all'&amp;&amp;r.sector!==filterSector)return false;
+    return true;
+  });
+  
+  filtered.sort((a,b)=>b.score-a.score);
+  
+  if(filtered.length===0){
+    document.getElementById('resultsContainer').innerHTML=`
+      <div class=&quot;empty-state&quot;>
+        <div>No se encontraron valores que cumplan los filtros</div>
+      </div>
+    `;
+    return;
+  }
+  
+  const rows=filtered.map(r=>{
+    const scoreClass=r.score>=9?'score-green':r.score>=7?'score-yellow':'score-gray';
+    const estadoClass=r.estado==='ready'?'estado-listo':r.estado==='diario'?'estado-espera':'estado-cerca';
+    const estadoText={'ready':'🟢 LISTO','diario':'⏳ ESPERA DIARIO','close':'🔶 CERCA','watching':'👁 VIGILANDO'}[r.estado];
+    
+    return`
+      <tr>
+        <td class=&quot;ticker-cell&quot;>${r.ticker}</td>
+        <td class=&quot;sector-cell&quot;>${r.sector?SECTOR_NAMES[r.sector]:'-'}</td>
+        <td class=&quot;score-cell ${scoreClass}&quot;>${r.score}/10</td>
+        <td class=&quot;${estadoClass}&quot;>${estadoText}</td>
+        <td>${r.price?r.price.toFixed(2):'-'}</td>
+        <td><button class=&quot;btn-add&quot; onclick=&quot;addToWatchlist('${r.ticker}')&quot;>+ Watchlist</button></td>
+      </tr>
+    `;
+  }).join('');
+  
+  document.getElementById('resultsContainer').innerHTML=`
+    <table class=&quot;results-table&quot;>
+      <thead>
+        <tr>
+          <th>TICKER</th>
+          <th>SECTOR</th>
+          <th>SCORE</th>
+          <th>ESTADO</th>
+          <th>PRECIO</th>
+          <th>ACCIÓN</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows}
+      </tbody>
+    </table>
+  `;
+}
+
+function addToWatchlist(ticker){
+  alert(`${ticker} añadido al watchlist (función pendiente de implementar)`);
+}
+
+// Auto-escanear al cargar
+window.addEventListener('load',()=>{
+  setTimeout(startScan,1000);
+});
+</script>
+</body>
+</html>
+"></iframe>
     <iframe class="module-frame"        id="frame-macro"      data-src="macro.html"></iframe>
     <iframe class="module-frame"        id="frame-portfolio"  data-src="ethan_mercados.html"></iframe>
-    <iframe class="module-frame"        id="frame-risk"       data-src="risk.html"></iframe>
+
     <iframe class="module-frame"        id="frame-fundamental" data-src="fundamental.html"></iframe>
     <iframe class="module-frame"        id="frame-sectors"     data-src="sectors.html"></iframe>
   </div>
