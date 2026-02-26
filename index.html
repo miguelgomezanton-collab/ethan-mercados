@@ -1089,8 +1089,8 @@ if (checkSession()) showApp();
 /* ══════════════════════════════════════════════════════════
    NAV
    ══════════════════════════════════════════════════════════ */
-const TABS = ['screener','macro','portfolio','risk','fundamental','sectors'];
-const LABELS = {screener:'SCREENER',macro:'ANÁLISIS MACRO',portfolio:'CARTERA',risk:'RISK MANAGEMENT',fundamental:'ANÁLISIS FUNDAMENTAL',sectors:'SECTORES USA'};
+const TABS = ['screener','sp500','macro','portfolio','fundamental','sectors'];
+const LABELS = {screener:'SCREENER',sp500:'SCREENER S&P 500',macro:'ANÁLISIS MACRO',portfolio:'CARTERA',fundamental:'ANÁLISIS FUNDAMENTAL',sectors:'SECTORES USA'};
 const loaded = new Set(['screener']);
 
 function switchTab(id) {
