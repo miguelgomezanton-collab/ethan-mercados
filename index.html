@@ -472,6 +472,10 @@ html, body { height: 100%; overflow: hidden; background: var(--bg-deep); }
         <span class="tab-icon">◆</span>
         <span class="tab-label">Screener</span>
       </button>
+      <button class="tab-btn" onclick="switchTab('sp500')" id="tab-sp500">
+        <span class="tab-icon">🔍</span>
+        <span class="tab-label">S&P 500</span>
+      </button>
       <button class="tab-btn" onclick="switchTab('macro')" id="tab-macro">
         <span class="tab-icon">◉</span>
         <span class="tab-label">Macro</span>
@@ -502,7 +506,8 @@ html, body { height: 100%; overflow: hidden; background: var(--bg-deep); }
       <div class="loader-ring"></div>
       <div class="loader-text">Cargando módulo...</div>
     </div>
-    <iframe class="module-frame active" id="frame-screener" srcdoc="<!DOCTYPE html>
+    <iframe class="module-frame active" id="frame-screener"  src="ethan-app.html"></iframe>
+    <iframe class="module-frame"        id="frame-sp500"     srcdoc="<!DOCTYPE html>
 <html lang=&quot;es&quot;>
 <head>
 <meta charset=&quot;UTF-8&quot;>
