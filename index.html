@@ -468,30 +468,33 @@ html, body { height: 100%; overflow: hidden; background: var(--bg-deep); }
     </div>
 
     <div class="nav-tabs">
-      <button class="tab-btn active" onclick="switchTab('screener')" id="tab-screener">
-        <span class="tab-icon">◆</span>
-        <span class="tab-label">Screener</span>
+      <button class="tab-btn active" onclick="switchTab('macro')" id="tab-macro">
+        <span class="tab-icon">◉</span>
+        <span class="tab-label">Macro</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('allocation')" id="tab-allocation">
+        <span class="tab-icon">💼</span>
+        <span class="tab-label">Asset Allocation</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('sectors')" id="tab-sectors">
+        <span class="tab-icon">🏭</span>
+        <span class="tab-label">Sectores</span>
       </button>
       <button class="tab-btn" onclick="switchTab('sp500')" id="tab-sp500">
         <span class="tab-icon">🔍</span>
         <span class="tab-label">S&P 500</span>
       </button>
-      <button class="tab-btn" onclick="switchTab('macro')" id="tab-macro">
-        <span class="tab-icon">◉</span>
-        <span class="tab-label">Macro</span>
+      <button class="tab-btn" onclick="switchTab('screener')" id="tab-screener">
+        <span class="tab-icon">◆</span>
+        <span class="tab-label">Screener</span>
       </button>
       <button class="tab-btn" onclick="switchTab('portfolio')" id="tab-portfolio">
         <span class="tab-icon">◫</span>
         <span class="tab-label">Cartera</span>
       </button>
-
       <button class="tab-btn" onclick="switchTab('fundamental')" id="tab-fundamental">
         <span class="tab-icon">▤</span>
         <span class="tab-label">Fundamental</span>
-      </button>
-      <button class="tab-btn" onclick="switchTab('sectors')" id="tab-sectors">
-        <span class="tab-icon">🏭</span>
-        <span class="tab-label">Sectores</span>
       </button>
     </div>
 
@@ -506,7 +509,7 @@ html, body { height: 100%; overflow: hidden; background: var(--bg-deep); }
       <div class="loader-ring"></div>
       <div class="loader-text">Cargando módulo...</div>
     </div>
-    <iframe class="module-frame active" id="frame-screener"  src="ethan-app.html"></iframe>
+    <iframe class="module-frame" id="frame-screener"  src="ethan-app.html"></iframe>
     <iframe class="module-frame"        id="frame-sp500"     srcdoc="<!DOCTYPE html>
 <html lang=&quot;es&quot;>
 <head>
@@ -1031,16 +1034,1928 @@ window.addEventListener('load',()=>{
 </body>
 </html>
 "></iframe>
-    <iframe class="module-frame"        id="frame-macro"      data-src="macro.html"></iframe>
-    <iframe class="module-frame"        id="frame-portfolio"  data-src="ethan_mercados.html"></iframe>
+    <iframe class="module-frame active" id="frame-macro"      srcdoc="<!DOCTYPE html>
+<html lang=&quot;es&quot;>
+<head>
+<meta charset=&quot;UTF-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+<title>Dashboard Macro Automático</title>
+<script src=&quot;https://cdn.jsdelivr.net/npm/chart.js&quot;></script>
+<style>
+:root {
+  --bg: #06080c;
+  --s1: #0d1117;
+  --s2: #161b22;
+  --border: #1c2535;
+  --green: #00ff87;
+  --red: #ff3b5c;
+  --yellow: #fbbf24;
+  --text: #d4dbe8;
+  --text2: #5a6478;
+}
 
-    <iframe class="module-frame"        id="frame-fundamental" data-src="fundamental.html"></iframe>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  padding: 24px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: var(--text2);
+  letter-spacing: 1px;
+}
+
+.main-score {
+  background: var(--s1);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.main-score.bullish {
+  border-color: var(--green);
+  background: linear-gradient(135deg, rgba(0, 255, 135, 0.05), rgba(0, 255, 135, 0.1));
+}
+
+.main-score.bearish {
+  border-color: var(--red);
+  background: linear-gradient(135deg, rgba(255, 59, 92, 0.05), rgba(255, 59, 92, 0.1));
+}
+
+.main-score.neutral {
+  border-color: var(--yellow);
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.05), rgba(251, 191, 36, 0.1));
+}
+
+.score-number {
+  font-size: 72px;
+  font-weight: 700;
+  margin: 16px 0;
+}
+
+.score-number.bullish { color: var(--green); }
+.score-number.bearish { color: var(--red); }
+.score-number.neutral { color: var(--yellow); }
+
+.score-label {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.indicators-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.indicator-card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.indicator-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text2);
+  margin-bottom: 12px;
+}
+
+.indicator-value {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.indicator-value.positive { color: var(--green); }
+.indicator-value.negative { color: var(--red); }
+.indicator-value.neutral { color: var(--text); }
+
+.indicator-change {
+  font-size: 11px;
+  color: var(--text2);
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.chart-card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.chart-title {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  color: var(--text2);
+}
+
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text2);
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.btn {
+  background: var(--green);
+  color: var(--bg);
+  border: none;
+  padding: 12px 24px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: opacity 0.2s;
+  display: block;
+  margin: 32px auto 0;
+}
+
+.btn:hover { opacity: 0.9; }
+.btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+@media (max-width: 1024px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class=&quot;header&quot;>
+  <div class=&quot;title&quot;>📊 DASHBOARD MACRO</div>
+  <div class=&quot;subtitle&quot;>Análisis Automático de Indicadores Macroeconómicos</div>
+</div>
+
+<div id=&quot;content&quot;>
+  <div class=&quot;loading&quot;>
+    <div class=&quot;spinner&quot;></div>
+    <div>Cargando indicadores macroeconómicos...</div>
+  </div>
+</div>
+
+<script>
+// Datos reales del sistema macro (actualizado 14 Feb 2026)
+const MACRO_DATA = {
+  // Score total y zona
+  totalScore: 3,
+  maxScore: 17,
+  zone: 'amarillo', // Soft Landing
+  zoneLabel: '🟡 SOFT LANDING',
+  
+  // Subcategorías
+  adelantados: { score: 2, max: 3 },
+  monetarios: { score: 1, max: 14 },
+  
+  // Indicadores Adelantados (3)
+  leading: {
+    curvaUSD: { 
+      value: 0.64, 
+      label: 'Curva USD (10Y-2Y)',
+      unit: '%',
+      signal: 'positive',
+      desc: 'Positiva = +1'
+    },
+    curvaEUR: { 
+      value: 0.80, 
+      label: 'Curva EUR (10Y-2Y)',
+      unit: '%',
+      signal: 'positive',
+      desc: 'Positiva = +1'
+    },
+    lei: { 
+      value: -1.2, 
+      label: 'LEI (6m anualizado)',
+      unit: '%',
+      signal: 'neutral',
+      desc: 'Zona amarilla, lejos de -4.3%'
+    }
+  },
+  
+  // Indicadores Monetarios (8, ponderados)
+  monetary: {
+    m2Global: { 
+      value: 5.2, 
+      label: 'M2 Global',
+      unit: '% YoY',
+      weight: 3,
+      score: 3,
+      signal: 'positive',
+      desc: 'Peso ×3 = +3 puntos'
+    },
+    credito: { 
+      value: 2.0, 
+      label: 'Crédito vs Nominal',
+      unit: '%',
+      weight: 3,
+      score: 0,
+      signal: 'neutral',
+      desc: 'Peso ×3 = 0 puntos'
+    },
+    impulso: { 
+      value: 1.0, 
+      label: 'Impulso Crediticio',
+      unit: '',
+      weight: 2,
+      score: 2,
+      signal: 'positive',
+      desc: 'Peso ×2 = +2 puntos'
+    },
+    velocidad: { 
+      value: -1.8, 
+      label: 'Velocidad M2',
+      unit: '%',
+      weight: 2,
+      score: -2,
+      signal: 'negative',
+      desc: 'Peso ×2 = -2 puntos'
+    },
+    reservas: { 
+      value: 2.93, 
+      label: 'Reservas Bancarias',
+      unit: 'T',
+      weight: 1,
+      score: -1,
+      signal: 'negative',
+      desc: '-10.4% YoY = -1 punto'
+    },
+    tipoReal: { 
+      value: 1.23, 
+      label: 'Tipo Interés Real',
+      unit: '%',
+      weight: 1,
+      score: -1,
+      signal: 'negative',
+      desc: 'Política restrictiva = -1'
+    },
+    spreads: { 
+      value: 0.96, 
+      label: 'Corporate Spreads BBB',
+      unit: '%',
+      weight: 1,
+      score: 1,
+      signal: 'positive',
+      desc: 'Mínimos históricos = +1'
+    },
+    putCall: { 
+      value: 0.60, 
+      label: 'Put/Call Ratio',
+      unit: '',
+      weight: 1,
+      score: -1,
+      signal: 'negative',
+      desc: '⚠️ Euforia = -1'
+    }
+  },
+  
+  // Escala de interpretación
+  scale: [
+    { min: 10, max: 17, zone: 'verde-oscuro', label: '🟢 Boom / Euforia' },
+    { min: 4, max: 10, zone: 'verde-claro', label: '🟢 Expansión sólida' },
+    { min: 0, max: 4, zone: 'amarillo', label: '🟡 Soft Landing' },
+    { min: -4, max: 0, zone: 'naranja', label: '🟠 Desaceleración' },
+    { min: -10, max: -4, zone: 'rojo-claro', label: '🔴 Recesión leve' },
+    { min: -17, max: -10, zone: 'rojo-oscuro', label: '🔴 Recesión severa' }
+  ],
+  
+  // Datos históricos simulados (6 meses)
+  history: {
+    dates: ['Sep 25', 'Oct 25', 'Nov 25', 'Dec 25', 'Jan 26', 'Feb 26'],
+    totalScore: [2, 2.5, 2.8, 3.2, 3.0, 3],
+    curvaUSD: [0.45, 0.52, 0.58, 0.62, 0.65, 0.64],
+    m2Global: [4.8, 4.9, 5.0, 5.1, 5.2, 5.2],
+    lei: [-2.1, -1.8, -1.5, -1.3, -1.2, -1.2]
+  }
+};
+
+function analyze() {
+  const score = MACRO_DATA.totalScore;
+  const maxScore = MACRO_DATA.maxScore;
+  const zone = MACRO_DATA.zone;
+  const zoneLabel = MACRO_DATA.zoneLabel;
+  
+  const signalClass = zone === 'amarillo' ? 'neutral' : 
+                      zone.includes('verde') ? 'bullish' : 'bearish';
+  
+  const html = `
+    <div class=&quot;main-score ${signalClass}&quot;>
+      <div class=&quot;score-label&quot;>Score Total Macro</div>
+      <div class=&quot;score-number ${signalClass}&quot;>${score > 0 ? '+' : ''}${score}/${maxScore}</div>
+      <div class=&quot;score-label&quot;>${zoneLabel}</div>
+      <div style=&quot;margin-top:16px;font-size:11px;opacity:0.8;&quot;>
+        Adelantados: +${MACRO_DATA.adelantados.score}/${MACRO_DATA.adelantados.max} · 
+        Monetarios: +${MACRO_DATA.monetarios.score}/${MACRO_DATA.monetarios.max}
+      </div>
+    </div>
+    
+    <div style=&quot;background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:32px;&quot;>
+      <div style=&quot;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px;color:var(--text2);&quot;>
+        📊 Escala de Interpretación
+      </div>
+      <div style=&quot;display:grid;gap:8px;&quot;>
+        ${MACRO_DATA.scale.map(s => `
+          <div style=&quot;padding:8px 12px;background:var(--s2);border-radius:4px;display:flex;justify-content:space-between;align-items:center;${s.zone === zone ? 'border-left:4px solid var(--green);' : ''}&quot;>
+            <span style=&quot;font-size:11px;&quot;>${s.label}</span>
+            <span style=&quot;font-size:11px;color:var(--text2);&quot;>${s.min > 0 ? '+' : ''}${s.min} a ${s.max > 0 ? '+' : ''}${s.max}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    
+    <div style=&quot;margin-bottom:32px;&quot;>
+      <div style=&quot;font-size:14px;font-weight:600;letter-spacing:1px;margin-bottom:16px;&quot;>🔮 INDICADORES ADELANTADOS</div>
+      <div class=&quot;indicators-grid&quot;>
+        ${Object.entries(MACRO_DATA.leading).map(([key, ind]) => `
+          <div class=&quot;indicator-card&quot;>
+            <div class=&quot;indicator-title&quot;>${ind.label}</div>
+            <div class=&quot;indicator-value ${ind.signal}&quot;>${ind.value > 0 ? '+' : ''}${ind.value}${ind.unit}</div>
+            <div class=&quot;indicator-change&quot;>${ind.desc}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    
+    <div style=&quot;margin-bottom:32px;&quot;>
+      <div style=&quot;font-size:14px;font-weight:600;letter-spacing:1px;margin-bottom:16px;&quot;>💰 INDICADORES MONETARIOS (Ponderados)</div>
+      <div class=&quot;indicators-grid&quot;>
+        ${Object.entries(MACRO_DATA.monetary).map(([key, ind]) => `
+          <div class=&quot;indicator-card&quot;>
+            <div class=&quot;indicator-title&quot;>${ind.label} (×${ind.weight})</div>
+            <div class=&quot;indicator-value ${ind.signal}&quot;>${typeof ind.value === 'number' ? (ind.value > 0 &amp;&amp; !ind.unit.includes('T') ? '+' : '') + ind.value.toFixed(2) : ind.value}${ind.unit}</div>
+            <div class=&quot;indicator-change&quot;>${ind.desc}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    
+    <div class=&quot;charts-grid&quot;>
+      <div class=&quot;chart-card&quot;>
+        <div class=&quot;chart-title&quot;>Evolución Score Total</div>
+        <canvas id=&quot;scoreChart&quot;></canvas>
+      </div>
+      
+      <div class=&quot;chart-card&quot;>
+        <div class=&quot;chart-title&quot;>Curva USD (10Y-2Y)</div>
+        <canvas id=&quot;curvaChart&quot;></canvas>
+      </div>
+      
+      <div class=&quot;chart-card&quot;>
+        <div class=&quot;chart-title&quot;>M2 Global (% YoY)</div>
+        <canvas id=&quot;m2Chart&quot;></canvas>
+      </div>
+      
+      <div class=&quot;chart-card&quot;>
+        <div class=&quot;chart-title&quot;>LEI (% 6m anualizado)</div>
+        <canvas id=&quot;leiChart&quot;></canvas>
+      </div>
+    </div>
+    
+    <button class=&quot;btn&quot; onclick=&quot;analyze()&quot;>⟲ ACTUALIZAR VISTA</button>
+  `;
+  
+  document.getElementById('content').innerHTML = html;
+  
+  // Crear gráficos
+  setTimeout(() => {
+    const hist = MACRO_DATA.history;
+    
+    const chartOptions = {
+      responsive: true,
+      plugins: { legend: { labels: { color: '#d4dbe8' } } },
+      scales: {
+        y: { ticks: { color: '#5a6478' }, grid: { color: '#1c2535' } },
+        x: { ticks: { color: '#5a6478' }, grid: { color: '#1c2535' } }
+      }
+    };
+    
+    // Score Total
+    new Chart(document.getElementById('scoreChart'), {
+      type: 'line',
+      data: {
+        labels: hist.dates,
+        datasets: [{
+          label: 'Score Total',
+          data: hist.totalScore,
+          borderColor: '#fbbf24',
+          backgroundColor: 'rgba(251, 191, 36, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: chartOptions
+    });
+    
+    // Curva USD
+    new Chart(document.getElementById('curvaChart'), {
+      type: 'line',
+      data: {
+        labels: hist.dates,
+        datasets: [{
+          label: 'Curva USD %',
+          data: hist.curvaUSD,
+          borderColor: '#00ff87',
+          backgroundColor: 'rgba(0, 255, 135, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: chartOptions
+    });
+    
+    // M2 Global
+    new Chart(document.getElementById('m2Chart'), {
+      type: 'line',
+      data: {
+        labels: hist.dates,
+        datasets: [{
+          label: 'M2 Global % YoY',
+          data: hist.m2Global,
+          borderColor: '#3b82f6',
+          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: chartOptions
+    });
+    
+    // LEI
+    new Chart(document.getElementById('leiChart'), {
+      type: 'bar',
+      data: {
+        labels: hist.dates,
+        datasets: [{
+          label: 'LEI %',
+          data: hist.lei,
+          backgroundColor: hist.lei.map(v => v >= 0 ? '#00ff87' : '#ff3b5c')
+        }]
+      },
+      options: chartOptions
+    });
+  }, 100);
+}
+
+// Auto-analizar al cargar
+window.addEventListener('load', () => {
+  setTimeout(analyze, 500);
+});
+</script>
+</body>
+</html>
+"></iframe>
+    <iframe class="module-frame"        id="frame-portfolio"  data-src="ethan_mercados.html"></iframe>
+    <iframe class="module-frame"        id="frame-allocation" srcdoc="<!DOCTYPE html>
+<html lang=&quot;es&quot;>
+<head>
+<meta charset=&quot;UTF-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+<title>ETHAN · Asset Allocation</title>
+<style>
+:root {
+  --bg: #06080c;
+  --s1: #0d1117;
+  --s2: #161b22;
+  --border: #1c2535;
+  --green: #00ff87;
+  --red: #ff3b5c;
+  --blue: #3b82f6;
+  --yellow: #fbbf24;
+  --text: #d4dbe8;
+  --text2: #5a6478;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  padding: 32px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  margin-bottom: 4px;
+  color: var(--text2);
+}
+
+.subtitle {
+  font-size: 11px;
+  color: var(--text2);
+  letter-spacing: 1px;
+  margin-bottom: 32px;
+}
+
+/* DASHBOARD EJECUTIVO */
+.executive-dashboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.decision-card {
+  background: var(--s1);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.decision-card:hover {
+  transform: translateY(-2px);
+}
+
+.decision-card.green {
+  border-color: var(--green);
+  box-shadow: 0 0 30px rgba(0, 255, 135, 0.15);
+}
+
+.decision-card.red {
+  border-color: var(--red);
+  box-shadow: 0 0 30px rgba(255, 59, 92, 0.15);
+}
+
+.decision-card.yellow {
+  border-color: var(--yellow);
+  box-shadow: 0 0 30px rgba(251, 191, 36, 0.15);
+}
+
+.decision-card.blue {
+  border-color: var(--blue);
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
+}
+
+.decision-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+
+.decision-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text2);
+  margin-bottom: 8px;
+}
+
+.decision-value {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.decision-value.green { color: var(--green); }
+.decision-value.red { color: var(--red); }
+.decision-value.yellow { color: var(--yellow); }
+.decision-value.blue { color: var(--blue); }
+
+.decision-desc {
+  font-size: 11px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+@media (max-width: 1024px) {
+  .executive-dashboard {
+    grid-template-columns: 1fr;
+  }
+}
+
+.recommendation {
+  background: var(--s1);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 32px;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.rec-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text2);
+  margin-bottom: 12px;
+}
+
+.rec-main {
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  margin-bottom: 16px;
+}
+
+.rec-main.rf { color: var(--blue); }
+.rec-main.rv { color: var(--green); }
+.rec-main.neutro { color: var(--yellow); }
+
+.rec-desc {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text2);
+  margin: 32px 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.warnings {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.warning-item {
+  background: var(--s1);
+  border-left: 4px solid var(--border);
+  padding: 16px 20px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.warning-item.alert {
+  border-left-color: var(--red);
+  background: rgba(255, 59, 92, 0.05);
+}
+
+.warning-item.caution {
+  border-left-color: var(--yellow);
+  background: rgba(251, 191, 36, 0.05);
+}
+
+.warning-item.ok {
+  border-left-color: var(--green);
+  background: rgba(0, 255, 135, 0.05);
+}
+
+.warning-icon {
+  font-size: 24px;
+}
+
+.warning-text {
+  flex: 1;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.warning-text strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.assets-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.asset-card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  transition: border-color 0.3s;
+}
+
+.asset-card.selected {
+  border: 2px solid var(--green);
+  box-shadow: 0 0 20px rgba(0, 255, 135, 0.2);
+}
+
+.asset-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.asset-ticker {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.asset-type {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: var(--s2);
+}
+
+.asset-type.rf { color: var(--blue); }
+.asset-type.rv { color: var(--green); }
+.asset-type.gold { color: var(--yellow); }
+.asset-type.hy { color: #f97316; }
+.asset-type.fx { color: #8b5cf6; }
+
+.asset-region {
+  font-size: 11px;
+  color: var(--text2);
+  margin-top: 4px;
+  text-align: center;
+}
+
+.score-display {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.score-number {
+  font-size: 48px;
+  font-weight: 700;
+}
+
+.score-label {
+  font-size: 10px;
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+.conditions {
+  display: grid;
+  gap: 8px;
+}
+
+.cond-group {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text2);
+  margin-top: 12px;
+  margin-bottom: 4px;
+}
+
+.cond {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  background: var(--s2);
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.cond-ok { color: var(--green); }
+.cond-fail { color: var(--red); }
+
+.btn {
+  background: var(--green);
+  color: var(--bg);
+  border: none;
+  padding: 12px 24px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: opacity 0.2s;
+  display: block;
+  margin: 0 auto;
+}
+
+.btn:hover { opacity: 0.9; }
+.btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text2);
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.methodology {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--text2);
+}
+
+.methodology h3 {
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+
+.methodology ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.methodology li {
+  padding-left: 20px;
+  position: relative;
+  margin-bottom: 6px;
+}
+
+.methodology li:before {
+  content: &quot;→&quot;;
+  position: absolute;
+  left: 0;
+  color: var(--green);
+}
+</style>
+</head>
+<body>
+
+<div class=&quot;header&quot;>
+  <div class=&quot;title&quot;>💼 ASSET ALLOCATION</div>
+  <div class=&quot;subtitle&quot;>Rotación táctica RF/RV según fortaleza técnica ETHAN</div>
+</div>
+
+<div id=&quot;content&quot;>
+  <div class=&quot;loading&quot;>
+    <div class=&quot;spinner&quot;></div>
+    <div>Analizando ETFs...</div>
+  </div>
+</div>
+
+<script>
+// ETFs de Asset Allocation
+const ASSETS = [
+  // Renta Variable
+  { ticker: 'VTI', name: 'Vanguard Total Stock Market', type: 'RV', region: '🇺🇸 USA', category: 'allocation' },
+  { ticker: 'VEU', name: 'Vanguard FTSE All-World ex-US', type: 'RV', region: '🌍 Mundo', category: 'allocation' },
+  
+  // Renta Fija
+  { ticker: 'IEF', name: 'iShares 7-10Y Treasury Bond', type: 'RF', region: '🇺🇸 USA', category: 'allocation' },
+  { ticker: 'BNDX', name: 'Vanguard Total Intl Bond', type: 'RF', region: '🌍 Mundo', category: 'allocation' },
+  
+  // Indicadores adicionales
+  { ticker: 'GLD', name: 'SPDR Gold Trust', type: 'GOLD', region: '🥇 Oro', category: 'indicator' },
+  { ticker: 'HYG', name: 'iShares iBoxx High Yield Corp Bond', type: 'HY', region: '💳 Corp', category: 'indicator' },
+  { ticker: 'EURUSD=X', name: 'Euro/Dólar', type: 'FX', region: '💱 FX', category: 'indicator' }
+];
+
+// Indicadores
+function sma(arr,p){return arr.map((_,i)=>{if(i<p-1)return null;const sl=arr.slice(i-p+1,i+1).filter(v=>v!=null&amp;&amp;!isNaN(v));return sl.length===p?sl.reduce((a,b)=>a+b,0)/p:null;});}
+function ema(arr,p){const k=2/(p+1),out=new Array(arr.length).fill(null);let s=arr.findIndex(v=>v!=null&amp;&amp;!isNaN(v));if(s<0)return out;out[s]=arr[s];for(let i=s+1;i<arr.length;i++){const v=(arr[i]!=null&amp;&amp;!isNaN(arr[i]))?arr[i]:out[i-1];out[i]=v*k+out[i-1]*(1-k);}return out;}
+function macd(closes){const ef=ema(closes,12),es=ema(closes,26);const m=ef.map((v,i)=>(v!=null&amp;&amp;es[i]!=null)?v-es[i]:null);const sl=ema(m.map(v=>v??0),9);return{m,sl};}
+function rsi(closes,p=14){const out=new Array(closes.length).fill(null);if(closes.length<p+1)return out;let g=0,l=0;for(let i=1;i<=p;i++){const d=closes[i]-closes[i-1];d>0?g+=d:l-=d;}let ag=g/p,al=l/p;out[p]=al===0?100:100-(100/(1+ag/al));for(let i=p+1;i<closes.length;i++){const d=closes[i]-closes[i-1];ag=(ag*(p-1)+(d>0?d:0))/p;al=(al*(p-1)+(d<0?-d:0))/p;out[i]=al===0?100:100-(100/(1+ag/al));}return out;}
+function stoch(highs,lows,closes,p){const rawK=closes.map((c,i)=>{if(i<p-1)return null;const hh=Math.max(...highs.slice(i-p+1,i+1));const ll=Math.min(...lows.slice(i-p+1,i+1));return hh===ll?50:(c-ll)/(hh-ll)*100;});const k=sma(rawK,3);const d=sma(k.map(v=>v??0),3);return{k,d};}
+function resample(ts,opens,highs,lows,closes,vols,freq){const groups={};ts.forEach((t,i)=>{const dd=new Date(t*1000);let key;if(freq==='W'){const day=dd.getDay();const diff=dd.getDate()-day+(day===0?-6:1);const mo=new Date(+dd);mo.setDate(diff);key=mo.toISOString().slice(0,10);}else{key=`${dd.getFullYear()}-${String(dd.getMonth()+1).padStart(2,'0')}`;}if(!groups[key]){groups[key]={o:opens[i],h:highs[i],l:lows[i],c:closes[i],v:vols[i]};}else{groups[key].h=Math.max(groups[key].h,highs[i]);groups[key].l=Math.min(groups[key].l,lows[i]);groups[key].c=closes[i];groups[key].v+=vols[i];}});const keys=Object.keys(groups).sort();return{dates:keys,opens:keys.map(k=>groups[k].o),highs:keys.map(k=>groups[k].h),lows:keys.map(k=>groups[k].l),closes:keys.map(k=>groups[k].c),vols:keys.map(k=>groups[k].v)};}
+
+async function fetchData(ticker){
+  const yUrl=`https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&amp;range=10y&amp;events=history`;
+  const proxies=[
+    u=>`https://corsproxy.io/?${encodeURIComponent(u)}`,
+    u=>`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
+    u=>`https://thingproxy.freeboard.io/fetch/${u}`,
+  ];
+  let lastErr;
+  for(const fn of proxies){
+    try{
+      const r=await fetch(fn(yUrl),{signal:AbortSignal.timeout(12000)});
+      if(!r.ok)throw new Error(`HTTP ${r.status}`);
+      const j=JSON.parse(await r.text());
+      if(j.chart?.error)throw new Error(j.chart.error.description);
+      const res=j.chart.result[0];
+      const q=res.indicators.quote[0];
+      const adj=res.indicators.adjclose?.[0]?.adjclose||q.close;
+      const ratio=adj.map((a,i)=>(q.close[i]&amp;&amp;a)?a/q.close[i]:1);
+      return{
+        timestamps:res.timestamp,
+        opens:q.open.map((v,i)=>v*ratio[i]),
+        highs:q.high.map((v,i)=>v*ratio[i]),
+        lows:q.low.map((v,i)=>v*ratio[i]),
+        closes:adj,
+        vols:q.volume,
+      };
+    }catch(e){lastErr=e;}
+  }
+  throw lastErr||new Error('Sin conexión');
+}
+
+function analyzeAsset(raw){
+  const{timestamps,opens,highs,lows,closes,vols}=raw;
+  const W=resample(timestamps,opens,highs,lows,closes,vols,'W');
+  const M=resample(timestamps,opens,highs,lows,closes,vols,'M');
+  
+  // Mensual (sin Stoch8)
+  const m_macd=macd(M.closes);
+  const m_s89=stoch(M.highs,M.lows,M.closes,89);
+  const m_rsi=rsi(M.closes,14);
+  const m_sma10=sma(M.closes,10);
+  const mi=M.closes.length-1;
+  
+  // Semanal
+  const w_macd=macd(W.closes);
+  const w_s89=stoch(W.highs,W.lows,W.closes,89);
+  const w_rsi=rsi(W.closes,14);
+  const w_sma20=sma(W.closes,20);
+  const wi=W.closes.length-1;
+  
+  // Condiciones mensuales (4 condiciones, sin Stoch8)
+  const mc={
+    macd: m_macd.m[mi]>0 &amp;&amp; m_macd.m[mi]>m_macd.sl[mi],
+    s89: (m_s89.k[mi]>80&amp;&amp;m_s89.k[mi]>m_s89.d[mi])||m_s89.k[mi]>92,
+    rsi: m_rsi[mi]>65,
+    precio: m_sma10[mi]&amp;&amp;M.closes[mi]>m_sma10[mi]
+  };
+  
+  // Condiciones semanales (4 condiciones)
+  const sc={
+    macd: w_macd.m[wi]>0&amp;&amp;w_macd.m[wi]>w_macd.sl[wi],
+    s89: (w_s89.k[wi]>85&amp;&amp;w_s89.k[wi]>w_s89.d[wi])||w_s89.k[wi]>92,
+    rsi: w_rsi[wi]>67,
+    precio: w_sma20[wi]&amp;&amp;W.closes[wi]>w_sma20[wi]
+  };
+  
+  // Score total (8 condiciones)
+  const score = Object.values(mc).filter(x=>x).length + Object.values(sc).filter(x=>x).length;
+  
+  return {
+    score,
+    mensual: mc,
+    semanal: sc,
+    price: closes[closes.length-1]
+  };
+}
+
+async function runAnalysis(){
+  const results = [];
+  
+  for(const asset of ASSETS){
+    try{
+      const raw = await fetchData(asset.ticker);
+      const analysis = analyzeAsset(raw);
+      results.push({
+        ...asset,
+        ...analysis
+      });
+    }catch(err){
+      results.push({
+        ...asset,
+        score: 0,
+        error: err.message
+      });
+    }
+  }
+  
+  // Separar allocation vs indicators
+  const allocationAssets = results.filter(a => a.category === 'allocation');
+  const indicators = results.filter(a => a.category === 'indicator');
+  
+  // Ordenar allocation por score
+  allocationAssets.sort((a,b) => b.score - a.score);
+  
+  // Los 2 mejores de allocation
+  const top2 = allocationAssets.slice(0, 2);
+  
+  // Determinar recomendación
+  const rfCount = top2.filter(a => a.type === 'RF').length;
+  const rvCount = top2.filter(a => a.type === 'RV').length;
+  
+  let recommendation;
+  let topRegion = '';
+  
+  if(rvCount === 2){
+    recommendation = { type: 'RV', label: 'RENTA VARIABLE', desc: 'Los 2 ETFs más fuertes son de Renta Variable. Posición alcista recomendada.' };
+    // Determinar región predominante
+    const usaRV = top2.find(a => a.region.includes('USA'));
+    const worldRV = top2.find(a => a.region.includes('Mundo'));
+    if(usaRV &amp;&amp; !worldRV) topRegion = ' → 🇺🇸 USA';
+    else if(!usaRV &amp;&amp; worldRV) topRegion = ' → 🌍 Resto Mundo';
+    else topRegion = ' → 🇺🇸 USA + 🌍 Mundo';
+  }else if(rfCount === 2){
+    recommendation = { type: 'RF', label: 'RENTA FIJA', desc: 'Los 2 ETFs más fuertes son de Renta Fija. Posición defensiva recomendada.' };
+  }else{
+    recommendation = { type: 'NEUTRO', label: 'MIXTO', desc: '1 RF + 1 RV entre los más fuertes. Considerar posición balanceada.' };
+  }
+  
+  recommendation.label += topRegion;
+  
+  renderResults(allocationAssets, indicators, top2, recommendation);
+}
+
+function renderResults(allocationAssets, indicators, top2, rec){
+  const recClass = rec.type.toLowerCase();
+  
+  // Encontrar indicadores
+  const gold = indicators.find(i => i.type === 'GOLD');
+  const hy = indicators.find(i => i.type === 'HY');
+  const fx = indicators.find(i => i.type === 'FX');
+  
+  // DECISIONES EJECUTIVAS
+  
+  // 1. Decisión de inversión (RF vs RV)
+  let investDecision = {
+    icon: '📊',
+    label: 'DECISIÓN DE INVERSIÓN',
+    value: rec.label,
+    class: recClass,
+    desc: rec.desc
+  };
+  
+  if(rec.type === 'RV') {
+    investDecision.icon = '📈';
+    investDecision.class = 'green';
+  } else if(rec.type === 'RF') {
+    investDecision.icon = '🛡️';
+    investDecision.class = 'blue';
+  } else {
+    investDecision.icon = '⚖️';
+    investDecision.class = 'yellow';
+  }
+  
+  // 2. Alerta de recesión (basada en HY)
+  let recessionAlert = {
+    icon: '💳',
+    label: 'RIESGO DE RECESIÓN',
+    value: 'CARGANDO...',
+    class: 'yellow',
+    desc: 'Analizando bonos corporativos...'
+  };
+  
+  if(hy &amp;&amp; !hy.error) {
+    if(hy.score <= 3) {
+      recessionAlert.value = '⚠️ ALTO';
+      recessionAlert.class = 'red';
+      recessionAlert.desc = 'High Yield débil. Estrés de crédito detectado. Precaución.';
+    } else if(hy.score <= 5) {
+      recessionAlert.value = '⚡ MODERADO';
+      recessionAlert.class = 'yellow';
+      recessionAlert.desc = 'High Yield neutral. Vigilar evolución del crédito corporativo.';
+    } else {
+      recessionAlert.value = '✓ BAJO';
+      recessionAlert.class = 'green';
+      recessionAlert.desc = 'High Yield fuerte. Crédito corporativo saludable.';
+    }
+  }
+  
+  // 3. Decisión de cobertura cambiaria (basada en EUR/USD)
+  let hedgeDecision = {
+    icon: '💱',
+    label: 'COBERTURA CAMBIARIA',
+    value: 'CARGANDO...',
+    class: 'yellow',
+    desc: 'Analizando EUR/USD...'
+  };
+  
+  if(fx &amp;&amp; !fx.error) {
+    if(fx.score >= 6) {
+      hedgeDecision.value = 'SÍ CUBRIR';
+      hedgeDecision.class = 'red';
+      hedgeDecision.desc = 'Euro fuerte vs Dólar. Considerar cobertura en posiciones USD.';
+    } else if(fx.score >= 4) {
+      hedgeDecision.value = 'VIGILAR';
+      hedgeDecision.class = 'yellow';
+      hedgeDecision.desc = 'EUR/USD neutral. Cobertura opcional según exposición.';
+    } else {
+      hedgeDecision.value = 'NO CUBRIR';
+      hedgeDecision.class = 'green';
+      hedgeDecision.desc = 'Dólar fuerte. No es necesaria cobertura en posiciones USD.';
+    }
+  }
+  
+  // WARNINGS ADICIONALES
+  const warnings = [];
+  
+  // Warning: Oro muy fuerte
+  if(gold &amp;&amp; !gold.error &amp;&amp; gold.score >= 7) {
+    warnings.push({
+      type: 'caution',
+      icon: '🥇',
+      text: '<strong>Oro en máximos:</strong> Mercado buscando refugio. Incertidumbre elevada. Validar posiciones de riesgo.'
+    });
+  }
+  
+  // Warning: Divergencia HY vs RV
+  if(hy &amp;&amp; !hy.error &amp;&amp; rec.type === 'RV' &amp;&amp; hy.score <= 4) {
+    warnings.push({
+      type: 'alert',
+      icon: '⚠️',
+      text: '<strong>Divergencia detectada:</strong> Renta Variable fuerte pero High Yield débil. Señal contradictoria - extrema precaución.'
+    });
+  }
+  
+  // Warning: Todo claro
+  if(rec.type === 'RV' &amp;&amp; hy &amp;&amp; hy.score >= 6 &amp;&amp; gold &amp;&amp; gold.score <= 4) {
+    warnings.push({
+      type: 'ok',
+      icon: '✓',
+      text: '<strong>Entorno favorable:</strong> RV fuerte, crédito sano, sin búsqueda de refugio. Condiciones óptimas para posiciones alcistas.'
+    });
+  }
+  
+  // Warning: Modo defensivo total
+  if(rec.type === 'RF' &amp;&amp; gold &amp;&amp; gold.score >= 6) {
+    warnings.push({
+      type: 'alert',
+      icon: '🛡️',
+      text: '<strong>Modo defensivo total:</strong> RF + Oro fuertes. Mercado en máxima aversión al riesgo. Mantener postura conservadora.'
+    });
+  }
+  
+  const renderAssetCard = (a, isSelected = false) => `
+    <div class=&quot;asset-card ${isSelected?'selected':''}&quot;>
+      <div class=&quot;asset-header&quot;>
+        <div class=&quot;asset-ticker&quot;>${a.ticker}</div>
+        <div class=&quot;asset-type ${a.type.toLowerCase()}&quot;>${a.type}</div>
+      </div>
+      <div class=&quot;asset-region&quot;>${a.region}</div>
+      
+      <div class=&quot;score-display&quot;>
+        <div class=&quot;score-number&quot; style=&quot;color:${a.score>=7?'var(--green)':a.score>=5?'var(--yellow)':'var(--text2)'}&quot;>${a.score}/8</div>
+        <div class=&quot;score-label&quot;>Score ETHAN</div>
+      </div>
+      
+      ${a.error ? `<div style=&quot;color:var(--red);text-align:center;font-size:11px;&quot;>Error: ${a.error}</div>` : `
+        <div class=&quot;conditions&quot;>
+          <div class=&quot;cond-group&quot;>📅 Mensual</div>
+          <div class=&quot;cond&quot;>
+            <span>MACD↑</span>
+            <span class=&quot;${a.mensual.macd?'cond-ok':'cond-fail'}&quot;>${a.mensual.macd?'✓':'✗'}</span>
+          </div>
+          <div class=&quot;cond&quot;>
+            <span>Stoch89>80</span>
+            <span class=&quot;${a.mensual.s89?'cond-ok':'cond-fail'}&quot;>${a.mensual.s89?'✓':'✗'}</span>
+          </div>
+          <div class=&quot;cond&quot;>
+            <span>RSI>65</span>
+            <span class=&quot;${a.mensual.rsi?'cond-ok':'cond-fail'}&quot;>${a.mensual.rsi?'✓':'✗'}</span>
+          </div>
+          <div class=&quot;cond&quot;>
+            <span>P>SMA10</span>
+            <span class=&quot;${a.mensual.precio?'cond-ok':'cond-fail'}&quot;>${a.mensual.precio?'✓':'✗'}</span>
+          </div>
+          
+          <div class=&quot;cond-group&quot;>📊 Semanal</div>
+          <div class=&quot;cond&quot;>
+            <span>MACD↑</span>
+            <span class=&quot;${a.semanal.macd?'cond-ok':'cond-fail'}&quot;>${a.semanal.macd?'✓':'✗'}</span>
+          </div>
+          <div class=&quot;cond&quot;>
+            <span>Stoch89>85</span>
+            <span class=&quot;${a.semanal.s89?'cond-ok':'cond-fail'}&quot;>${a.semanal.s89?'✓':'✗'}</span>
+          </div>
+          <div class=&quot;cond&quot;>
+            <span>RSI>67</span>
+            <span class=&quot;${a.semanal.rsi?'cond-ok':'cond-fail'}&quot;>${a.semanal.rsi?'✓':'✗'}</span>
+          </div>
+          <div class=&quot;cond&quot;>
+            <span>P>SMA20</span>
+            <span class=&quot;${a.semanal.precio?'cond-ok':'cond-fail'}&quot;>${a.semanal.precio?'✓':'✗'}</span>
+          </div>
+        </div>
+      `}
+    </div>
+  `;
+  
+  const html = `
+    <div class=&quot;executive-dashboard&quot;>
+      <div class=&quot;decision-card ${investDecision.class}&quot;>
+        <div class=&quot;decision-icon&quot;>${investDecision.icon}</div>
+        <div class=&quot;decision-label&quot;>${investDecision.label}</div>
+        <div class=&quot;decision-value ${investDecision.class}&quot;>${investDecision.value}</div>
+        <div class=&quot;decision-desc&quot;>${investDecision.desc}</div>
+      </div>
+      
+      <div class=&quot;decision-card ${recessionAlert.class}&quot;>
+        <div class=&quot;decision-icon&quot;>${recessionAlert.icon}</div>
+        <div class=&quot;decision-label&quot;>${recessionAlert.label}</div>
+        <div class=&quot;decision-value ${recessionAlert.class}&quot;>${recessionAlert.value}</div>
+        <div class=&quot;decision-desc&quot;>${recessionAlert.desc}</div>
+      </div>
+      
+      <div class=&quot;decision-card ${hedgeDecision.class}&quot;>
+        <div class=&quot;decision-icon&quot;>${hedgeDecision.icon}</div>
+        <div class=&quot;decision-label&quot;>${hedgeDecision.label}</div>
+        <div class=&quot;decision-value ${hedgeDecision.class}&quot;>${hedgeDecision.value}</div>
+        <div class=&quot;decision-desc&quot;>${hedgeDecision.desc}</div>
+      </div>
+    </div>
+    
+    ${warnings.length > 0 ? `
+      <div class=&quot;warnings&quot;>
+        ${warnings.map(w => `
+          <div class=&quot;warning-item ${w.type}&quot;>
+            <div class=&quot;warning-icon&quot;>${w.icon}</div>
+            <div class=&quot;warning-text&quot;>${w.text}</div>
+          </div>
+        `).join('')}
+      </div>
+    ` : ''}
+    
+    <div class=&quot;section-title&quot;>📊 Asset Allocation (RF vs RV)</div>
+    <div class=&quot;assets-grid&quot;>
+      ${allocationAssets.map(a => renderAssetCard(a, top2.includes(a))).join('')}
+    </div>
+    
+    <div class=&quot;section-title&quot;>🔔 Indicadores de Mercado</div>
+    <div class=&quot;assets-grid&quot; style=&quot;grid-template-columns: repeat(3, 1fr);&quot;>
+      ${gold ? renderAssetCard(gold) : ''}
+      ${hy ? renderAssetCard(hy) : ''}
+      ${fx ? renderAssetCard(fx) : ''}
+    </div>
+    
+    <div class=&quot;methodology&quot;>
+      <h3>Interpretación de Indicadores</h3>
+      <ul>
+        <li><strong>🥇 Oro (GLD):</strong> Score alto → Busca refugio, incertidumbre. Score bajo → Apetito por riesgo</li>
+        <li><strong>💳 High Yield (HYG):</strong> Score bajo → Estrés de crédito, posible recesión. Score alto → Crédito saludable</li>
+        <li><strong>💱 EUR/USD:</strong> Score alto (euro fuerte) → Considerar cobertura si inviertes en USD. Score bajo → Sin necesidad de cobertura</li>
+      </ul>
+      
+      <h3 style=&quot;margin-top:20px;&quot;>Metodología Allocation</h3>
+      <ul>
+        <li>Sistema ETHAN aplicado a 4 ETFs (2 RF + 2 RV)</li>
+        <li>Condiciones: Mensual (4) + Semanal (4) = 8 puntos máximo</li>
+        <li>Se seleccionan los 2 ETFs con mayor score</li>
+        <li>Si top 2 = RF → Posición defensiva</li>
+        <li>Si top 2 = RV → Posición alcista (especifica región predominante)</li>
+        <li>Si top 2 = 1 RF + 1 RV → Posición mixta</li>
+      </ul>
+    </div>
+    
+    <button class=&quot;btn&quot; onclick=&quot;runAnalysis()&quot; style=&quot;margin-top:24px;&quot;>⟲ ACTUALIZAR ANÁLISIS</button>
+  `;
+  
+  document.getElementById('content').innerHTML = html;
+}
+
+// Auto-ejecutar al cargar
+window.addEventListener('load', () => {
+  setTimeout(runAnalysis, 500);
+});
+</script>
+</body>
+</html>
+"></iframe>
+
+    <iframe class="module-frame"        id="frame-fundamental" srcdoc="<!DOCTYPE html>
+<html lang=&quot;es&quot;>
+<head>
+<meta charset=&quot;UTF-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+<title>Análisis Fundamental Automático</title>
+<script src=&quot;https://cdn.jsdelivr.net/npm/chart.js&quot;></script>
+<style>
+:root {
+  --bg: #06080c;
+  --s1: #0d1117;
+  --s2: #161b22;
+  --border: #1c2535;
+  --green: #00ff87;
+  --red: #ff3b5c;
+  --blue: #3b82f6;
+  --text: #d4dbe8;
+  --text2: #5a6478;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  padding: 24px;
+}
+
+.header {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+  align-items: center;
+}
+
+#tickerInput {
+  flex: 1;
+  background: var(--s1);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px 16px;
+  font-family: inherit;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn {
+  background: var(--green);
+  color: var(--bg);
+  border: none;
+  padding: 12px 24px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn:hover { opacity: 0.9; }
+.btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.metric-card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.metric-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text2);
+  margin-bottom: 8px;
+}
+
+.metric-value {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.metric-value.positive { color: var(--green); }
+.metric-value.negative { color: var(--red); }
+.metric-value.neutral { color: var(--text); }
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.chart-card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.chart-title {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  color: var(--text2);
+}
+
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text2);
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error {
+  background: rgba(255, 59, 92, 0.1);
+  border: 1px solid var(--red);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  color: var(--red);
+}
+
+@media (max-width: 1024px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class=&quot;header&quot;>
+  <input type=&quot;text&quot; id=&quot;tickerInput&quot; placeholder=&quot;Introduce ticker (ej: AAPL, MSFT, GOOGL)&quot; value=&quot;AAPL&quot;>
+  <button class=&quot;btn&quot; onclick=&quot;analyze()&quot; id=&quot;analyzeBtn&quot;>ANALIZAR</button>
+</div>
+
+<div id=&quot;content&quot;>
+  <div class=&quot;loading&quot;>
+    <div>Introduce un ticker y haz clic en ANALIZAR</div>
+  </div>
+</div>
+
+<script>
+let charts = {};
+
+async function fetchFundamentals(ticker) {
+  // Una sola petición con todos los módulos necesarios
+  const url = `https://query1.finance.yahoo.com/v10/finance/quoteSummary/${ticker}?modules=defaultKeyStatistics,financialData,summaryDetail,incomeStatementHistory,balanceSheetHistory,cashflowStatementHistory`;
+  
+  const proxies = [
+    u => u, // Directo
+    u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
+    u => `https://corsproxy.io/?${encodeURIComponent(u)}`,
+  ];
+  
+  for (const proxy of proxies) {
+    try {
+      const proxyUrl = proxy(url);
+      console.log(`Intentando: ${proxyUrl.substring(0, 100)}...`);
+      
+      const r = await fetch(proxyUrl, {
+        signal: AbortSignal.timeout(20000),
+        headers: {
+          'Accept': 'application/json',
+          'User-Agent': 'Mozilla/5.0'
+        }
+      });
+      
+      if (!r.ok) {
+        console.warn(`HTTP ${r.status}`);
+        continue;
+      }
+      
+      const text = await r.text();
+      const data = JSON.parse(text);
+      
+      if (data.quoteSummary?.result?.[0]) {
+        console.log('✓ Datos obtenidos correctamente');
+        return data.quoteSummary.result[0];
+      } else if (data.quoteSummary?.error) {
+        throw new Error(data.quoteSummary.error.description);
+      }
+    } catch(e) {
+      console.warn(`Error con proxy:`, e.message);
+      continue;
+    }
+  }
+  
+  throw new Error('No se pudo conectar con Yahoo Finance. Los proxies pueden estar bloqueados o el ticker no existe.');
+}
+
+function extractValue(obj) {
+  return obj?.raw ?? obj?.fmt ?? obj ?? 'N/A';
+}
+
+function createChart(canvasId, config) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return null;
+  
+  // Destruir gráfico anterior si existe
+  if (charts[canvasId]) {
+    charts[canvasId].destroy();
+  }
+  
+  charts[canvasId] = new Chart(canvas, config);
+  return charts[canvasId];
+}
+
+async function analyze() {
+  const ticker = document.getElementById('tickerInput').value.trim().toUpperCase();
+  if (!ticker) return;
+  
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true;
+  
+  document.getElementById('content').innerHTML = `
+    <div class=&quot;loading&quot;>
+      <div class=&quot;spinner&quot;></div>
+      <div>Analizando ${ticker}...</div>
+    </div>
+  `;
+  
+  try {
+    const data = await fetchFundamentals(ticker);
+    
+    if (!data) {
+      throw new Error('No se encontraron datos para este ticker');
+    }
+    
+    renderAnalysis(ticker, data);
+  } catch(err) {
+    document.getElementById('content').innerHTML = `
+      <div class=&quot;error&quot;>
+        <strong>Error:</strong> ${err.message}
+      </div>
+    `;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function renderAnalysis(ticker, allData) {
+  const stats = allData?.defaultKeyStatistics || {};
+  const fin = allData?.financialData || {};
+  const detail = allData?.summaryDetail || {};
+  
+  // Extraer métricas
+  const metrics = {
+    price: extractValue(detail.previousClose || detail.regularMarketPrice),
+    marketCap: extractValue(detail.marketCap),
+    per: extractValue(stats.trailingPE),
+    peg: extractValue(stats.pegRatio),
+    priceToBook: extractValue(stats.priceToBook),
+    roe: extractValue(fin.returnOnEquity),
+    roa: extractValue(fin.returnOnAssets),
+    debtToEquity: extractValue(fin.debtToEquity),
+    currentRatio: extractValue(fin.currentRatio),
+    profitMargin: extractValue(fin.profitMargins),
+    revenueGrowth: extractValue(fin.revenueGrowth),
+    earningsGrowth: extractValue(fin.earningsGrowth)
+  };
+  
+  // Formatear valores
+  const fmt = (v, suffix = '') => {
+    if (v === 'N/A' || v === null || v === undefined || isNaN(v)) return 'N/A';
+    if (typeof v === 'string') return v;
+    return v.toFixed(2) + suffix;
+  };
+  
+  const fmtBillions = (v) => {
+    if (v === 'N/A' || v === null || v === undefined || isNaN(v)) return 'N/A';
+    if (v >= 1e12) return '$' + (v / 1e12).toFixed(2) + 'T';
+    if (v >= 1e9) return '$' + (v / 1e9).toFixed(2) + 'B';
+    if (v >= 1e6) return '$' + (v / 1e6).toFixed(2) + 'M';
+    return '$' + v.toFixed(2);
+  };
+  
+  const fmtPct = (v) => {
+    if (v === 'N/A' || v === null || v === undefined || isNaN(v)) return 'N/A';
+    if (typeof v === 'string') return v;
+    return (v * 100).toFixed(2) + '%';
+  };
+  
+  const getClass = (v, threshold, inverse = false) => {
+    if (v === 'N/A' || v === null || v === undefined || isNaN(v)) return 'neutral';
+    const isGood = inverse ? v < threshold : v > threshold;
+    return isGood ? 'positive' : v === threshold ? 'neutral' : 'negative';
+  };
+  
+  // Históricos (si existen)
+  const incomeHistory = allData?.incomeStatementHistory?.incomeStatementHistory || [];
+  const balanceHistory = allData?.balanceSheetHistory?.balanceSheetStatements || [];
+  const cashflowHistory = allData?.cashflowStatementHistory?.cashflowStatements || [];
+  
+  const hasHistoricalData = incomeHistory.length > 0 || balanceHistory.length > 0 || cashflowHistory.length > 0;
+  
+  const years = incomeHistory.map(i => {
+    try {
+      return new Date(i.endDate.fmt).getFullYear();
+    } catch(e) {
+      return 'N/A';
+    }
+  }).filter(y => y !== 'N/A').reverse();
+  
+  const revenues = incomeHistory.map(i => {
+    const val = extractValue(i.totalRevenue);
+    return val !== 'N/A' &amp;&amp; !isNaN(val) ? val / 1e9 : 0;
+  }).reverse();
+  
+  const netIncome = incomeHistory.map(i => {
+    const val = extractValue(i.netIncome);
+    return val !== 'N/A' &amp;&amp; !isNaN(val) ? val / 1e9 : 0;
+  }).reverse();
+  
+  const assets = balanceHistory.map(b => {
+    const val = extractValue(b.totalAssets);
+    return val !== 'N/A' &amp;&amp; !isNaN(val) ? val / 1e9 : 0;
+  }).reverse();
+  
+  const liabilities = balanceHistory.map(b => {
+    const val = extractValue(b.totalLiab);
+    return val !== 'N/A' &amp;&amp; !isNaN(val) ? val / 1e9 : 0;
+  }).reverse();
+  
+  const operatingCashflow = cashflowHistory.map(c => {
+    const val = extractValue(c.totalCashFromOperatingActivities);
+    return val !== 'N/A' &amp;&amp; !isNaN(val) ? val / 1e9 : 0;
+  }).reverse();
+  
+  const capex = cashflowHistory.map(c => {
+    const val = extractValue(c.capitalExpenditures || 0);
+    return val !== 'N/A' &amp;&amp; !isNaN(val) ? Math.abs(val) / 1e9 : 0;
+  }).reverse();
+  
+  const fcf = operatingCashflow.map((ocf, i) => ocf - (capex[i] || 0));
+  
+  const html = `
+    <div class=&quot;metrics-grid&quot;>
+      <div class=&quot;metric-card&quot;>
+        <div class=&quot;metric-label&quot;>💰 Precio</div>
+        <div class=&quot;metric-value neutral&quot;>$${fmt(metrics.price)}</div>
+      </div>
+      <div class=&quot;metric-card&quot;>
+        <div class=&quot;metric-label&quot;>📊 Market Cap</div>
+        <div class=&quot;metric-value neutral&quot;>${fmtBillions(metrics.marketCap)}</div>
+      </div>
+      <div class=&quot;metric-card&quot;>
+        <div class=&quot;metric-label&quot;>📈 PER</div>
+        <div class=&quot;metric-value ${getClass(metrics.per, 25, true)}&quot;>${fmt(metrics.per)}x</div>
+      </div>
+      <div class=&quot;metric-card&quot;>
+        <div class=&quot;metric-label&quot;>📉 PEG</div>
+        <div class=&quot;metric-value ${getClass(metrics.peg, 2, true)}&quot;>${fmt(metrics.peg)}</div>
+      </div>
+      <div class=&quot;metric-card&quot;>
+        <div class=&quot;metric-label&quot;>🏆 ROE</div>
+        <div class=&quot;metric-value ${getClass(metrics.roe, 0.15)}&quot;>${fmtPct(metrics.roe)}</div>
+      </div>
+      <div class=&quot;metric-card&quot;>
+        <div class=&quot;metric-label&quot;>💼 ROA</div>
+        <div class=&quot;metric-value ${getClass(metrics.roa, 0.05)}&quot;>${fmtPct(metrics.roa)}</div>
+      </div>
+      <div class=&quot;metric-card&quot;>
+        <div class=&quot;metric-label&quot;>📊 Deuda/Equity</div>
+        <div class=&quot;metric-value ${getClass(metrics.debtToEquity, 100, true)}&quot;>${fmt(metrics.debtToEquity)}%</div>
+      </div>
+      <div class=&quot;metric-card&quot;>
+        <div class=&quot;metric-label&quot;>💧 Current Ratio</div>
+        <div class=&quot;metric-value ${getClass(metrics.currentRatio, 1)}&quot;>${fmt(metrics.currentRatio)}</div>
+      </div>
+      <div class=&quot;metric-card&quot;>
+        <div class=&quot;metric-label&quot;>💹 Profit Margin</div>
+        <div class=&quot;metric-value ${getClass(metrics.profitMargin, 0.10)}&quot;>${fmtPct(metrics.profitMargin)}</div>
+      </div>
+      <div class=&quot;metric-card&quot;>
+        <div class=&quot;metric-label&quot;>📈 Revenue Growth</div>
+        <div class=&quot;metric-value ${getClass(metrics.revenueGrowth, 0)}&quot;>${fmtPct(metrics.revenueGrowth)}</div>
+      </div>
+    </div>
+    
+    ${hasHistoricalData ? `
+    <div class=&quot;charts-grid&quot;>
+      <div class=&quot;chart-card&quot;>
+        <div class=&quot;chart-title&quot;>Ingresos vs Beneficio Neto ($ Billions)</div>
+        <canvas id=&quot;revenueChart&quot;></canvas>
+      </div>
+      
+      <div class=&quot;chart-card&quot;>
+        <div class=&quot;chart-title&quot;>Activos vs Pasivos ($ Billions)</div>
+        <canvas id=&quot;balanceChart&quot;></canvas>
+      </div>
+      
+      <div class=&quot;chart-card&quot;>
+        <div class=&quot;chart-title&quot;>Free Cash Flow ($ Billions)</div>
+        <canvas id=&quot;fcfChart&quot;></canvas>
+      </div>
+      
+      <div class=&quot;chart-card&quot;>
+        <div class=&quot;chart-title&quot;>Márgenes y Rentabilidad</div>
+        <canvas id=&quot;marginsChart&quot;></canvas>
+      </div>
+    </div>
+    ` : '<div style=&quot;text-align:center;color:var(--text2);padding:40px;&quot;>No hay datos históricos disponibles para este ticker</div>'}
+  `;
+  
+  document.getElementById('content').innerHTML = html;
+  
+  // Crear gráficos solo si hay datos históricos
+  if (!hasHistoricalData) return;
+  
+  setTimeout(() => {
+    // Revenue Chart
+    createChart('revenueChart', {
+      type: 'line',
+      data: {
+        labels: years,
+        datasets: [{
+          label: 'Ingresos',
+          data: revenues,
+          borderColor: '#00ff87',
+          backgroundColor: 'rgba(0, 255, 135, 0.1)',
+          tension: 0.4
+        }, {
+          label: 'Beneficio Neto',
+          data: netIncome,
+          borderColor: '#3b82f6',
+          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: '#d4dbe8' } } },
+        scales: {
+          y: { ticks: { color: '#5a6478' }, grid: { color: '#1c2535' } },
+          x: { ticks: { color: '#5a6478' }, grid: { color: '#1c2535' } }
+        }
+      }
+    });
+    
+    // Balance Chart
+    createChart('balanceChart', {
+      type: 'bar',
+      data: {
+        labels: years,
+        datasets: [{
+          label: 'Activos',
+          data: assets,
+          backgroundColor: '#00ff87'
+        }, {
+          label: 'Pasivos',
+          data: liabilities,
+          backgroundColor: '#ff3b5c'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: '#d4dbe8' } } },
+        scales: {
+          y: { ticks: { color: '#5a6478' }, grid: { color: '#1c2535' } },
+          x: { ticks: { color: '#5a6478' }, grid: { color: '#1c2535' } }
+        }
+      }
+    });
+    
+    // FCF Chart
+    createChart('fcfChart', {
+      type: 'line',
+      data: {
+        labels: years,
+        datasets: [{
+          label: 'Operating Cashflow',
+          data: operatingCashflow,
+          borderColor: '#00ff87',
+          fill: false
+        }, {
+          label: 'CapEx',
+          data: capex.map(v => -v),
+          borderColor: '#ff3b5c',
+          fill: false
+        }, {
+          label: 'Free Cash Flow',
+          data: fcf,
+          borderColor: '#fbbf24',
+          backgroundColor: 'rgba(251, 191, 36, 0.1)',
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: '#d4dbe8' } } },
+        scales: {
+          y: { ticks: { color: '#5a6478' }, grid: { color: '#1c2535' } },
+          x: { ticks: { color: '#5a6478' }, grid: { color: '#1c2535' } }
+        }
+      }
+    });
+    
+    // Margins Chart
+    createChart('marginsChart', {
+      type: 'radar',
+      data: {
+        labels: ['ROE', 'ROA', 'Profit Margin', 'Revenue Growth', 'Earnings Growth'],
+        datasets: [{
+          label: ticker,
+          data: [
+            (metrics.roe || 0) * 100,
+            (metrics.roa || 0) * 100,
+            (metrics.profitMargin || 0) * 100,
+            (metrics.revenueGrowth || 0) * 100,
+            (metrics.earningsGrowth || 0) * 100
+          ],
+          backgroundColor: 'rgba(0, 255, 135, 0.2)',
+          borderColor: '#00ff87',
+          pointBackgroundColor: '#00ff87'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: '#d4dbe8' } } },
+        scales: {
+          r: {
+            ticks: { color: '#5a6478', backdropColor: 'transparent' },
+            grid: { color: '#1c2535' },
+            pointLabels: { color: '#d4dbe8' }
+          }
+        }
+      }
+    });
+  }, 100);
+}
+
+// Auto-analizar al cargar
+window.addEventListener('load', () => {
+  setTimeout(() => analyze(), 500);
+});
+
+// Enter para analizar
+document.getElementById('tickerInput').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') analyze();
+});
+</script>
+</body>
+</html>
+"></iframe>
     <iframe class="module-frame"        id="frame-sectors"     data-src="sectors.html"></iframe>
   </div>
 
   <div class="status-bar">
     <span><span class="status-dot"></span>&nbsp; ONLINE</span>
-    <span id="status-module">SCREENER</span>
+    <span id="status-module">ANÁLISIS MACRO</span>
     <span style="margin-left:auto;">ethan mercados · plataforma v2.0</span>
   </div>
 </div>
