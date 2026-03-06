@@ -3,27 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Macro | 14 Febrero 2026</title>
+    <title>Dashboard Macro | 5 Marzo 2026</title>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Montserrat', 'Segoe UI', sans-serif;
-            background: #040e0e;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
             min-height: 100vh;
             padding: 20px;
         }
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background: #071717; color: #d0e8e4;
+            background: white;
             border-radius: 25px;
-            box-shadow: 0 25px 70px rgba(0,0,0,0.6); border: 1px solid #1a3c3c;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.4);
             overflow: hidden;
         }
         .header {
-            background: linear-gradient(135deg, #071717 0%, #203a43 100%);
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 100%);
             color: white;
             padding: 35px 40px;
             text-align: center;
@@ -34,30 +33,29 @@
 
         .nav {
             display: flex;
-            border-bottom: 1px solid #1a3c3c;
+            border-bottom: 3px solid #e0e0e0;
             overflow-x: auto;
-            background: #0a1919;
+            background: #f8f9fa;
         }
         .nav-btn {
             flex: 1;
             padding: 18px 20px;
-            background: #071717; color: #d0e8e4;
+            background: white;
             border: none;
-            border-right: 1px solid #1a3c3c;
+            border-right: 1px solid #e0e0e0;
             cursor: pointer;
             font-size: 0.95rem;
             font-weight: 600;
             white-space: nowrap;
             transition: all 0.25s;
         }
-        .nav-btn:hover { background: #0f2828; color: #d0e8e4; }
-        .nav-btn.active { background: rgba(64,217,192,0.15); color: #40d9c0; border-bottom: 2px solid #40d9c0; }
+        .nav-btn:hover { background: #e8f4f8; }
+        .nav-btn.active { background: #10b981; color: white; }
 
-        .content { padding: 35px; background: #071717; }
+        .content { padding: 35px; }
         .page { display: none; }
         .page.active { display: block; }
 
-        /* Score principal */
         .main-score {
             text-align: center;
             padding: 45px;
@@ -65,13 +63,12 @@
             color: white;
             margin-bottom: 30px;
         }
-        .main-score.amarillo { background: linear-gradient(135deg, #3b2f00 0%, #4a3500 100%); }
-        .main-score.verde    { background: linear-gradient(135deg, #2ba897 0%, #40d9c0 100%); }
-        .main-score.rojo     { background: linear-gradient(135deg, #b91c1c 0%, #f47174 100%); }
+        .main-score.amarillo { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); }
+        .main-score.verde { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+        .main-score.naranja { background: linear-gradient(135deg, #e67e22, #f39c12); }
         .big-score { font-size: 5rem; font-weight: 900; margin: 15px 0; text-shadow: 2px 4px 10px rgba(0,0,0,0.25); }
         .signal { font-size: 1.8rem; margin: 10px 0; }
 
-        /* Cards */
         .score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 25px 0; }
         .score-card {
             padding: 28px;
@@ -83,26 +80,24 @@
         .score-card h3 { font-size: 1.2rem; margin-bottom: 10px; opacity: 0.9; }
         .score-card .score { font-size: 2.8rem; font-weight: 800; margin: 10px 0; }
         .score-card .desc { font-size: 0.9rem; opacity: 0.85; }
-        .card-green   { background: linear-gradient(135deg, #2ba897, #40d9c0); }
-        .card-neutral { background: linear-gradient(135deg, #5eead4, #764ba2); }
-        .card-orange  { background: linear-gradient(135deg, #3b2f00, #4a3500); color: #d0e8e4; }
+        .card-green   { background: linear-gradient(135deg, #11998e, #38ef7d); }
+        .card-neutral { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .card-orange  { background: linear-gradient(135deg, #f6d365, #fda085); color: #2c3e50; }
         .card-red     { background: linear-gradient(135deg, #eb3349, #f45c43); }
 
-        /* Alerta */
         .alert-box {
-            background: #fff3cd;
-            border: 2px solid #ffc107;
-            border-left: 6px solid #ff6b35;
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            border-left: 6px solid #c0392b;
             border-radius: 12px;
             padding: 18px 22px;
             margin: 20px 0;
             font-size: 0.95rem;
         }
-        .alert-box strong { color: #b91c1c; }
+        .alert-box strong { color: #c0392b; }
 
-        /* Gauge visual */
         .visual-gauge-container {
-            background: #0a1919;
+            background: #f8f9fa;
             border-radius: 20px;
             padding: 35px;
             margin: 25px 0;
@@ -112,7 +107,7 @@
             text-align: center;
             font-size: 1.5rem;
             font-weight: 700;
-            color: #071717;
+            color: #0f2027;
             margin-bottom: 35px;
         }
         .gauge-scale {
@@ -124,7 +119,7 @@
         .gauge-bar {
             display: flex;
             height: 75px;
-            border: 3px solid #d0e8e4;
+            border: 3px solid #2c3e50;
             border-radius: 10px;
             overflow: hidden;
         }
@@ -142,12 +137,12 @@
         }
         .gauge-segment:last-child { border-right: none; }
         .gauge-segment:hover { filter: brightness(1.1); }
-        .seg-rojo-oscuro { background: linear-gradient(135deg, #b91c1c, #f47174); color: white; }
-        .seg-rojo        { background: linear-gradient(135deg, #f47174, #f1948a); }
-        .seg-naranja     { background: linear-gradient(135deg, #d97706, #fbbf24); }
+        .seg-rojo-oscuro { background: linear-gradient(135deg, #c0392b, #e74c3c); color: white; }
+        .seg-rojo        { background: linear-gradient(135deg, #e74c3c, #f1948a); }
+        .seg-naranja     { background: linear-gradient(135deg, #e67e22, #f39c12); }
         .seg-amarillo    { background: linear-gradient(135deg, #f1c40f, #f9e79f); }
-        .seg-verde       { background: linear-gradient(135deg, #40d9c0, #58d68d); }
-        .seg-verde-plus  { background: linear-gradient(135deg, #2ba897, #40d9c0); color: white; }
+        .seg-verde       { background: linear-gradient(135deg, #27ae60, #58d68d); }
+        .seg-verde-plus  { background: linear-gradient(135deg, #1e8449, #27ae60); color: white; }
 
         .gauge-markers {
             display: flex;
@@ -155,7 +150,7 @@
             margin-top: 8px;
             padding: 0 2px;
         }
-        .gauge-marker { font-weight: 600; font-size: 0.9rem; color: #d0e8e4; }
+        .gauge-marker { font-weight: 600; font-size: 0.9rem; color: #2c3e50; }
 
         .current-position {
             position: absolute;
@@ -164,9 +159,9 @@
             animation: bounce 2.5s ease-in-out infinite;
             text-align: center;
         }
-        .position-arrow { font-size: 2.5rem; color: #f47174; line-height: 1; }
+        .position-arrow { font-size: 2.5rem; color: #e74c3c; line-height: 1; }
         .position-label {
-            background: #f47174;
+            background: #e74c3c;
             color: white;
             padding: 6px 14px;
             border-radius: 20px;
@@ -187,47 +182,44 @@
             gap: 12px;
             margin-top: 35px;
         }
-        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: #d0e8e4; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: #2c3e50; }
         .legend-color { width: 22px; height: 22px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.2); }
 
-        /* Chart container */
         .chart-container {
-            background: #071717; color: #d0e8e4;
+            background: white;
             border-radius: 15px;
             padding: 20px;
             margin: 20px 0;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
 
-        /* Analysis box */
         .analysis-box {
-            background: #0a1919;
+            background: #f8f9fa;
             padding: 22px;
             border-radius: 12px;
             margin: 20px 0;
-            border-left: 5px solid #40d9c0;
+            border-left: 5px solid #10b981;
         }
-        .analysis-box.warning { border-left-color: #d97706; }
-        .analysis-box.danger  { border-left-color: #f47174; }
-        .analysis-box h3 { color: #d0e8e4; margin-bottom: 12px; font-size: 1.05rem; }
+        .analysis-box.warning { border-left-color: #e67e22; }
+        .analysis-box.danger  { border-left-color: #e74c3c; }
+        .analysis-box h3 { color: #0f2027; margin-bottom: 12px; font-size: 1.05rem; }
         .analysis-box ul { list-style: none; padding: 0; }
         .analysis-box ul li { padding: 4px 0; line-height: 1.6; }
-        .analysis-box ul li::before { content: "▸ "; color: #40d9c0; font-weight: bold; }
-        .analysis-box.warning ul li::before { color: #d97706; }
-        .analysis-box.danger ul li::before  { color: #f47174; }
+        .analysis-box ul li::before { content: "▸ "; color: #10b981; font-weight: bold; }
+        .analysis-box.warning ul li::before { color: #e67e22; }
+        .analysis-box.danger ul li::before  { color: #e74c3c; }
         .analysis-box p { line-height: 1.7; }
 
-        /* Tabla */
         .indicator-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.92rem; }
         .indicator-table th {
-            background: #071717;
+            background: #0f2027;
             color: white;
             padding: 13px 15px;
             text-align: left;
             font-weight: 600;
         }
         .indicator-table td { padding: 12px 15px; border-bottom: 1px solid #e8e8e8; vertical-align: middle; }
-        .indicator-table tr:hover td { background: #0a1a1f; }
+        .indicator-table tr:hover td { background: #f0f8ff; }
         .score-badge {
             display: inline-block;
             padding: 4px 14px;
@@ -239,26 +231,22 @@
         .score-negative { background: #f8d7da; color: #721c24; }
         .score-neutral  { background: #fff3cd; color: #856404; }
 
-        /* Nuevos vs anteriores */
-        .cambio-up   { color: #40d9c0; font-weight: 700; }
-        .cambio-down { color: #f47174; font-weight: 700; }
+        .cambio-up   { color: #27ae60; font-weight: 700; }
+        .cambio-down { color: #e74c3c; font-weight: 700; }
         .cambio-flat { color: #888; }
 
-        /* Sección título */
-        .section-title { font-size: 1.8rem; font-weight: 700; color: #d0e8e4; margin-bottom: 20px; }
+        .section-title { font-size: 1.8rem; font-weight: 700; color: #0f2027; margin-bottom: 20px; }
 
-        /* Probabilidades */
         .prob-bar-wrap { margin: 12px 0; }
         .prob-label { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 4px; }
-        .prob-bar { background: #1a3c3c; border-radius: 8px; height: 18px; overflow: hidden; }
+        .prob-bar { background: #e0e0e0; border-radius: 8px; height: 18px; overflow: hidden; }
         .prob-fill { height: 100%; border-radius: 8px; transition: width 1s ease; }
-        .fill-green  { background: linear-gradient(90deg, #40d9c0, #58d68d); }
-        .fill-orange { background: linear-gradient(90deg, #d97706, #fbbf24); }
-        .fill-red    { background: linear-gradient(90deg, #b91c1c, #f47174); }
+        .fill-green  { background: linear-gradient(90deg, #27ae60, #58d68d); }
+        .fill-orange { background: linear-gradient(90deg, #e67e22, #f39c12); }
+        .fill-red    { background: linear-gradient(90deg, #c0392b, #e74c3c); }
 
-        /* Footer */
         .footer {
-            background: #071717;
+            background: #0f2027;
             color: white;
             text-align: center;
             padding: 28px 30px;
@@ -266,7 +254,6 @@
         .footer p { margin: 4px 0; opacity: 0.85; font-size: 0.9rem; }
         .footer .fuentes { font-size: 0.78rem; opacity: 0.6; margin-top: 10px; }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .header h1 { font-size: 1.8rem; }
             .content { padding: 20px; }
@@ -279,54 +266,48 @@
 </head>
 <body>
 <div class="container">
-
-    <!-- HEADER -->
     <div class="header">
         <h1>📊 DASHBOARD MACROECONÓMICO</h1>
         <div class="subtitle">Sistema Integrado de Análisis · 11 indicadores · 3 Adelantados + 8 Monetarios</div>
-        <div class="version">v2.2 · Actualizado: 14 Febrero 2026</div>
+        <div class="version">v2.3 · Actualizado: 5 Marzo 2026</div>
     </div>
 
-    <!-- NAV -->
     <div class="nav">
         <button class="nav-btn active" onclick="showPage('home', this)">🏠 HOME</button>
         <button class="nav-btn" onclick="showPage('adelantados', this)">🔮 Adelantados</button>
         <button class="nav-btn" onclick="showPage('monetarios', this)">💰 Monetarios</button>
         <button class="nav-btn" onclick="showPage('escenarios', this)">🎲 Escenarios</button>
-        <button class="nav-btn" onclick="showPage('cambios', this)">🔄 Cambios</button>
+        <button class="nav-btn" onclick="showPage('resumen', this)">📋 Resumen</button>
     </div>
 
     <div class="content">
-
-    <!-- ===== HOME ===== -->
     <div id="home" class="page active">
-
         <div class="main-score amarillo">
-            <div style="font-size:1rem;opacity:0.8;margin-bottom:5px;">SCORE TOTAL · 14 FEB 2026</div>
-            <div class="big-score">+3/17</div>
+            <div style="font-size:1rem;opacity:0.8;margin-bottom:5px;">SCORE TOTAL · 5 MAR 2026</div>
+            <div class="big-score">+2/17</div>
             <div class="signal">🟡 SOFT LANDING (frágil)</div>
-            <div style="margin-top:15px;font-size:1rem;opacity:0.85;">Zona: Amarilla · Posición: 58.8% del rango</div>
+            <div style="margin-top:15px;font-size:1rem;opacity:0.85;">Zona: Amarilla · Posición: 55.9% del rango</div>
         </div>
 
         <div class="alert-box">
-            ⚠️ <strong>ALERTA LEI:</strong> El Conference Board LEI cayó a -1.2% en los 6 meses hasta Noviembre 2025 (tasa anualizada moderada). Próximo dato Feb 19. Consumer Confidence se desplomó 9.7 puntos en Enero 2026 (84.5). Riesgo de deterioro.
+            🚨 <strong>ALERTA: Guerra USA-Irán + Aranceles Globales</strong> — El 10Y ha subido a 4.09% (desde <4% en Feb). Riesgo de shock inflacionario por petróleo. LEI Dic 2025: -0.2% (5º mes consecutivo negativo). Consumer Confidence mejora a 91.2 (Feb) pero Expectations Index sigue en 72 (bajo umbral 80 por 13º mes consecutivo).
         </div>
 
         <div class="score-grid">
             <div class="score-card card-green">
                 <h3>Adelantados</h3>
                 <div class="score">+2/3</div>
-                <div class="desc">Curvas positivas · LEI NEUTRO</div>
+                <div class="desc">Curvas positivas · LEI débil pero estable</div>
             </div>
             <div class="score-card card-neutral">
                 <h3>Monetarios</h3>
-                <div class="score">+1/14</div>
-                <div class="desc">M2 USA +4.6% · BBB 0.96%</div>
+                <div class="score">0/14</div>
+                <div class="desc">P/C eufórico · Tipo real alto · Conflicto geopolítico</div>
             </div>
-            <div class="score-card card-orange" style="color:#d0e8e4;">
-                <h3>Score vs Dic 25</h3>
-                <div class="score" style="color:#b91c1c;">−1</div>
-                <div class="desc">Put/Call baja a zona euforia · P/C 0.60</div>
+            <div class="score-card card-red">
+                <h3>Score vs Feb 26</h3>
+                <div class="score" style="color:white;">−1</div>
+                <div class="desc">Yields suben por riesgo geopolítico</div>
             </div>
         </div>
 
@@ -335,8 +316,7 @@
         </div>
 
         <div class="visual-gauge-container">
-            <h2 class="visual-gauge-title">Posición en el Espectro Macro (-17 a +17)</h2>
-
+            <h2 class="visual-gauge-title">📊 Posición en el Espectro Macro (-17 a +17)</h2>
             <div class="gauge-scale">
                 <div class="gauge-bar">
                     <div class="gauge-segment seg-rojo-oscuro" title="Recesión severa">RECESIÓN<br>SEVERA</div>
@@ -348,10 +328,9 @@
                 </div>
                 <div class="current-position" id="currentPosition">
                     <div class="position-arrow">▼</div>
-                    <div class="position-label">+3 AQUÍ</div>
+                    <div class="position-label">+2 AQUÍ</div>
                 </div>
             </div>
-
             <div class="gauge-markers">
                 <span class="gauge-marker">-17</span>
                 <span class="gauge-marker">-10</span>
@@ -361,7 +340,6 @@
                 <span class="gauge-marker">+10</span>
                 <span class="gauge-marker">+17</span>
             </div>
-
             <div class="gauge-legend">
                 <div class="legend-item"><div class="legend-color seg-rojo-oscuro"></div>Recesión severa (-17 a -10)</div>
                 <div class="legend-item"><div class="legend-color seg-rojo"></div>Recesión leve (-10 a -4)</div>
@@ -373,43 +351,42 @@
         </div>
 
         <div class="analysis-box">
-            <h3>✅ Factores Positivos</h3>
+            <h3>✅ Factores Positivos (limitados)</h3>
             <ul>
-                <li>Curva USD positiva: <strong>+0.64%</strong> (13 Feb 2026) — des-invertida y ampliándose</li>
-                <li>M2 USA: <strong>+4.6% YoY</strong> (Dic 2025) — acelera desde +4.3% anterior</li>
-                <li>BBB Spreads: <strong>0.96%</strong> (Feb 2026) — mínimos históricos, sin stress financiero</li>
-                <li>Impulso crediticio: positivo, bancos expandiendo balance</li>
-                <li>Inflación a la baja: CPI Jan 2026 = <strong>2.4%</strong> (menor de lo esperado)</li>
+                <li>Consumer Confidence mejora a <strong>91.2</strong> en Feb (+2.2 pts desde 89.0 en Ene)</li>
+                <li>Expectations Index sube a <strong>72.0</strong> (+4.8 pts) — sigue bajo umbral 80 por 13º mes</li>
+                <li>Curva USD: ~<strong>+0.50%</strong> (3 Mar 2026, estimado) — se mantiene positiva</li>
+                <li>BBB Spreads: ~<strong>1.0%</strong> (estimado) — condiciones financieras aún favorables</li>
+                <li>CEO Confidence Q1 2026 sube a <strong>59</strong> (+11 pts desde 48 en Q4)</li>
             </ul>
         </div>
 
-        <div class="analysis-box warning">
-            <h3>⚠️ Factores de Riesgo</h3>
+        <div class="analysis-box danger">
+            <h3>🚨 RIESGOS CRÍTICOS — Máxima Alerta</h3>
             <ul>
-                <li>Consumer Confidence: <strong>84.5</strong> en Enero (cayó 9.7 pts) — Expectations Index 65.1 (bajo umbral 80)</li>
-                <li>Put/Call Ratio: <strong>0.60</strong> — zona de EUFORIA (señal bajista contraria) → Score −1</li>
-                <li>Reservas bancarias: <strong>$2.93T</strong> (Feb 2026 vs ~$3.27T Feb 2025) ≈ −10.4% YoY → Score −1</li>
-                <li>Tipo real positivo: FFR 3.625% – CPI 2.4% = <strong>+1.2%</strong> — política restrictiva</li>
-                <li>LEI: próxima lectura Feb 19 · Dato gubernamental puede retrasarse (gov shutdown)</li>
+                <li><strong>GUERRA USA-Irán:</strong> 5º día de conflicto → Petróleo dispara → Riesgo inflación</li>
+                <li><strong>Aranceles globales 15%:</strong> Inician esta semana (Secretario Tesoro) → Shock oferta</li>
+                <li><strong>LEI -0.2% en Dic 2025:</strong> 5º mes consecutivo negativo → Economía débil inicio 2026</li>
+                <li><strong>10Y Treasury sube a 4.09%:</strong> Preocupación inflacionaria > safe-haven demand</li>
+                <li><strong>Expectations Index en 72:</strong> 13 meses bajo 80 → Señal recesión sostenida</li>
+                <li><strong>Put/Call 0.60:</strong> Mercado eufórico pre-conflicto → Vulnerabilidad extrema</li>
+                <li><strong>Fed no puede recortar:</strong> Inflación energía + aranceles atan manos del FOMC</li>
             </ul>
         </div>
     </div>
 
-    <!-- ===== ADELANTADOS ===== -->
     <div id="adelantados" class="page">
         <h2 class="section-title">🔮 Indicadores Adelantados</h2>
-
         <div class="main-score verde" style="padding:30px;">
             <div class="big-score" style="font-size:3rem;">+2/3</div>
-            <div class="signal" style="font-size:1.2rem;">Curvas OK · LEI Vigilancia</div>
+            <div class="signal" style="font-size:1.2rem;">Curvas positivas · LEI débil</div>
         </div>
-
         <table class="indicator-table">
             <thead>
                 <tr>
                     <th>Indicador</th>
                     <th>Valor Actual</th>
-                    <th>Dato Anterior</th>
+                    <th>Anterior</th>
                     <th>Fecha</th>
                     <th>Score</th>
                 </tr>
@@ -417,70 +394,67 @@
             <tbody>
                 <tr>
                     <td><strong>Curva USD (10Y–2Y)</strong></td>
-                    <td>+0.64%</td>
-                    <td><span class="cambio-flat">+0.52% (Nov 25)</span></td>
-                    <td>13 Feb 2026</td>
+                    <td>~+0.50%</td>
+                    <td><span class="cambio-down">+0.64% (13 Feb)</span></td>
+                    <td>3 Mar 2026 est.</td>
                     <td><span class="score-badge score-positive">+1</span></td>
                 </tr>
                 <tr>
                     <td><strong>Curva EUR (10Y–2Y)</strong></td>
-                    <td>~+0.80%</td>
-                    <td><span class="cambio-down">+0.85% (Dic 25)</span></td>
-                    <td>Feb 2026 est.</td>
+                    <td>~+0.75%</td>
+                    <td><span class="cambio-flat">~+0.80% (Feb)</span></td>
+                    <td>Mar 2026 est.</td>
                     <td><span class="score-badge score-positive">+1</span></td>
                 </tr>
-                <tr>
-                    <td><strong>LEI USA (6m ann.)</strong></td>
-                    <td>−1.2% (6m)</td>
-                    <td><span class="cambio-up">Mejora vs −4.1% (Sep 25)</span></td>
-                    <td>Nov 2025 (ene 25/26)</td>
+                <tr style="background:#fff8e1;">
+                    <td><strong>LEI USA</strong></td>
+                    <td><strong>-0.2%</strong> (Dic 2025)</td>
+                    <td><span class="cambio-flat">5º mes negativo</span></td>
+                    <td>19 Feb 2026</td>
                     <td><span class="score-badge score-neutral">0</span></td>
                 </tr>
             </tbody>
         </table>
-
-        <div class="analysis-box">
-            <h3>📊 LEI — Actualización Enero 2026</h3>
-            <p>El Conference Board publicó el 23 enero 2026 el LEI de Noviembre 2025: el índice cayó −0.3% (97.9, base 2016=100). <strong>La tasa 6 meses se moderó significativamente a −1.2%</strong> (vs −2.6% en el semestre anterior y vs −4.1% que teníamos en Septiembre). Esto es una <strong>MEJORA IMPORTANTE</strong>. Las 3Ds actualizadas:</p>
-            <ul>
-                <li><strong>DEPTH:</strong> −1.2% anualizado → AMARILLA (lejos del umbral −4.3%)</li>
-                <li><strong>DURATION:</strong> Sigue negativo pero desacelerando</li>
-                <li><strong>DIFFUSION:</strong> Mejora en componentes laborales (claims, horas)</li>
-            </ul>
-            <p style="margin-top:10px; color:#d97706;"><strong>Próximo dato: 19 Feb 2026 (puede retrasarse por government shutdown)</strong></p>
-        </div>
-
         <div class="analysis-box warning">
-            <h3>⚠️ Alerta: Consumer Confidence Enero 2026</h3>
-            <p>El índice de Confianza del Consumidor de Conference Board cayó <strong>9.7 puntos</strong> a 84.5 en Enero 2026. El Expectations Index bajó a 65.1, por debajo del umbral de 80 que señala recesión a 12 meses. Esta métrica es componente del LEI y puede anticipar deterioro en los próximos datos.</p>
+            <h3>📊 LEI Diciembre 2025 — Conference Board (19 Feb 2026)</h3>
+            <p>El LEI cayó <strong>-0.2%</strong> en Diciembre 2025, marcando el 5º mes consecutivo de descensos. Aunque la tasa es moderada comparada con meses anteriores, la <strong>DURATION prolongada</strong> (5+ meses negativo) es señal de debilidad económica estructural.</p>
+            <p style="margin-top:10px;"><strong>Componentes negativos:</strong> Expectativas consumidor débiles, nuevas órdenes manufactureras bajas, incremento claims desempleo.</p>
+            <p style="margin-top:10px;"><strong>Conference Board proyecta:</strong> Crecimiento 2.1% YoY en 2026 (desaceleración desde 2.2% en 2025).</p>
+        </div>
+        <div class="analysis-box">
+            <h3>🟢 Consumer Confidence Feb 2026 — Recuperación Parcial</h3>
+            <p>El índice subió a <strong>91.2</strong> (+2.2 pts) tras el desplome de Enero. El <strong>Expectations Index mejoró a 72</strong> (+4.8 pts) pero permanece <strong>bajo 80 por 13º mes consecutivo</strong> — señal de recesión sostenida según patrón histórico.</p>
+            <ul style="margin-top:10px;">
+                <li>Labor market differential: +7.4% (jobs plentiful vs hard to get) — mejora marginal</li>
+                <li>Planes de gasto: Incremento en autos usados, muebles, TVs, smartphones</li>
+                <li>Preocupaciones: Precios/inflación siguen dominando write-ins de consumidores</li>
+            </ul>
         </div>
     </div>
 
-    <!-- ===== MONETARIOS ===== -->
     <div id="monetarios" class="page">
         <h2 class="section-title">💰 Indicadores Monetarios</h2>
-
-        <div class="main-score amarillo" style="padding:30px;">
-            <div class="big-score" style="font-size:3rem;">+1/14</div>
-            <div class="signal" style="font-size:1.1rem;">Liquidez OK · Put/Call zona euforia</div>
+        <div class="main-score naranja" style="padding:30px; color:white;">
+            <div class="big-score" style="font-size:3rem;">0/14</div>
+            <div class="signal" style="font-size:1.1rem;">Zona Neutral - Riesgos elevados</div>
         </div>
-
+        <div class="alert-box">
+            <strong>⚠️ CAMBIO vs Feb 14:</strong> Score monetarios cae de <strong>+1/14 → 0/14</strong> (-1 punto). La guerra con Irán y los aranceles globales han cambiado radicalmente el entorno: yields suben por miedo inflacionario, no por crecimiento. El tipo real está disparándose.
+        </div>
         <table class="indicator-table">
             <thead>
                 <tr>
                     <th>Indicador</th>
-                    <th>Valor Feb 2026</th>
-                    <th>Dic 2025</th>
-                    <th>Score raw</th>
+                    <th>Valor Mar 2026</th>
+                    <th>Score</th>
                     <th>Peso</th>
-                    <th>Contrib.</th>
+                    <th>Total</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td><strong>M2 Global</strong></td>
-                    <td>~+5.2% YoY est.</td>
-                    <td>+5.0%</td>
+                    <td>~+5.2% est.</td>
                     <td><span class="score-badge score-positive">+1</span></td>
                     <td>×3</td>
                     <td><strong>+3</strong></td>
@@ -488,307 +462,156 @@
                 <tr>
                     <td><strong>Crédito vs Nominal</strong></td>
                     <td>~+2.0% est.</td>
-                    <td>+2.1%</td>
                     <td><span class="score-badge score-neutral">0</span></td>
                     <td>×3</td>
                     <td><strong>0</strong></td>
                 </tr>
                 <tr>
                     <td><strong>Impulso Crediticio</strong></td>
-                    <td>+1.0 est.</td>
-                    <td>+1.2</td>
+                    <td>~+0.8 est.</td>
                     <td><span class="score-badge score-positive">+1</span></td>
                     <td>×2</td>
                     <td><strong>+2</strong></td>
                 </tr>
                 <tr>
                     <td><strong>Velocidad M2</strong></td>
-                    <td>~−1.8% est.</td>
-                    <td>−2.1%</td>
+                    <td>~−1.7% est.</td>
                     <td><span class="score-badge score-negative">−1</span></td>
                     <td>×2</td>
                     <td><strong>−2</strong></td>
                 </tr>
-                <tr style="background:#1f0a0a;">
+                <tr>
                     <td><strong>Reservas Bancarias</strong></td>
-                    <td>$2.93T (4 Feb 26)</td>
-                    <td>~$3.27T (Feb 25)</td>
+                    <td>~$2.90T est.</td>
+                    <td><span class="score-badge score-negative">−1</span></td>
+                    <td>×1</td>
+                    <td><strong>−1</strong></td>
+                </tr>
+                <tr style="background:#fff0f0;">
+                    <td><strong>Tipo Real</strong></td>
+                    <td>FFR 3.625% − CPI ~2.8% = <strong>+0.83%</strong></td>
                     <td><span class="score-badge score-negative">−1</span></td>
                     <td>×1</td>
                     <td><strong>−1</strong></td>
                 </tr>
                 <tr>
-                    <td><strong>Tipo Real (FFR−CPI)</strong></td>
-                    <td>3.625%−2.4% = <strong>+1.23%</strong></td>
-                    <td>+0.93%</td>
-                    <td><span class="score-badge score-negative">−1</span></td>
-                    <td>×1</td>
-                    <td><strong>−1</strong></td>
-                </tr>
-                <tr style="background:#f0fff0;">
                     <td><strong>BBB Spreads</strong></td>
-                    <td>0.96% (Feb 2026)</td>
-                    <td>1.06%</td>
+                    <td>~1.0% est.</td>
                     <td><span class="score-badge score-positive">+1</span></td>
                     <td>×1</td>
                     <td><strong>+1</strong></td>
                 </tr>
-                <tr style="background:#1f0a0a;">
-                    <td><strong>Put/Call Ratio (CBOE)</strong></td>
-                    <td>0.60 (13 Feb 26)</td>
-                    <td>0.75</td>
+                <tr style="background:#fff0f0;">
+                    <td><strong>Put/Call Ratio</strong></td>
+                    <td><strong>0.58</strong> (estimado)</td>
                     <td><span class="score-badge score-negative">−1</span></td>
                     <td>×1</td>
                     <td><strong>−1</strong></td>
                 </tr>
+                <tr style="background:#e8f4f9;">
+                    <td colspan="4" style="text-align:right; font-weight:700;">TOTAL MONETARIOS:</td>
+                    <td><strong>0/14</strong></td>
+                </tr>
             </tbody>
         </table>
-
-        <div class="analysis-box">
-            <h3>💡 Notas clave</h3>
+        <div class="analysis-box danger">
+            <h3>🚨 Análisis Crítico — Guerra + Aranceles</h3>
             <ul>
-                <li><strong>M2 USA sube a +4.6%</strong> en Dic 2025 (vs +4.3% Nov). M2 Global estimado ~+5.2% incluyendo China ~+8.5%, EUR ~+2.8%.</li>
-                <li><strong>BBB Spreads bajan a 0.96%</strong> — mínimos históricos, mercado de crédito sin stress alguno.</li>
-                <li><strong>Reservas Fed caen a $2.93T</strong> (4 Feb 2026) vs ~$3.27T hace un año → −10.4% YoY → Score baja a −1 (antes era −4.7% = −1; ahora más negativo pero mismo score).</li>
-                <li><strong>Put/Call 0.60</strong> — EUFORIA. El mercado de opciones refleja exceso de complacencia. Contraindicador bajista → Score −1 (antes 0 con P/C 0.75).</li>
-                <li><strong>Tipo real sube a +1.23%</strong> — la bajada del CPI a 2.4% con FFR sin cambios aumenta la restricción real.</li>
-            </ul>
-        </div>
-
-        <div class="analysis-box warning">
-            <h3>🔄 Cambio Score vs Diciembre 2025</h3>
-            <ul>
-                <li>Put/Call: 0 → <strong>−1</strong> (0.75 neutral → 0.60 euforia)</li>
-                <li>M2 Global: sin cambio de score (+1)</li>
-                <li>BBB Spreads: sin cambio de score (+1, mejora marginal)</li>
-                <li><strong>Score monetarios: +2/14 → +1/14</strong></li>
-                <li><strong>Score total: +4/17 → +3/17</strong></li>
+                <li><strong>10Y Treasury en 4.09%:</strong> Sube por 3ª sesión — miedo inflacionario > safe-haven</li>
+                <li><strong>Aranceles 15% globales:</strong> Shock oferta inminente (inician esta semana)</li>
+                <li><strong>Petróleo disparado:</strong> Guerra Irán-USA día 5 → CPI podría subir a 3%+ en Mar</li>
+                <li><strong>Fed paralizada:</strong> No puede recortar con inflación amenazando repunte</li>
+                <li><strong>Tipo real se comprime:</strong> Si CPI sube a 3%, tipo real cae a +0.6% (aún restrictivo)</li>
+                <li><strong>Mercado espera:</strong> Primer recorte pospuesto a Septiembre (antes era Julio)</li>
             </ul>
         </div>
     </div>
 
-    <!-- ===== ESCENARIOS ===== -->
     <div id="escenarios" class="page">
-        <h2 class="section-title">🎲 Escenarios & Posicionamiento</h2>
-
-        <div class="analysis-box">
-            <h3>📊 Probabilidades (actualizado Feb 2026)</h3>
-            <div class="prob-bar-wrap">
-                <div class="prob-label"><span>🟢 Soft Landing / Expansión</span><span>55%</span></div>
-                <div class="prob-bar"><div class="prob-fill fill-green" style="width:55%"></div></div>
-            </div>
-            <div class="prob-bar-wrap">
-                <div class="prob-label"><span>🟡 Desaceleración prolongada</span><span>30%</span></div>
-                <div class="prob-bar"><div class="prob-fill fill-orange" style="width:30%"></div></div>
-            </div>
-            <div class="prob-bar-wrap">
-                <div class="prob-label"><span>🔴 Recesión 12 meses</span><span>15%</span></div>
-                <div class="prob-bar"><div class="prob-fill fill-red" style="width:15%"></div></div>
-            </div>
+        <h2 class="section-title">🎲 Escenarios Probabilísticos</h2>
+        <div class="analysis-box danger">
+            <h3>📊 Probabilidades ACTUALIZADAS (5 Mar 2026)</h3>
+            <p><strong>CAMBIO SIGNIFICATIVO vs Feb:</strong> Guerra Irán-USA + Aranceles 15% alteran radicalmente el panorama. Probabilidad de recesión sube por <strong>STAGFLATION RISK</strong> (estancamiento + inflación).</p>
         </div>
-
+        <div class="prob-bar-wrap">
+            <div class="prob-label"><span>🟡 Soft Landing (escenario base)</span><span>35%</span></div>
+            <div class="prob-bar"><div class="prob-fill fill-orange" style="width:35%"></div></div>
+        </div>
+        <div class="prob-bar-wrap">
+            <div class="prob-label"><span>🔴 Stagflation (nuevo riesgo)</span><span>30%</span></div>
+            <div class="prob-bar"><div class="prob-fill fill-red" style="width:30%"></div></div>
+        </div>
+        <div class="prob-bar-wrap">
+            <div class="prob-label"><span>🔴 Recesión 12 meses</span><span>25%</span></div>
+            <div class="prob-bar"><div class="prob-fill fill-red" style="width:25%"></div></div>
+        </div>
+        <div class="prob-bar-wrap">
+            <div class="prob-label"><span>🟢 Expansión</span><span>10%</span></div>
+            <div class="prob-bar"><div class="prob-fill fill-green" style="width:10%"></div></div>
+        </div>
         <div class="score-grid">
-            <div class="score-card card-green">
-                <h3>Soft Landing (base)</h3>
-                <div class="score" style="font-size:2rem;">55%</div>
-                <div class="desc">LEI mejorando · curvas OK · crédito barato</div>
+            <div class="score-card card-orange" style="color:#2c3e50;">
+                <h3>Soft Landing</h3>
+                <div class="score" style="font-size:2rem;">35%</div>
+                <div class="desc">Si guerra termina rápido + aranceles temporales</div>
             </div>
-            <div class="score-card card-orange" style="color:#d0e8e4;">
-                <h3>Desaceleración</h3>
+            <div class="score-card card-red">
+                <h3>Stagflation</h3>
                 <div class="score" style="font-size:2rem;">30%</div>
-                <div class="desc">Consumer confidence deteriorando · Fed restrictiva</div>
+                <div class="desc">Petróleo alto + aranceles → CPI 3%+ con growth bajo</div>
             </div>
             <div class="score-card card-red">
                 <h3>Recesión</h3>
-                <div class="score" style="font-size:2rem;">15%</div>
-                <div class="desc">Expectations Index < 80 · Shock externo</div>
+                <div class="score" style="font-size:2rem;">25%</div>
+                <div class="desc">Conflicto se extiende + Fed forzada a subir</div>
             </div>
         </div>
-
-        <div class="analysis-box">
-            <h3>📈 Posicionamiento Sugerido (Score +3/17)</h3>
-            <ul>
-                <li>✅ <strong>Renta Variable:</strong> 55% — reducción táctica desde 60% (P/C eufórico)</li>
-                <li>✅ <strong>Quality / Defensivos:</strong> 30% — salud, utilities, staples</li>
-                <li>💵 <strong>Liquidez / Treasuries cortos:</strong> 15% — yield atractivo, cobertura</li>
-                <li>⚠️ Reducir exposición a growth especulativo (P/C 0.60 = mercado muy complaciente)</li>
-                <li>✅ Mantener crédito investment grade (spreads mínimos = buen carry, poco riesgo)</li>
-            </ul>
-        </div>
-
         <div class="analysis-box danger">
-            <h3>🚨 Señales de Alerta — Triggers</h3>
+            <h3>📈 Posicionamiento DEFENSIVO (Score +2/17)</h3>
             <ul>
-                <li>Si <strong>LEI &lt; −3%</strong> (6m ann.) → Score −2 → Reducir renta variable a 40%</li>
-                <li>Si <strong>Curva USD &lt; 0%</strong> → Re-inversión → Score −2 → Defensivo total</li>
-                <li>Si <strong>BBB Spreads &gt; 2%</strong> → Stress financiero → Score −3</li>
-                <li>Si <strong>M2 Global &lt; +2%</strong> → Contracción liquidez → Score −3</li>
-                <li>Si <strong>Consumer Confidence &lt; 80</strong> varios meses → Alta prob. recesión</li>
+                <li>⚠️ <strong>Renta Variable:</strong> REDUCIR a 35-40% (desde 55%) — riesgo stagflation extremo</li>
+                <li>✅ <strong>Energía / Defensivos:</strong> 30% — oil, utilities, staples, salud</li>
+                <li>✅ <strong>Treasuries:</strong> 20% — duration corta (2-5Y) — protección si recesión</li>
+                <li>💵 <strong>Cash / Commodities:</strong> 15% — oro, liquidez, TIPS</li>
+                <li>🚫 <strong>EVITAR:</strong> Growth tech, small caps, high beta, mercados emergentes</li>
             </ul>
         </div>
     </div>
 
-    <!-- ===== CAMBIOS ===== -->
-    <div id="cambios" class="page">
-        <h2 class="section-title">🔄 Cambios vs Diciembre 2025</h2>
-
+    <div id="resumen" class="page">
+        <h2 class="section-title">📋 Resumen Ejecutivo</h2>
+        <div class="main-score naranja" style="padding:30px; color:white;">
+            <h3 style="font-size:1.1rem; opacity:0.9;">SCORE TOTAL</h3>
+            <div class="big-score" style="font-size:4rem;">+2/17</div>
+            <div class="signal" style="font-size:1.3rem;">🟡 SOFT LANDING FRÁGIL</div>
+            <p style="margin-top:15px; font-size:0.95rem; opacity:0.85;">Adelantados: +2/3 · Monetarios: 0/14</p>
+        </div>
         <table class="indicator-table">
             <thead>
                 <tr>
-                    <th>Indicador</th>
-                    <th>Dic 2025</th>
-                    <th>Feb 2026</th>
+                    <th>Fecha</th>
+                    <th>Score Total</th>
+                    <th>Adelantados</th>
+                    <th>Monetarios</th>
                     <th>Cambio</th>
-                    <th>Score</th>
+                    <th>Evento Clave</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>Curva USD</td>
-                    <td>+0.52%</td>
-                    <td>+0.64%</td>
-                    <td><span class="cambio-up">↑ +0.12%</span></td>
-                    <td>+1 → +1 (sin cambio)</td>
+                    <td>20 Dic 2025</td>
+                    <td>+4/17</td>
+                    <td>+2/3</td>
+                    <td>+2/14</td>
+                    <td>—</td>
+                    <td>LEI −4.1%, P/C 0.75</td>
                 </tr>
                 <tr>
-                    <td>Curva EUR</td>
-                    <td>+0.85%</td>
-                    <td>~+0.80%</td>
-                    <td><span class="cambio-down">↓ −0.05%</span></td>
-                    <td>+1 → +1 (sin cambio)</td>
+                    <td>14 Feb 2026</td>
+                    <td>+3/17</td>
+                    <td>+2/3</td>
+                    <td>+1/14</td>
+                    <td class="cambio-down">−1</td>
+                    <td>P/C cae a 0.60 (euforia)</td>
                 </tr>
-                <tr>
-                    <td>LEI (6m ann.)</td>
-                    <td>−4.1%</td>
-                    <td><strong>−1.2%</strong></td>
-                    <td><span class="cambio-up">↑↑ MEJORA significativa</span></td>
-                    <td>0 → 0 (sin cambio score)</td>
-                </tr>
-                <tr>
-                    <td>M2 USA</td>
-                    <td>+4.3%</td>
-                    <td>+4.6%</td>
-                    <td><span class="cambio-up">↑ Acelera</span></td>
-                    <td>+1 → +1 (sin cambio)</td>
-                </tr>
-                <tr>
-                    <td>BBB Spreads</td>
-                    <td>1.06%</td>
-                    <td>0.96%</td>
-                    <td><span class="cambio-up">↓ compresión</span></td>
-                    <td>+1 → +1 (sin cambio)</td>
-                </tr>
-                <tr style="background:#1f0a0a;">
-                    <td><strong>Put/Call Ratio</strong></td>
-                    <td>0.75 (neutral)</td>
-                    <td><strong>0.60 (euforia)</strong></td>
-                    <td><span class="cambio-down">↓ DETERIORO</span></td>
-                    <td><strong>0 → −1 ⚠️</strong></td>
-                </tr>
-                <tr style="background:#1f0a0a;">
-                    <td><strong>Reservas bancarias</strong></td>
-                    <td>$2.93T (~−4.7%)</td>
-                    <td>$2.93T (~−10.4%)</td>
-                    <td><span class="cambio-down">↓ más negativo</span></td>
-                    <td>−1 → −1 (sin cambio)</td>
-                </tr>
-                <tr>
-                    <td>Tipo Real</td>
-                    <td>+0.93%</td>
-                    <td>+1.23%</td>
-                    <td><span class="cambio-down">↑ más restrictivo</span></td>
-                    <td>−1 → −1 (sin cambio)</td>
-                </tr>
-                <tr style="background:#f0fff0;">
-                    <td><strong>Score TOTAL</strong></td>
-                    <td><strong>+4/17</strong></td>
-                    <td><strong>+3/17</strong></td>
-                    <td><span class="cambio-down">↓ −1 punto</span></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="analysis-box">
-            <h3>📌 Resumen del Cambio</h3>
-            <p>El único cambio de score entre Diciembre 2025 y Febrero 2026 proviene del <strong>Put/Call Ratio</strong>: el mercado de opciones pasó de neutral (0.75) a eufórico (0.60), una señal contraria bajista. El resto de indicadores mantienen sus scores, aunque con matices importantes: el <strong>LEI mejoró significativamente</strong> (de −4.1% a −1.2%) y los <strong>BBB Spreads comprimieron</strong> a mínimos. El deterioro de la <strong>confianza del consumidor</strong> es la variable más preocupante de cara a los próximos meses.</p>
-        </div>
-    </div>
-
-    </div><!-- /content -->
-
-    <!-- FOOTER -->
-    <div class="footer">
-        <p><strong>Dashboard Macro v2.2</strong> | Score: +3/17 | Actualizado: 14 Febrero 2026</p>
-        <p>Próxima actualización: cuando salga LEI Feb (19 Feb) y M2 Feb (27 Feb)</p>
-        <p class="fuentes">
-            Fuentes: Conference Board (LEI, Consumer Confidence) · FRED/Fed Reserve (Curvas, M2, Reservas, BBB Spreads, FFR) ·
-            BLS (CPI Enero 2026: 2.4%) · ICE BofA (BBB Spreads: 0.96%) · CBOE/YCharts (Put/Call: 0.60) ·
-            Treasury.gov (Yield Curve) · CEIC (M2 USA +4.6% Dic 2025)
-        </p>
-        <p class="fuentes" style="margin-top:8px; color:#ff9;">⚠️ Análisis cuantitativo informativo. No constituye asesoramiento de inversión.</p>
-    </div>
-
-</div><!-- /container -->
-
-<script>
-    // Navegación
-    function showPage(pageId, btn) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(pageId).classList.add('active');
-        if (btn) btn.classList.add('active');
-        window.scrollTo(0, 0);
-    }
-
-    // Gauge circular Plotly
-    var gaugeData = [{
-        type: "indicator",
-        mode: "gauge+number+delta",
-        value: 3,
-        delta: { reference: 4, valueformat: ".0f", prefix: "vs Dic25: " },
-        title: { text: "Score Macro · Feb 2026", font: { size: 20, family: "Segoe UI" } },
-        gauge: {
-            axis: { range: [-17, 17], tickwidth: 1, tickcolor: "#d0e8e4", tickfont: { size: 11 } },
-            bar: { color: "#fbbf24", thickness: 0.25 },
-            bgcolor: "white",
-            borderwidth: 2,
-            bordercolor: "#245050",
-            steps: [
-                { range: [-17, -10], color: "#b91c1c" },
-                { range: [-10, -4],  color: "#f47174" },
-                { range: [-4,   0],  color: "#d97706" },
-                { range: [0,    4],  color: "#f1c40f" },
-                { range: [4,   10],  color: "#40d9c0" },
-                { range: [10,  17],  color: "#2ba897" }
-            ],
-            threshold: {
-                line: { color: "#b91c1c", width: 3 },
-                thickness: 0.75,
-                value: 3
-            }
-        }
-    }];
-
-    var gaugeLayout = {
-        height: 380,
-        margin: { t: 50, r: 30, l: 30, b: 30 },
-        font: { color: "#d0e8e4", family: "Segoe UI" },
-        paper_bgcolor: "#071717"
-    };
-
-    Plotly.newPlot('scoreGauge', gaugeData, gaugeLayout, { responsive: true, displayModeBar: false });
-
-    // Posición gauge visual
-    function updatePosition() {
-        const score = 3;
-        const min = -17, max = 17;
-        const pct = ((score - min) / (max - min)) * 100;
-        const el = document.getElementById('currentPosition');
-        if (el) el.style.left = pct + '%';
-    }
-    updatePosition();
-    window.addEventListener('resize', updatePosition);
-</script>
-</body>
-</html>
+                <tr
