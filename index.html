@@ -1549,7 +1549,8 @@ window.addEventListener('load', () => {
 <head>
 <meta charset=&quot;UTF-8&quot;>
 <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
-<title>ETHAN · Asset Allocation</title>
+<title>Asset Allocation</title>
+<script src=&quot;https://cdn.jsdelivr.net/npm/chart.js&quot;></script>
 <style>
 :root {
   --bg: #06080c;
@@ -1571,318 +1572,202 @@ body {
   color: var(--text);
   font-family: 'IBM Plex Mono', monospace;
   font-size: 13px;
-  padding: 32px;
+  padding: 16px;
+  overflow-x: hidden;
 }
 
 .header {
   text-align: center;
-  margin-bottom: 32px;
-}
-
-.title {
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  margin-bottom: 4px;
-  color: var(--text2);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
 }
 
 .subtitle {
   font-size: 11px;
   color: var(--text2);
   letter-spacing: 1px;
-  margin-bottom: 32px;
 }
 
-/* DASHBOARD EJECUTIVO */
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tab {
+  padding: 10px 20px;
+  background: transparent;
+  border: none;
+  color: var(--text2);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.tab:hover { color: var(--text); }
+.tab.active { 
+  color: var(--green); 
+  border-bottom-color: var(--green);
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
 .executive-dashboard {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  margin-bottom: 32px;
+  gap: 16px;
+  margin-bottom: 20px;
 }
 
 .decision-card {
   background: var(--s1);
   border: 2px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
+  border-radius: 8px;
+  padding: 20px;
   text-align: center;
-  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.decision-card:hover {
-  transform: translateY(-2px);
-}
+.decision-card.green { border-color: var(--green); }
+.decision-card.red { border-color: var(--red); }
+.decision-card.yellow { border-color: var(--yellow); }
+.decision-card.blue { border-color: var(--blue); }
 
-.decision-card.green {
-  border-color: var(--green);
-  box-shadow: 0 0 30px rgba(0, 255, 135, 0.15);
-}
-
-.decision-card.red {
-  border-color: var(--red);
-  box-shadow: 0 0 30px rgba(255, 59, 92, 0.15);
-}
-
-.decision-card.yellow {
-  border-color: var(--yellow);
-  box-shadow: 0 0 30px rgba(251, 191, 36, 0.15);
-}
-
-.decision-card.blue {
-  border-color: var(--blue);
-  box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
-}
-
-.decision-icon {
-  font-size: 48px;
-  margin-bottom: 12px;
-  line-height: 1;
-}
-
-.decision-label {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--text2);
-  margin-bottom: 8px;
-}
-
-.decision-value {
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  margin-bottom: 8px;
-}
-
+.decision-icon { font-size: 32px; margin-bottom: 8px; }
+.decision-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); margin-bottom: 6px; }
+.decision-value { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
 .decision-value.green { color: var(--green); }
 .decision-value.red { color: var(--red); }
 .decision-value.yellow { color: var(--yellow); }
 .decision-value.blue { color: var(--blue); }
+.decision-desc { font-size: 10px; color: var(--text2); line-height: 1.4; }
 
-.decision-desc {
-  font-size: 11px;
-  color: var(--text2);
-  line-height: 1.5;
-}
-
-@media (max-width: 1024px) {
-  .executive-dashboard {
-    grid-template-columns: 1fr;
-  }
-}
-
-.recommendation {
-  background: var(--s1);
-  border: 2px solid var(--border);
-  border-radius: 12px;
-  padding: 32px;
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.rec-label {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--text2);
-  margin-bottom: 12px;
-}
-
-.rec-main {
-  font-size: 48px;
-  font-weight: 700;
-  letter-spacing: 4px;
-  margin-bottom: 16px;
-}
-
-.rec-main.rf { color: var(--blue); }
-.rec-main.rv { color: var(--green); }
-.rec-main.neutro { color: var(--yellow); }
-
-.rec-desc {
-  font-size: 13px;
-  color: var(--text2);
-  line-height: 1.6;
-}
-
-.section-title {
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--text2);
-  margin: 32px 0 16px 0;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border);
-}
-
-.warnings {
-  display: grid;
-  gap: 12px;
-  margin-bottom: 32px;
-}
-
-.warning-item {
-  background: var(--s1);
-  border-left: 4px solid var(--border);
-  padding: 16px 20px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.warning-item.alert {
-  border-left-color: var(--red);
-  background: rgba(255, 59, 92, 0.05);
-}
-
-.warning-item.caution {
-  border-left-color: var(--yellow);
-  background: rgba(251, 191, 36, 0.05);
-}
-
-.warning-item.ok {
-  border-left-color: var(--green);
-  background: rgba(0, 255, 135, 0.05);
-}
-
-.warning-icon {
-  font-size: 24px;
-}
-
-.warning-text {
-  flex: 1;
-  font-size: 12px;
-  line-height: 1.6;
-}
-
-.warning-text strong {
-  color: var(--text);
-  font-weight: 600;
-}
-
-.assets-grid {
+.assets-compact {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-  margin-bottom: 24px;
-}
-
-.asset-card {
-  background: var(--s1);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 24px;
-  transition: border-color 0.3s;
-}
-
-.asset-card.selected {
-  border: 2px solid var(--green);
-  box-shadow: 0 0 20px rgba(0, 255, 135, 0.2);
-}
-
-.asset-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
-}
-
-.asset-ticker {
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: 2px;
-}
-
-.asset-type {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  padding: 4px 10px;
-  border-radius: 4px;
-  background: var(--s2);
-}
-
-.asset-type.rf { color: var(--blue); }
-.asset-type.rv { color: var(--green); }
-.asset-type.gold { color: var(--yellow); }
-.asset-type.hy { color: #f97316; }
-.asset-type.fx { color: #8b5cf6; }
-
-.asset-region {
-  font-size: 11px;
-  color: var(--text2);
-  margin-top: 4px;
-  text-align: center;
-}
-
-.score-display {
-  text-align: center;
+  gap: 12px;
   margin-bottom: 20px;
 }
 
-.score-number {
-  font-size: 48px;
-  font-weight: 700;
+.asset-compact {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
 }
 
-.score-label {
-  font-size: 10px;
-  color: var(--text2);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-top: 4px;
+.asset-compact.selected {
+  border: 2px solid var(--green);
+  box-shadow: 0 0 10px rgba(0, 255, 135, 0.2);
 }
 
-.conditions {
-  display: grid;
-  gap: 8px;
-}
-
-.cond-group {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--text2);
-  margin-top: 12px;
-  margin-bottom: 4px;
-}
-
-.cond {
+.asset-header-compact {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 10px;
-  background: var(--s2);
-  border-radius: 4px;
-  font-size: 11px;
+  margin-bottom: 8px;
 }
 
-.cond-ok { color: var(--green); }
-.cond-fail { color: var(--red); }
+.asset-ticker-compact {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
 
-.btn {
-  background: var(--green);
-  color: var(--bg);
-  border: none;
-  padding: 12px 24px;
-  font-size: 12px;
+.asset-score-compact {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.asset-conditions-compact {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.cond-mini {
+  font-size: 9px;
+  padding: 2px 6px;
+  background: var(--s2);
+  border-radius: 3px;
+  color: var(--text2);
+}
+
+.cond-mini.ok { color: var(--green); }
+.cond-mini.fail { color: var(--red); }
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.chart-card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.chart-title {
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: 1px;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: opacity 0.2s;
-  display: block;
-  margin: 0 auto;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  color: var(--text2);
 }
 
-.btn:hover { opacity: 0.9; }
-.btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.percentiles-table {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.percentiles-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.percentiles-table th {
+  text-align: left;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text2);
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.percentiles-table td {
+  padding: 8px;
+  font-size: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.percentile-bar {
+  height: 6px;
+  background: var(--s2);
+  border-radius: 3px;
+  position: relative;
+  overflow: hidden;
+}
+
+.percentile-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--red), var(--yellow), var(--green));
+  border-radius: 3px;
+}
 
 .loading {
   text-align: center;
@@ -1905,80 +1790,113 @@ body {
   to { transform: rotate(360deg); }
 }
 
-.methodology {
-  background: var(--s1);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 24px;
-  font-size: 12px;
-  line-height: 1.8;
-  color: var(--text2);
-}
-
-.methodology h3 {
-  font-size: 14px;
-  color: var(--text);
-  margin-bottom: 12px;
+.btn {
+  background: var(--green);
+  color: var(--bg);
+  border: none;
+  padding: 10px 20px;
+  font-size: 11px;
+  font-weight: 600;
   letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: opacity 0.2s;
+  display: block;
+  margin: 0 auto;
+  font-family: inherit;
 }
 
-.methodology ul {
-  list-style: none;
-  padding-left: 0;
+.btn:hover { opacity: 0.9; }
+
+.warnings {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
-.methodology li {
-  padding-left: 20px;
-  position: relative;
-  margin-bottom: 6px;
+.warning-item {
+  background: var(--s1);
+  border-left: 4px solid var(--border);
+  padding: 14px 16px;
+  border-radius: 6px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 12px;
+  line-height: 1.5;
 }
 
-.methodology li:before {
-  content: &quot;→&quot;;
-  position: absolute;
-  left: 0;
-  color: var(--green);
+.warning-item.alert {
+  border-left-color: var(--red);
+  background: rgba(255, 59, 92, 0.08);
+}
+
+.warning-item.caution {
+  border-left-color: var(--yellow);
+  background: rgba(251, 191, 36, 0.08);
+}
+
+.warning-item.ok {
+  border-left-color: var(--green);
+  background: rgba(0, 255, 135, 0.08);
+}
+
+.warning-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.warning-text {
+  flex: 1;
+}
+
+@media (max-width: 1024px) {
+  .executive-dashboard { grid-template-columns: 1fr; }
+  .assets-compact { grid-template-columns: 1fr; }
+  .charts-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
 
 <div class=&quot;header&quot;>
-  <div class=&quot;title&quot;>💼 ASSET ALLOCATION</div>
-  <div class=&quot;subtitle&quot;>Rotación táctica RF/RV según fortaleza técnica ETHAN</div>
+  <div class=&quot;subtitle&quot;>Dashboard Ejecutivo · RF vs RV · Indicadores Macro</div>
+</div>
+
+<div class=&quot;tabs&quot;>
+  <button class=&quot;tab active&quot; onclick=&quot;switchTabInternal('dashboard')&quot;>📊 Asset Allocation</button>
+  <button class=&quot;tab&quot; onclick=&quot;switchTabInternal('params')&quot;>🔬 Parámetros</button>
 </div>
 
 <div id=&quot;content&quot;>
   <div class=&quot;loading&quot;>
     <div class=&quot;spinner&quot;></div>
-    <div>Analizando ETFs...</div>
+    <div>Analizando mercados...</div>
   </div>
 </div>
 
 <script>
-// ETFs de Asset Allocation
-const ASSETS = [
-  // Renta Variable
-  { ticker: 'VTI', name: 'Vanguard Total Stock Market', type: 'RV', region: '🇺🇸 USA', category: 'allocation' },
-  { ticker: 'VEU', name: 'Vanguard FTSE All-World ex-US', type: 'RV', region: '🌍 Mundo', category: 'allocation' },
-  
-  // Renta Fija
-  { ticker: 'IEF', name: 'iShares 7-10Y Treasury Bond', type: 'RF', region: '🇺🇸 USA', category: 'allocation' },
-  { ticker: 'BNDX', name: 'Vanguard Total Intl Bond', type: 'RF', region: '🌍 Mundo', category: 'allocation' },
-  
-  // Indicadores adicionales
-  { ticker: 'GLD', name: 'SPDR Gold Trust', type: 'GOLD', region: '🥇 Oro', category: 'indicator' },
-  { ticker: 'HYG', name: 'iShares iBoxx High Yield Corp Bond', type: 'HY', region: '💳 Corp', category: 'indicator' },
-  { ticker: 'EURUSD=X', name: 'Euro/Dólar', type: 'FX', region: '💱 FX', category: 'indicator' }
-];
+let allData = null;
+let currentTab = 'dashboard';
 
-// Indicadores
 function sma(arr,p){return arr.map((_,i)=>{if(i<p-1)return null;const sl=arr.slice(i-p+1,i+1).filter(v=>v!=null&amp;&amp;!isNaN(v));return sl.length===p?sl.reduce((a,b)=>a+b,0)/p:null;});}
 function ema(arr,p){const k=2/(p+1),out=new Array(arr.length).fill(null);let s=arr.findIndex(v=>v!=null&amp;&amp;!isNaN(v));if(s<0)return out;out[s]=arr[s];for(let i=s+1;i<arr.length;i++){const v=(arr[i]!=null&amp;&amp;!isNaN(arr[i]))?arr[i]:out[i-1];out[i]=v*k+out[i-1]*(1-k);}return out;}
 function macd(closes){const ef=ema(closes,12),es=ema(closes,26);const m=ef.map((v,i)=>(v!=null&amp;&amp;es[i]!=null)?v-es[i]:null);const sl=ema(m.map(v=>v??0),9);return{m,sl};}
 function rsi(closes,p=14){const out=new Array(closes.length).fill(null);if(closes.length<p+1)return out;let g=0,l=0;for(let i=1;i<=p;i++){const d=closes[i]-closes[i-1];d>0?g+=d:l-=d;}let ag=g/p,al=l/p;out[p]=al===0?100:100-(100/(1+ag/al));for(let i=p+1;i<closes.length;i++){const d=closes[i]-closes[i-1];ag=(ag*(p-1)+(d>0?d:0))/p;al=(al*(p-1)+(d<0?-d:0))/p;out[i]=al===0?100:100-(100/(1+ag/al));}return out;}
 function stoch(highs,lows,closes,p){const rawK=closes.map((c,i)=>{if(i<p-1)return null;const hh=Math.max(...highs.slice(i-p+1,i+1));const ll=Math.min(...lows.slice(i-p+1,i+1));return hh===ll?50:(c-ll)/(hh-ll)*100;});const k=sma(rawK,3);const d=sma(k.map(v=>v??0),3);return{k,d};}
 function resample(ts,opens,highs,lows,closes,vols,freq){const groups={};ts.forEach((t,i)=>{const dd=new Date(t*1000);let key;if(freq==='W'){const day=dd.getDay();const diff=dd.getDate()-day+(day===0?-6:1);const mo=new Date(+dd);mo.setDate(diff);key=mo.toISOString().slice(0,10);}else{key=`${dd.getFullYear()}-${String(dd.getMonth()+1).padStart(2,'0')}`;}if(!groups[key]){groups[key]={o:opens[i],h:highs[i],l:lows[i],c:closes[i],v:vols[i]};}else{groups[key].h=Math.max(groups[key].h,highs[i]);groups[key].l=Math.min(groups[key].l,lows[i]);groups[key].c=closes[i];groups[key].v+=vols[i];}});const keys=Object.keys(groups).sort();return{dates:keys,opens:keys.map(k=>groups[k].o),highs:keys.map(k=>groups[k].h),lows:keys.map(k=>groups[k].l),closes:keys.map(k=>groups[k].c),vols:keys.map(k=>groups[k].v)};}
+
+const ASSETS = [
+  { ticker: 'VTI', name: 'Vanguard Total Stock Market', type: 'RV', region: '🇺🇸 USA', category: 'allocation' },
+  { ticker: 'VEU', name: 'Vanguard FTSE All-World ex-US', type: 'RV', region: '🌍 Mundo', category: 'allocation' },
+  { ticker: 'IEF', name: 'iShares 7-10Y Treasury Bond', type: 'RF', region: '🇺🇸 USA', category: 'allocation' },
+  { ticker: 'BNDX', name: 'Vanguard Total Intl Bond', type: 'RF', region: '🌍 Mundo', category: 'allocation' },
+  { ticker: 'SPY', name: 'S&amp;P 500 ETF', type: 'INDEX', region: '📊 S&amp;P 500', category: 'indicator' },
+  { ticker: 'GLD', name: 'SPDR Gold Trust', type: 'GOLD', region: '🥇 Oro', category: 'indicator' },
+  { ticker: 'USO', name: 'United States Oil Fund', type: 'OIL', region: '🛢️ Petróleo', category: 'indicator' },
+  { ticker: 'HYG', name: 'iShares High Yield Corp Bond', type: 'HY', region: '💳 Corp', category: 'indicator' },
+  { ticker: 'EURUSD=X', name: 'Euro/Dólar', type: 'FX', region: '💱 FX', category: 'indicator' }
+];
 
 async function fetchData(ticker){
   const yUrl=`https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&amp;range=10y&amp;events=history`;
@@ -1987,13 +1905,11 @@ async function fetchData(ticker){
     u=>`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
     u=>`https://thingproxy.freeboard.io/fetch/${u}`,
   ];
-  let lastErr;
   for(const fn of proxies){
     try{
       const r=await fetch(fn(yUrl),{signal:AbortSignal.timeout(12000)});
-      if(!r.ok)throw new Error(`HTTP ${r.status}`);
-      const j=JSON.parse(await r.text());
-      if(j.chart?.error)throw new Error(j.chart.error.description);
+      if(!r.ok)continue;
+      const j=await r.json();
       const res=j.chart.result[0];
       const q=res.indicators.quote[0];
       const adj=res.indicators.adjclose?.[0]?.adjclose||q.close;
@@ -2006,9 +1922,9 @@ async function fetchData(ticker){
         closes:adj,
         vols:q.volume,
       };
-    }catch(e){lastErr=e;}
+    }catch(e){}
   }
-  throw lastErr||new Error('Sin conexión');
+  throw new Error('Error fetching');
 }
 
 function analyzeAsset(raw){
@@ -2016,21 +1932,18 @@ function analyzeAsset(raw){
   const W=resample(timestamps,opens,highs,lows,closes,vols,'W');
   const M=resample(timestamps,opens,highs,lows,closes,vols,'M');
   
-  // Mensual (sin Stoch8)
   const m_macd=macd(M.closes);
   const m_s89=stoch(M.highs,M.lows,M.closes,89);
   const m_rsi=rsi(M.closes,14);
   const m_sma10=sma(M.closes,10);
   const mi=M.closes.length-1;
   
-  // Semanal
   const w_macd=macd(W.closes);
   const w_s89=stoch(W.highs,W.lows,W.closes,89);
   const w_rsi=rsi(W.closes,14);
   const w_sma20=sma(W.closes,20);
   const wi=W.closes.length-1;
   
-  // Condiciones mensuales (4 condiciones, sin Stoch8)
   const mc={
     macd: m_macd.m[mi]>0 &amp;&amp; m_macd.m[mi]>m_macd.sl[mi],
     s89: (m_s89.k[mi]>80&amp;&amp;m_s89.k[mi]>m_s89.d[mi])||m_s89.k[mi]>92,
@@ -2038,7 +1951,6 @@ function analyzeAsset(raw){
     precio: m_sma10[mi]&amp;&amp;M.closes[mi]>m_sma10[mi]
   };
   
-  // Condiciones semanales (4 condiciones)
   const sc={
     macd: w_macd.m[wi]>0&amp;&amp;w_macd.m[wi]>w_macd.sl[wi],
     s89: (w_s89.k[wi]>85&amp;&amp;w_s89.k[wi]>w_s89.d[wi])||w_s89.k[wi]>92,
@@ -2046,14 +1958,24 @@ function analyzeAsset(raw){
     precio: w_sma20[wi]&amp;&amp;W.closes[wi]>w_sma20[wi]
   };
   
-  // Score total (8 condiciones)
   const score = Object.values(mc).filter(x=>x).length + Object.values(sc).filter(x=>x).length;
+  
+  const last52w = closes.slice(-252);
+  const current = closes[closes.length-1];
+  const min52 = Math.min(...last52w);
+  const max52 = Math.max(...last52w);
+  const percentile = ((current - min52) / (max52 - min52)) * 100;
   
   return {
     score,
     mensual: mc,
     semanal: sc,
-    price: closes[closes.length-1]
+    price: current,
+    closes: closes.slice(-60),
+    percentile,
+    min52,
+    max52,
+    raw
   };
 }
 
@@ -2077,127 +1999,46 @@ async function runAnalysis(){
     }
   }
   
-  // Separar allocation vs indicators
+  allData = results;
+  
   const allocationAssets = results.filter(a => a.category === 'allocation');
   const indicators = results.filter(a => a.category === 'indicator');
   
-  // Ordenar allocation por score
   allocationAssets.sort((a,b) => b.score - a.score);
-  
-  // Los 2 mejores de allocation
   const top2 = allocationAssets.slice(0, 2);
   
-  // Determinar recomendación
   const rfCount = top2.filter(a => a.type === 'RF').length;
   const rvCount = top2.filter(a => a.type === 'RV').length;
   
   let recommendation;
-  let topRegion = '';
-  
   if(rvCount === 2){
-    recommendation = { type: 'RV', label: 'RENTA VARIABLE', desc: 'Los 2 ETFs más fuertes son de Renta Variable. Posición alcista recomendada.' };
-    // Determinar región predominante
-    const usaRV = top2.find(a => a.region.includes('USA'));
-    const worldRV = top2.find(a => a.region.includes('Mundo'));
-    if(usaRV &amp;&amp; !worldRV) topRegion = ' → 🇺🇸 USA';
-    else if(!usaRV &amp;&amp; worldRV) topRegion = ' → 🌍 Resto Mundo';
-    else topRegion = ' → 🇺🇸 USA + 🌍 Mundo';
+    recommendation = { type: 'RV', label: 'RENTA VARIABLE', class: 'green', desc: 'Los 2 más fuertes son RV' };
   }else if(rfCount === 2){
-    recommendation = { type: 'RF', label: 'RENTA FIJA', desc: 'Los 2 ETFs más fuertes son de Renta Fija. Posición defensiva recomendada.' };
+    recommendation = { type: 'RF', label: 'RENTA FIJA', class: 'blue', desc: 'Los 2 más fuertes son RF' };
   }else{
-    recommendation = { type: 'NEUTRO', label: 'MIXTO', desc: '1 RF + 1 RV entre los más fuertes. Considerar posición balanceada.' };
+    recommendation = { type: 'NEUTRO', label: 'MIXTO', class: 'yellow', desc: '1 RF + 1 RV' };
   }
   
-  recommendation.label += topRegion;
+  const gold = indicators.find(i => i.ticker === 'GLD');
+  const oil = indicators.find(i => i.ticker === 'USO');
+  const hy = indicators.find(i => i.ticker === 'HYG');
+  const fx = indicators.find(i => i.ticker === 'EURUSD=X');
   
-  renderResults(allocationAssets, indicators, top2, recommendation);
+  renderDashboard(allocationAssets, top2, recommendation, gold, oil, hy, fx);
 }
 
-function renderResults(allocationAssets, indicators, top2, rec){
-  const recClass = rec.type.toLowerCase();
+function renderDashboard(allocation, top2, rec, gold, oil, hy, fx){
+  const recessionAlert = hy &amp;&amp; hy.score <= 3 ? 'red' : hy &amp;&amp; hy.score <= 5 ? 'yellow' : 'green';
+  const recessionLabel = hy &amp;&amp; hy.score <= 3 ? '⚠️ ALTO' : hy &amp;&amp; hy.score <= 5 ? '⚡ MODERADO' : '✓ BAJO';
   
-  // Encontrar indicadores
-  const gold = indicators.find(i => i.type === 'GOLD');
-  const hy = indicators.find(i => i.type === 'HY');
-  const fx = indicators.find(i => i.type === 'FX');
+  const hedgeDecision = fx &amp;&amp; fx.score >= 6 ? 'red' : fx &amp;&amp; fx.score >= 4 ? 'yellow' : 'green';
+  const hedgeLabel = fx &amp;&amp; fx.score >= 6 ? 'SÍ CUBRIR' : fx &amp;&amp; fx.score >= 4 ? 'VIGILAR' : 'NO CUBRIR';
   
-  // DECISIONES EJECUTIVAS
-  
-  // 1. Decisión de inversión (RF vs RV)
-  let investDecision = {
-    icon: '📊',
-    label: 'DECISIÓN DE INVERSIÓN',
-    value: rec.label,
-    class: recClass,
-    desc: rec.desc
-  };
-  
-  if(rec.type === 'RV') {
-    investDecision.icon = '📈';
-    investDecision.class = 'green';
-  } else if(rec.type === 'RF') {
-    investDecision.icon = '🛡️';
-    investDecision.class = 'blue';
-  } else {
-    investDecision.icon = '⚖️';
-    investDecision.class = 'yellow';
-  }
-  
-  // 2. Alerta de recesión (basada en HY)
-  let recessionAlert = {
-    icon: '💳',
-    label: 'RIESGO DE RECESIÓN',
-    value: 'CARGANDO...',
-    class: 'yellow',
-    desc: 'Analizando bonos corporativos...'
-  };
-  
-  if(hy &amp;&amp; !hy.error) {
-    if(hy.score <= 3) {
-      recessionAlert.value = '⚠️ ALTO';
-      recessionAlert.class = 'red';
-      recessionAlert.desc = 'High Yield débil. Estrés de crédito detectado. Precaución.';
-    } else if(hy.score <= 5) {
-      recessionAlert.value = '⚡ MODERADO';
-      recessionAlert.class = 'yellow';
-      recessionAlert.desc = 'High Yield neutral. Vigilar evolución del crédito corporativo.';
-    } else {
-      recessionAlert.value = '✓ BAJO';
-      recessionAlert.class = 'green';
-      recessionAlert.desc = 'High Yield fuerte. Crédito corporativo saludable.';
-    }
-  }
-  
-  // 3. Decisión de cobertura cambiaria (basada en EUR/USD)
-  let hedgeDecision = {
-    icon: '💱',
-    label: 'COBERTURA CAMBIARIA',
-    value: 'CARGANDO...',
-    class: 'yellow',
-    desc: 'Analizando EUR/USD...'
-  };
-  
-  if(fx &amp;&amp; !fx.error) {
-    if(fx.score >= 6) {
-      hedgeDecision.value = 'SÍ CUBRIR';
-      hedgeDecision.class = 'red';
-      hedgeDecision.desc = 'Euro fuerte vs Dólar. Considerar cobertura en posiciones USD.';
-    } else if(fx.score >= 4) {
-      hedgeDecision.value = 'VIGILAR';
-      hedgeDecision.class = 'yellow';
-      hedgeDecision.desc = 'EUR/USD neutral. Cobertura opcional según exposición.';
-    } else {
-      hedgeDecision.value = 'NO CUBRIR';
-      hedgeDecision.class = 'green';
-      hedgeDecision.desc = 'Dólar fuerte. No es necesaria cobertura en posiciones USD.';
-    }
-  }
-  
-  // WARNINGS ADICIONALES
+  // Generar warnings inteligentes
   const warnings = [];
   
   // Warning: Oro muy fuerte
-  if(gold &amp;&amp; !gold.error &amp;&amp; gold.score >= 7) {
+  if(gold &amp;&amp; gold.score >= 7) {
     warnings.push({
       type: 'caution',
       icon: '🥇',
@@ -2205,16 +2046,25 @@ function renderResults(allocationAssets, indicators, top2, rec){
     });
   }
   
-  // Warning: Divergencia HY vs RV
-  if(hy &amp;&amp; !hy.error &amp;&amp; rec.type === 'RV' &amp;&amp; hy.score <= 4) {
+  // Warning: Divergencia RV fuerte pero HY débil
+  if(rec.type === 'RV' &amp;&amp; hy &amp;&amp; hy.score <= 4) {
     warnings.push({
       type: 'alert',
       icon: '⚠️',
-      text: '<strong>Divergencia detectada:</strong> Renta Variable fuerte pero High Yield débil. Señal contradictoria - extrema precaución.'
+      text: '<strong>Divergencia detectada:</strong> Renta Variable fuerte pero High Yield débil. Señal contradictoria – extrema precaución.'
     });
   }
   
-  // Warning: Todo claro
+  // Warning: Petróleo muy fuerte
+  if(oil &amp;&amp; oil.score >= 7) {
+    warnings.push({
+      type: 'caution',
+      icon: '🛢️',
+      text: '<strong>Commodities en fuerza:</strong> Petróleo muy fuerte. Posible presión inflacionaria. Vigilar política monetaria.'
+    });
+  }
+  
+  // Warning: Todo claro - entorno óptimo
   if(rec.type === 'RV' &amp;&amp; hy &amp;&amp; hy.score >= 6 &amp;&amp; gold &amp;&amp; gold.score <= 4) {
     warnings.push({
       type: 'ok',
@@ -2232,134 +2082,308 @@ function renderResults(allocationAssets, indicators, top2, rec){
     });
   }
   
-  const renderAssetCard = (a, isSelected = false) => `
-    <div class=&quot;asset-card ${isSelected?'selected':''}&quot;>
-      <div class=&quot;asset-header&quot;>
-        <div class=&quot;asset-ticker&quot;>${a.ticker}</div>
-        <div class=&quot;asset-type ${a.type.toLowerCase()}&quot;>${a.type}</div>
-      </div>
-      <div class=&quot;asset-region&quot;>${a.region}</div>
-      
-      <div class=&quot;score-display&quot;>
-        <div class=&quot;score-number&quot; style=&quot;color:${a.score>=7?'var(--green)':a.score>=5?'var(--yellow)':'var(--text2)'}&quot;>${a.score}/8</div>
-        <div class=&quot;score-label&quot;>Score ETHAN</div>
-      </div>
-      
-      ${a.error ? `<div style=&quot;color:var(--red);text-align:center;font-size:11px;&quot;>Error: ${a.error}</div>` : `
-        <div class=&quot;conditions&quot;>
-          <div class=&quot;cond-group&quot;>📅 Mensual</div>
-          <div class=&quot;cond&quot;>
-            <span>MACD↑</span>
-            <span class=&quot;${a.mensual.macd?'cond-ok':'cond-fail'}&quot;>${a.mensual.macd?'✓':'✗'}</span>
-          </div>
-          <div class=&quot;cond&quot;>
-            <span>Stoch89>80</span>
-            <span class=&quot;${a.mensual.s89?'cond-ok':'cond-fail'}&quot;>${a.mensual.s89?'✓':'✗'}</span>
-          </div>
-          <div class=&quot;cond&quot;>
-            <span>RSI>65</span>
-            <span class=&quot;${a.mensual.rsi?'cond-ok':'cond-fail'}&quot;>${a.mensual.rsi?'✓':'✗'}</span>
-          </div>
-          <div class=&quot;cond&quot;>
-            <span>P>SMA10</span>
-            <span class=&quot;${a.mensual.precio?'cond-ok':'cond-fail'}&quot;>${a.mensual.precio?'✓':'✗'}</span>
-          </div>
-          
-          <div class=&quot;cond-group&quot;>📊 Semanal</div>
-          <div class=&quot;cond&quot;>
-            <span>MACD↑</span>
-            <span class=&quot;${a.semanal.macd?'cond-ok':'cond-fail'}&quot;>${a.semanal.macd?'✓':'✗'}</span>
-          </div>
-          <div class=&quot;cond&quot;>
-            <span>Stoch89>85</span>
-            <span class=&quot;${a.semanal.s89?'cond-ok':'cond-fail'}&quot;>${a.semanal.s89?'✓':'✗'}</span>
-          </div>
-          <div class=&quot;cond&quot;>
-            <span>RSI>67</span>
-            <span class=&quot;${a.semanal.rsi?'cond-ok':'cond-fail'}&quot;>${a.semanal.rsi?'✓':'✗'}</span>
-          </div>
-          <div class=&quot;cond&quot;>
-            <span>P>SMA20</span>
-            <span class=&quot;${a.semanal.precio?'cond-ok':'cond-fail'}&quot;>${a.semanal.precio?'✓':'✗'}</span>
-          </div>
-        </div>
-      `}
-    </div>
-  `;
+  // Warning: EUR/USD muy fuerte - riesgo FX
+  if(fx &amp;&amp; fx.score >= 7) {
+    warnings.push({
+      type: 'alert',
+      icon: '💱',
+      text: '<strong>Euro muy fuerte vs Dólar:</strong> Impacto negativo en inversiones USD sin cobertura. Implementar hedge inmediato.'
+    });
+  }
+  
+  // Warning: Volatilidad en petróleo
+  if(oil &amp;&amp; oil.score <= 3) {
+    warnings.push({
+      type: 'caution',
+      icon: '📉',
+      text: '<strong>Petróleo débil:</strong> Posible desaceleración económica o exceso de oferta. Vigilar demanda global.'
+    });
+  }
+  
+  // Warning: HY extremadamente débil - recesión inminente
+  if(hy &amp;&amp; hy.score <= 2) {
+    warnings.push({
+      type: 'alert',
+      icon: '🚨',
+      text: '<strong>ALERTA CRÍTICA:</strong> High Yield colapsando. Estrés severo en mercado de crédito. Recesión posible. Reducir exposición inmediatamente.'
+    });
+  }
   
   const html = `
-    <div class=&quot;executive-dashboard&quot;>
-      <div class=&quot;decision-card ${investDecision.class}&quot;>
-        <div class=&quot;decision-icon&quot;>${investDecision.icon}</div>
-        <div class=&quot;decision-label&quot;>${investDecision.label}</div>
-        <div class=&quot;decision-value ${investDecision.class}&quot;>${investDecision.value}</div>
-        <div class=&quot;decision-desc&quot;>${investDecision.desc}</div>
+    <div class=&quot;tab-content active&quot; id=&quot;tab-dashboard&quot;>
+      ${warnings.length > 0 ? `
+        <div class=&quot;warnings&quot;>
+          ${warnings.map(w => `
+            <div class=&quot;warning-item ${w.type}&quot;>
+              <div class=&quot;warning-icon&quot;>${w.icon}</div>
+              <div class=&quot;warning-text&quot;>${w.text}</div>
+            </div>
+          `).join('')}
+        </div>
+      ` : ''}
+      
+      <div class=&quot;executive-dashboard&quot;>
+        <div class=&quot;decision-card ${rec.class}&quot;>
+          <div class=&quot;decision-icon&quot;>📈</div>
+          <div class=&quot;decision-label&quot;>Decisión de Inversión</div>
+          <div class=&quot;decision-value ${rec.class}&quot;>${rec.label}</div>
+          <div class=&quot;decision-desc&quot;>${rec.desc}</div>
+        </div>
+        
+        <div class=&quot;decision-card ${recessionAlert}&quot;>
+          <div class=&quot;decision-icon&quot;>💳</div>
+          <div class=&quot;decision-label&quot;>Riesgo de Recesión</div>
+          <div class=&quot;decision-value ${recessionAlert}&quot;>${recessionLabel}</div>
+          <div class=&quot;decision-desc&quot;>${hy ? 'HYG Score: ' + hy.score + '/8' : 'Analizando...'}</div>
+        </div>
+        
+        <div class=&quot;decision-card ${hedgeDecision}&quot;>
+          <div class=&quot;decision-icon&quot;>💱</div>
+          <div class=&quot;decision-label&quot;>Cobertura Cambiaria</div>
+          <div class=&quot;decision-value ${hedgeDecision}&quot;>${hedgeLabel}</div>
+          <div class=&quot;decision-desc&quot;>${fx ? 'EUR/USD Score: ' + fx.score + '/8' : 'Analizando...'}</div>
+        </div>
       </div>
       
-      <div class=&quot;decision-card ${recessionAlert.class}&quot;>
-        <div class=&quot;decision-icon&quot;>${recessionAlert.icon}</div>
-        <div class=&quot;decision-label&quot;>${recessionAlert.label}</div>
-        <div class=&quot;decision-value ${recessionAlert.class}&quot;>${recessionAlert.value}</div>
-        <div class=&quot;decision-desc&quot;>${recessionAlert.desc}</div>
-      </div>
-      
-      <div class=&quot;decision-card ${hedgeDecision.class}&quot;>
-        <div class=&quot;decision-icon&quot;>${hedgeDecision.icon}</div>
-        <div class=&quot;decision-label&quot;>${hedgeDecision.label}</div>
-        <div class=&quot;decision-value ${hedgeDecision.class}&quot;>${hedgeDecision.value}</div>
-        <div class=&quot;decision-desc&quot;>${hedgeDecision.desc}</div>
-      </div>
-    </div>
-    
-    ${warnings.length > 0 ? `
-      <div class=&quot;warnings&quot;>
-        ${warnings.map(w => `
-          <div class=&quot;warning-item ${w.type}&quot;>
-            <div class=&quot;warning-icon&quot;>${w.icon}</div>
-            <div class=&quot;warning-text&quot;>${w.text}</div>
+      <div class=&quot;assets-compact&quot;>
+        ${allocation.map(a => `
+          <div class=&quot;asset-compact ${top2.includes(a) ? 'selected' : ''}&quot;>
+            <div class=&quot;asset-header-compact&quot;>
+              <div>
+                <div class=&quot;asset-ticker-compact&quot;>${a.ticker}</div>
+                <div style=&quot;font-size:9px;color:var(--text2);&quot;>${a.region}</div>
+              </div>
+              <div class=&quot;asset-score-compact&quot; style=&quot;color:${a.score>=6?'var(--green)':a.score>=4?'var(--yellow)':'var(--text2)'}&quot;>${a.score}/8</div>
+            </div>
+            <div class=&quot;asset-conditions-compact&quot;>
+              <span class=&quot;cond-mini ${a.mensual?.macd?'ok':'fail'}&quot;>M·MACD</span>
+              <span class=&quot;cond-mini ${a.mensual?.s89?'ok':'fail'}&quot;>M·S89</span>
+              <span class=&quot;cond-mini ${a.mensual?.rsi?'ok':'fail'}&quot;>M·RSI</span>
+              <span class=&quot;cond-mini ${a.mensual?.precio?'ok':'fail'}&quot;>M·P>SMA</span>
+              <span class=&quot;cond-mini ${a.semanal?.macd?'ok':'fail'}&quot;>W·MACD</span>
+              <span class=&quot;cond-mini ${a.semanal?.s89?'ok':'fail'}&quot;>W·S89</span>
+              <span class=&quot;cond-mini ${a.semanal?.rsi?'ok':'fail'}&quot;>W·RSI</span>
+              <span class=&quot;cond-mini ${a.semanal?.precio?'ok':'fail'}&quot;>W·P>SMA</span>
+            </div>
+          </div>
+        `).join('')}
+        
+        ${[allData.find(a => a.ticker === 'SPY'), gold, oil, hy, fx].filter(Boolean).map(a => `
+          <div class=&quot;asset-compact&quot;>
+            <div class=&quot;asset-header-compact&quot;>
+              <div>
+                <div class=&quot;asset-ticker-compact&quot;>${a.ticker.replace('=X','')}</div>
+                <div style=&quot;font-size:9px;color:var(--text2);&quot;>${a.region}</div>
+              </div>
+              <div class=&quot;asset-score-compact&quot; style=&quot;color:${a.score>=6?'var(--green)':a.score>=4?'var(--yellow)':'var(--red)'}&quot;>${a.score}/8</div>
+            </div>
+            <div style=&quot;font-size:10px;color:var(--text2);margin-top:4px;&quot;>
+              ${a.type === 'INDEX' ? (a.score>=7 ? '🚀 Mercado fuerte' : a.score>=4 ? 'Neutral' : '📉 Débil') :
+                a.type === 'GOLD' &amp;&amp; a.score>=7 ? '⚠️ Refugio fuerte' : 
+                a.type === 'HY' &amp;&amp; a.score<=3 ? '⚠️ Estrés de crédito' :
+                a.type === 'FX' &amp;&amp; a.score>=6 ? 'Euro fuerte - Cubrir' :
+                'Normal'}
+            </div>
           </div>
         `).join('')}
       </div>
-    ` : ''}
-    
-    <div class=&quot;section-title&quot;>📊 Asset Allocation (RF vs RV)</div>
-    <div class=&quot;assets-grid&quot;>
-      ${allocationAssets.map(a => renderAssetCard(a, top2.includes(a))).join('')}
     </div>
     
-    <div class=&quot;section-title&quot;>🔔 Indicadores de Mercado</div>
-    <div class=&quot;assets-grid&quot; style=&quot;grid-template-columns: repeat(3, 1fr);&quot;>
-      ${gold ? renderAssetCard(gold) : ''}
-      ${hy ? renderAssetCard(hy) : ''}
-      ${fx ? renderAssetCard(fx) : ''}
+    <div class=&quot;tab-content&quot; id=&quot;tab-params&quot;>
+      ${renderParameters()}
     </div>
     
-    <div class=&quot;methodology&quot;>
-      <h3>Interpretación de Indicadores</h3>
-      <ul>
-        <li><strong>🥇 Oro (GLD):</strong> Score alto → Busca refugio, incertidumbre. Score bajo → Apetito por riesgo</li>
-        <li><strong>💳 High Yield (HYG):</strong> Score bajo → Estrés de crédito, posible recesión. Score alto → Crédito saludable</li>
-        <li><strong>💱 EUR/USD:</strong> Score alto (euro fuerte) → Considerar cobertura si inviertes en USD. Score bajo → Sin necesidad de cobertura</li>
-      </ul>
-      
-      <h3 style=&quot;margin-top:20px;&quot;>Metodología Allocation</h3>
-      <ul>
-        <li>Sistema ETHAN aplicado a 4 ETFs (2 RF + 2 RV)</li>
-        <li>Condiciones: Mensual (4) + Semanal (4) = 8 puntos máximo</li>
-        <li>Se seleccionan los 2 ETFs con mayor score</li>
-        <li>Si top 2 = RF → Posición defensiva</li>
-        <li>Si top 2 = RV → Posición alcista (especifica región predominante)</li>
-        <li>Si top 2 = 1 RF + 1 RV → Posición mixta</li>
-      </ul>
-    </div>
-    
-    <button class=&quot;btn&quot; onclick=&quot;runAnalysis()&quot; style=&quot;margin-top:24px;&quot;>⟲ ACTUALIZAR ANÁLISIS</button>
+    <button class=&quot;btn&quot; onclick=&quot;runAnalysis()&quot;>⟲ ACTUALIZAR</button>
   `;
   
   document.getElementById('content').innerHTML = html;
+  
+  if(currentTab === 'params') {
+    setTimeout(renderCharts, 100);
+  }
 }
 
-// Auto-ejecutar al cargar
+function renderParameters(){
+  if(!allData) return '<div class=&quot;loading&quot;>Cargando datos...</div>';
+  
+  return `
+    <div class=&quot;charts-grid&quot;>
+      <div class=&quot;chart-card&quot;>
+        <div class=&quot;chart-title&quot;>Evolución Normalizada (60d)</div>
+        <canvas id=&quot;evolutionChart&quot;></canvas>
+      </div>
+      
+      <div class=&quot;chart-card&quot;>
+        <div class=&quot;chart-title&quot;>Momentum (% cambio 20d)</div>
+        <canvas id=&quot;momentumChart&quot;></canvas>
+      </div>
+    </div>
+    
+    <div class=&quot;percentiles-table&quot;>
+      <div class=&quot;chart-title&quot;>Análisis 52 Semanas</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Ticker</th>
+            <th>Precio</th>
+            <th>Min 52w</th>
+            <th>Max 52w</th>
+            <th>Percentil</th>
+            <th>Posición</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${allData.map(a => `
+            <tr>
+              <td><strong>${a.ticker.replace('=X','')}</strong></td>
+              <td>$${a.price?.toFixed(2) || 'N/A'}</td>
+              <td>$${a.min52?.toFixed(2) || 'N/A'}</td>
+              <td>$${a.max52?.toFixed(2) || 'N/A'}</td>
+              <td>${a.percentile?.toFixed(0) || 'N/A'}%</td>
+              <td>
+                <div class=&quot;percentile-bar&quot;>
+                  <div class=&quot;percentile-fill&quot; style=&quot;width:${a.percentile || 0}%&quot;></div>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+    
+    <div class=&quot;chart-card&quot; style=&quot;margin-bottom:20px;&quot;>
+      <div class=&quot;chart-title&quot;>Matriz de Correlaciones (60 días)</div>
+      <div id=&quot;correlationMatrix&quot;></div>
+    </div>
+  `;
+}
+
+function renderCharts(){
+  if(!allData) return;
+  
+  const validAssets = allData.filter(a => a.closes &amp;&amp; a.closes.length > 0);
+  
+  // Evolución
+  const labels = Array.from({length: 60}, (_, i) => `-${60-i}d`);
+  new Chart(document.getElementById('evolutionChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: validAssets.slice(0,6).map((a, i) => ({
+        label: a.ticker.replace('=X',''),
+        data: a.closes.map(c => ((c / a.closes[0]) - 1) * 100),
+        borderColor: ['#00ff87', '#3b82f6', '#fbbf24', '#ff3b5c', '#8b5cf6', '#10b981'][i],
+        tension: 0.4,
+        borderWidth: 2
+      }))
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { labels: { color: '#d4dbe8', font: {size: 10} } } },
+      scales: {
+        y: { ticks: { color: '#5a6478', callback: v => v + '%' }, grid: { color: '#1c2535' } },
+        x: { ticks: { color: '#5a6478', maxTicksLimit: 10 }, grid: { color: '#1c2535' } }
+      }
+    }
+  });
+  
+  // Momentum
+  const momentum = validAssets.map(a => {
+    const recent = a.closes.slice(-20);
+    return recent.length > 0 ? ((recent[recent.length-1] / recent[0]) - 1) * 100 : 0;
+  });
+  
+  new Chart(document.getElementById('momentumChart'), {
+    type: 'bar',
+    data: {
+      labels: validAssets.map(a => a.ticker.replace('=X','')),
+      datasets: [{
+        label: '% Cambio 20d',
+        data: momentum,
+        backgroundColor: momentum.map(m => m > 0 ? '#00ff87' : '#ff3b5c')
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { ticks: { color: '#5a6478', callback: v => v + '%' }, grid: { color: '#1c2535' } },
+        x: { ticks: { color: '#5a6478', font: {size: 10} }, grid: { color: '#1c2535' } }
+      }
+    }
+  });
+  
+  // Correlaciones
+  const tickers = validAssets.map(a => a.ticker.replace('=X',''));
+  const corr = calculateCorrelationMatrix(validAssets);
+  
+  let corrHTML = '<div style=&quot;display:grid;grid-template-columns:60px repeat(' + tickers.length + ',1fr);gap:2px;font-size:9px;&quot;>';
+  corrHTML += '<div></div>' + tickers.map(t => `<div style=&quot;text-align:center;font-weight:600;&quot;>${t}</div>`).join('');
+  
+  tickers.forEach((t1, i) => {
+    corrHTML += `<div style=&quot;font-weight:600;padding:4px;&quot;>${t1}</div>`;
+    tickers.forEach((t2, j) => {
+      const val = corr[i][j];
+      const color = val > 0.7 ? '#00ff87' : val > 0.3 ? '#3b82f6' : val < -0.3 ? '#ff3b5c' : '#5a6478';
+      corrHTML += `<div style=&quot;background:${color}20;color:${color};text-align:center;padding:4px;border-radius:2px;font-size:9px;&quot;>${val.toFixed(2)}</div>`;
+    });
+  });
+  corrHTML += '</div>';
+  
+  document.getElementById('correlationMatrix').innerHTML = corrHTML;
+}
+
+function calculateCorrelationMatrix(assets){
+  const n = assets.length;
+  const matrix = Array(n).fill(0).map(() => Array(n).fill(0));
+  
+  for(let i = 0; i < n; i++){
+    for(let j = 0; j < n; j++){
+      if(i === j) {
+        matrix[i][j] = 1;
+      } else {
+        const returns1 = assets[i].closes.map((c,k) => k > 0 ? (c / assets[i].closes[k-1]) - 1 : 0);
+        const returns2 = assets[j].closes.map((c,k) => k > 0 ? (c / assets[j].closes[k-1]) - 1 : 0);
+        matrix[i][j] = correlation(returns1, returns2);
+      }
+    }
+  }
+  return matrix;
+}
+
+function correlation(x, y){
+  const n = Math.min(x.length, y.length);
+  const meanX = x.reduce((a,b) => a+b, 0) / n;
+  const meanY = y.reduce((a,b) => a+b, 0) / n;
+  
+  let num = 0, denX = 0, denY = 0;
+  for(let i = 0; i < n; i++){
+    const dx = x[i] - meanX;
+    const dy = y[i] - meanY;
+    num += dx * dy;
+    denX += dx * dx;
+    denY += dy * dy;
+  }
+  
+  return denX === 0 || denY === 0 ? 0 : num / Math.sqrt(denX * denY);
+}
+
+function switchTabInternal(tab){
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    if(t.onclick.toString().includes(tab)) t.classList.add('active');
+  });
+  
+  document.getElementById('tab-' + tab).classList.add('active');
+  
+  if(tab === 'params' &amp;&amp; allData){
+    setTimeout(renderCharts, 100);
+  }
+}
+
 window.addEventListener('load', () => {
   setTimeout(runAnalysis, 500);
 });
