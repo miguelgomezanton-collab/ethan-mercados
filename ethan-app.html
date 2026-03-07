@@ -721,14 +721,10 @@ function analyze(raw) {
   else if(score>=7)                         estado='close';
   else                                      estado='watching';
 
-  // Verificar ARRANCADA
-  const arrancada = checkArrancada(M, W, m_mc, w_mc, m_s89, w_s89, m_r14, w_r14);
-
   return {
     name, currency,
     price: closes[di],
     score, estado, mensualOk, semanalOk, dailyReady,
-    arrancada,
     mc: [mc_macd, mc_s89, mc_rsi, mc_s8, mc_precio],
     sc: [sc_macd, sc_s89, sc_rsi, sc_precio],
     dc: {
@@ -881,26 +877,6 @@ function renderCard(ticker){
       <div><button class=&quot;del-btn&quot; onclick=&quot;removeTicker('${ticker}',event)&quot;>✕</button></div>
     </div>
     <div class=&quot;card-detail ${isExpanded?'open':''}&quot; id=&quot;detail-${ticker}&quot;>
-      ${r.arrancada ? `
-      <div style=&quot;margin-bottom:16px;padding:12px;background:${r.arrancada.ok?'rgba(64,217,192,0.08)':'rgba(106,158,148,0.08)'};border-left:3px solid ${r.arrancada.ok?'var(--green)':'var(--yellow)'};border-radius:4px;font-size:11px;&quot;>
-        <div style=&quot;display:flex;align-items:center;gap:8px;margin-bottom:8px;&quot;>
-          <span style=&quot;font-size:18px;&quot;>${r.arrancada.ok?'✓':'⚡'}</span>
-          <span style=&quot;font-weight:600;color:${r.arrancada.ok?'var(--green)':'var(--yellow)'};letter-spacing:1px;&quot;>
-            ${r.arrancada.ok ? 'ARRANCADA OK' : 'ARRANCADA PENDIENTE'}
-          </span>
-        </div>
-        <div style=&quot;font-size:10px;color:var(--text2);display:grid;grid-template-columns:1fr 1fr;gap:8px;&quot;>
-          <div>
-            Mensual: ${r.arrancada.mensual ? '<span style=&quot;color:var(--green);font-weight:600;&quot;>✓ OK</span>' : '<span style=&quot;color:var(--red);&quot;>✗ NO</span>'}
-            ${!r.arrancada.mensual && r.arrancada.m_details ? `<div style=&quot;margin-top:4px;font-size:9px;&quot;>S89:${r.arrancada.m_details.s89} S50:${r.arrancada.m_details.s50} S14:${r.arrancada.m_details.s14} RSI:${r.arrancada.m_details.rsi}</div>` : ''}
-          </div>
-          <div>
-            Semanal: ${r.arrancada.semanal ? '<span style=&quot;color:var(--green);font-weight:600;&quot;>✓ OK</span>' : '<span style=&quot;color:var(--red);&quot;>✗ NO</span>'}
-            ${!r.arrancada.semanal && r.arrancada.w_details ? `<div style=&quot;margin-top:4px;font-size:9px;&quot;>S89:${r.arrancada.w_details.s89} S50:${r.arrancada.w_details.s50} S14:${r.arrancada.w_details.s14} RSI:${r.arrancada.w_details.rsi}</div>` : ''}
-          </div>
-        </div>
-      </div>
-      ` : ''}
       <div class=&quot;detail-grid&quot;>
         <div class=&quot;detail-block&quot;>
           <div class=&quot;detail-title m&quot;>◆ MENSUAL ${r.mensualOk?'✓':''}</div>
@@ -1639,108 +1615,6 @@ function calcStoch(highs, lows, closes, period = 14, smoothK = 3) {
   // Paso 3: %D = media de %K suavizado
   const d = calcSMASimple(kSmooth, 3);
   return { k: kSmooth, d };
-}
-
-// ═══════════════════════════════════════════════
-// VERIFICACIÓN DE ARRANCADA
-// ═══════════════════════════════════════════════
-function checkArrancada(M, W, m_mc, w_mc, m_s89, w_s89, m_r14, w_r14) {
-  const mi = M.closes.length - 1;
-  const wi = W.closes.length - 1;
-  
-  // Calcular Stoch(50) y Stoch(14) para mensual y semanal
-  const m_s50 = calcStoch(M.highs, M.lows, M.closes, 50);
-  const m_s14 = calcStoch(M.highs, M.lows, M.closes, 14);
-  const w_s50 = calcStoch(W.highs, W.lows, W.closes, 50);
-  const w_s14 = calcStoch(W.highs, W.lows, W.closes, 14);
-  
-  // ═══ ARRANCADA MENSUAL ═══
-  let arrancadaMensual = false;
-  let m_details = {};
-  
-  // Condiciones básicas
-  const m_price_change = mi >= 10 ? ((M.closes[mi] / M.closes[mi-10]) - 1) * 100 : 0;
-  const m_pc_ok = m_price_change > 10;
-  const m_macd_cross = mi > 0 && m_mc.m[mi] > m_mc.sl[mi] && m_mc.m[mi-1] <= m_mc.sl[mi-1];
-  const m_macd_pos = m_mc.m[mi] > 0;
-  const m_s89_cross = mi > 0 && m_s89.k[mi] > m_s89.d[mi] && m_s89.k[mi-1] <= m_s89.d[mi-1];
-  
-  // Verificar si viene de tendencia bajista (MACD estuvo negativo)
-  let fromDowntrend = false;
-  if(mi >= 5) {
-    for(let i = mi - 5; i < mi; i++) {
-      if(m_mc.m[i] != null && m_mc.m[i] < 0) {
-        fromDowntrend = true;
-        break;
-      }
-    }
-  }
-  
-  // Condición robusta: Estoc89 > 80 Y Estoc50 > 85 desde tendencia bajista
-  const m_robust = fromDowntrend && m_s89.k[mi] > 80 && m_s50.k[mi] > 85;
-  
-  // O fase correctiva (MACD cortado a la baja pero no perdió cero)
-  const m_correctiva = !fromDowntrend && (m_macd_cross || m_macd_pos) && m_mc.m[mi] > 0;
-  
-  // RSI > 53 (más arriba = más fiable)
-  const m_rsi_ok = m_r14[mi] > 53;
-  
-  // Estoc14 ~ 70+
-  const m_s14_ok = m_s14.k[mi] > 70;
-  
-  arrancadaMensual = (m_macd_cross || m_macd_pos) &&
-                     (m_s89_cross || m_s89.k[mi] > m_s89.d[mi]) &&
-                     (m_robust || m_correctiva) &&
-                     m_rsi_ok &&
-                     m_s14_ok;
-  
-  m_details = {
-    pc: m_price_change.toFixed(1),
-    macd_pos: m_macd_pos,
-    s89: m_s89.k[mi]?.toFixed(1) || '—',
-    s50: m_s50.k[mi]?.toFixed(1) || '—',
-    s14: m_s14.k[mi]?.toFixed(1) || '—',
-    rsi: m_r14[mi]?.toFixed(1) || '—',
-    fromDowntrend
-  };
-  
-  // ═══ ARRANCADA SEMANAL ═══
-  let arrancadaSemanal = false;
-  let w_details = {};
-  
-  const w_macd_cross = wi > 0 && w_mc.m[wi] > w_mc.sl[wi] && w_mc.m[wi-1] <= w_mc.sl[wi-1];
-  const w_macd_pos = w_mc.m[wi] > 0;
-  const w_s89_cross = wi > 0 && w_s89.k[wi] > w_s89.d[wi] && w_s89.k[wi-1] <= w_s89.d[wi-1];
-  const w_s89_ok = w_s89.k[wi] > 40;
-  const w_s89_strong = w_s89.k[wi] > 80;
-  const w_s50_cross = w_s50.k[wi] > w_s50.d[wi];
-  const w_s50_zone = w_s50.k[wi] > 60 && w_s50.k[wi] < 80;
-  const w_s50_strong = w_s50.k[wi] > 85;
-  const w_s14_ok = w_s14.k[wi] > 85;
-  const w_rsi_ok = w_r14[wi] > 67;
-  
-  arrancadaSemanal = (w_macd_cross || w_macd_pos) &&
-                     w_macd_pos &&
-                     (w_s89_cross || w_s89_ok) &&
-                     (w_s50_cross || w_s50_zone || w_s50_strong) &&
-                     w_s14_ok &&
-                     w_rsi_ok;
-  
-  w_details = {
-    macd_pos: w_macd_pos,
-    s89: w_s89.k[wi]?.toFixed(1) || '—',
-    s50: w_s50.k[wi]?.toFixed(1) || '—',
-    s14: w_s14.k[wi]?.toFixed(1) || '—',
-    rsi: w_r14[wi]?.toFixed(1) || '—'
-  };
-  
-  return {
-    mensual: arrancadaMensual,
-    semanal: arrancadaSemanal,
-    ok: arrancadaMensual && arrancadaSemanal,
-    m_details,
-    w_details
-  };
 }
 
 // ---- RESAMPLE ----
