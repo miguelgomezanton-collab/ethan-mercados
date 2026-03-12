@@ -1,71 +1,138 @@
-# ETHAN Mercados
+# ETHAN Mercados · Plataforma de Trading
 
-Trading platform personal — Sistema de inversión "Lo más fuerte de lo fuerte"
+Sistema completo de análisis técnico y gestión de carteras con backtesting del sistema ETHAN.
 
-## Módulos
+## 📦 Estructura de Archivos
 
-| Módulo | Descripción |
-|--------|-------------|
-| **Screener** | Watchlist + Análisis técnico + Backtesting |
-| **Macro** | Dashboard macroeconómico (17 indicadores) |
-| **Cartera** | Rentabilidades, métricas, proyecciones |
-| **Risk Mgmt** | 7 estrategias de gestión monetaria |
-| **Fundamental** | Rankings: Fundamental + Greenblatt + Lynch |
-
-## Acceso
-
-Contraseña por defecto: `ethan2026`
-
-Para cambiarla, edita `index.html` y sustituye el hash SHA-256.  
-Genera el nuevo hash en la consola del navegador (F12):
-
-```js
-crypto.subtle.digest('SHA-256', new TextEncoder().encode('TU_NUEVA_CONTRASEÑA'))
-  .then(h => console.log(Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join('')))
+```
+ETHAN_FINAL/
+├── index.html              # Plataforma principal (multi-módulo)
+├── ethan-app.html         # Watchlist independiente
+├── alertas.html           # Sistema de alertas
+├── ethan_mercados.html    # Versión alternativa
+├── fundamental.html       # Análisis fundamental
+├── macro.html            # Indicadores macro
+├── portfolio.html        # Gestión de cartera
+├── risk.html             # Risk Management
+├── sectors.html          # Análisis sectorial
+└── operaciones.json      # Datos de operaciones
 ```
 
-## Añadir operaciones a la cartera
+## 🚀 Despliegue en GitHub Pages
 
-Edita el archivo `operaciones.json` directamente en GitHub:
+### 1. Subir a GitHub
 
-1. Ve al archivo → click en el **lápiz** para editar
-2. Añade la nueva operación al final del array `alcista.operaciones`
-3. Formato de cada operación:
-```json
-{
-  "valor": "NOMBRE EMPRESA",
-  "ticker": "TICK",
-  "fechaEntrada": "2025-07-01",
-  "fechaSalida": "2025-07-15",
-  "precioEntrada": 100.00,
-  "precioSalida": 110.00,
-  "capital": 3000,
-  "peso": 0.30,
-  "plusvalia": 300.00,
-  "rentabilidad": 0.10,
-  "dias": 14,
-  "motivo": "Voluntaria"
-}
+```bash
+git add .
+git commit -m "Deploy ETHAN platform"
+git push origin main
 ```
-4. Click en **Commit changes**
-5. La web se actualiza automáticamente en 1-2 minutos
 
-## Atajos de teclado
+### 2. Activar GitHub Pages
 
-- `Alt+1` → Screener
-- `Alt+2` → Macro
-- `Alt+3` → Cartera
-- `Alt+4` → Risk Management
-- `Alt+5` → Fundamental
+1. Ve a **Settings** → **Pages**
+2. Source: **Deploy from branch**
+3. Branch: **main** / **root**
+4. Click **Save**
 
-## Archivos
+### 3. Acceder
 
-| Archivo | Función |
-|---------|---------|
-| `index.html` | Shell principal + login + navegación |
-| `ethan-app.html` | Screener / Watchlist / Backtesting |
-| `macro.html` | Dashboard macroeconómico |
-| `portfolio.html` | Cartera y rentabilidades |
-| `risk.html` | Gestión monetaria |
-| `fundamental.html` | Análisis fundamental |
-| `operaciones.json` | **Datos editables** de operaciones |
+Tu plataforma estará en:
+```
+https://tu-usuario.github.io/tu-repo/
+```
+
+## 📋 Módulos Incluidos
+
+### **index.html** (Principal)
+- **Macro**: Indicadores macroeconómicos
+- **Asset Allocation**: Análisis de activos (VTI, VEU, IEF, BNDX, SPY, GLD, USO, HYG, EUR/USD)
+- **Sectores**: Análisis de ETFs sectoriales
+- **S&P 500**: Screener completo del S&P 500
+- **Screener**: Filtrado de valores
+- **Cartera**: Gestión de portfolio
+- **Fundamental**: Análisis fundamental
+
+### **ethan-app.html** (Watchlist Independiente)
+- Watchlist multi-ticker
+- Análisis técnico completo
+- Dashboard con backtesting
+
+### **Otros Módulos**
+- **alertas.html**: Notificaciones y alertas
+- **portfolio.html**: Gestión avanzada de cartera
+- **risk.html**: Gestión de riesgo
+- **sectors.html**: Análisis sectorial standalone
+
+## ⚙️ Sistema ETHAN
+
+### Filtros Mensuales
+- MACD > 0 y MACD > Signal
+- Stoch(89) > 80 y K > D, o K > 92
+- RSI(14) > 65
+- Stoch(8) > 78
+- Precio > SMA(10)
+
+### Filtros Semanales
+- MACD > 0 y MACD > Signal
+- Stoch(89) > 85 y K > D, o K > 92
+- RSI(14) > 67
+- Precio > SMA(20)
+
+### Señales de Entrada
+- **MACD**: Cruce alcista + RSI(14) > 57 + MACD > 0
+- **SMA5 Semanal**: Precio cruza SMA(5) al alza
+- **SMA5 Diario**: Precio cruza SMA(5) al alza
+- **RSI5 Diario**: RSI(5) cruza 60 al alza
+
+### Salida
+- Precio < SMA(10) semanal
+- Filtros mensuales/semanales rotos (viernes)
+
+## 🔧 Correcciones Aplicadas
+
+✅ **index.html**: 63 entidades `&amp;&amp;` corregidas
+✅ **ethan-app.html**: 116 entidades `&amp;&amp;` corregidas
+✅ **operaciones.json**: Validado y formateado
+✅ Todos los proxies actualizados para Yahoo Finance
+
+## 📊 Operaciones Registradas
+
+El archivo `operaciones.json` contiene:
+- **Alcista**: 17 operaciones, +29.58% rentabilidad
+- **Bajista**: 20 posiciones registradas
+
+## 🌐 APIs Utilizadas
+
+- **Yahoo Finance**: Datos históricos de precios
+- **Proxies CORS**: 
+  - corsproxy.io
+  - api.codetabs.com
+  - thingproxy.freeboard.io
+
+## 📱 Compatibilidad
+
+- ✅ Chrome/Edge
+- ✅ Firefox
+- ✅ Safari
+- ✅ Mobile responsive
+
+## 🔒 Sin Backend
+
+Todo funciona 100% en el navegador:
+- No requiere servidor
+- No requiere base de datos
+- localStorage para persistencia local
+
+## 📝 Notas
+
+- Los datos se actualizan en tiempo real desde Yahoo Finance
+- El backtesting se ejecuta localmente
+- La persistencia usa localStorage del navegador
+- Compatible con GitHub Pages (hosting estático gratuito)
+
+---
+
+**Versión**: 2.0  
+**Última actualización**: Marzo 2026  
+**Autor**: ethan mercados

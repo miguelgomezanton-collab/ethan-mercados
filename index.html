@@ -797,10 +797,10 @@ body {
 </div>
 
 <script>
-// Lista del S&amp;P 500
-const SP500 = [&quot;MMM&quot;,&quot;AOS&quot;,&quot;ABT&quot;,&quot;ABBV&quot;,&quot;ACN&quot;,&quot;ADBE&quot;,&quot;AMD&quot;,&quot;AES&quot;,&quot;AFL&quot;,&quot;A&quot;,&quot;APD&quot;,&quot;ABNB&quot;,&quot;AKAM&quot;,&quot;ALB&quot;,&quot;ARE&quot;,&quot;ALGN&quot;,&quot;ALLE&quot;,&quot;LNT&quot;,&quot;ALL&quot;,&quot;GOOGL&quot;,&quot;GOOG&quot;,&quot;MO&quot;,&quot;AMZN&quot;,&quot;AMCR&quot;,&quot;AEE&quot;,&quot;AAL&quot;,&quot;AEP&quot;,&quot;AXP&quot;,&quot;AIG&quot;,&quot;AMT&quot;,&quot;AWK&quot;,&quot;AMP&quot;,&quot;AME&quot;,&quot;AMGN&quot;,&quot;APH&quot;,&quot;ADI&quot;,&quot;ANSS&quot;,&quot;AON&quot;,&quot;APA&quot;,&quot;AAPL&quot;,&quot;AMAT&quot;,&quot;APTV&quot;,&quot;ACGL&quot;,&quot;ADM&quot;,&quot;ANET&quot;,&quot;AJG&quot;,&quot;AIZ&quot;,&quot;T&quot;,&quot;ATO&quot;,&quot;ADSK&quot;,&quot;ADP&quot;,&quot;AZO&quot;,&quot;AVB&quot;,&quot;AVY&quot;,&quot;AXON&quot;,&quot;BKR&quot;,&quot;BALL&quot;,&quot;BAC&quot;,&quot;BBWI&quot;,&quot;BAX&quot;,&quot;BDX&quot;,&quot;BRK-B&quot;,&quot;BBY&quot;,&quot;TECH&quot;,&quot;BIIB&quot;,&quot;BIO&quot;,&quot;BLK&quot;,&quot;BX&quot;,&quot;BK&quot;,&quot;BA&quot;,&quot;BKNG&quot;,&quot;BWA&quot;,&quot;BSX&quot;,&quot;BMY&quot;,&quot;AVGO&quot;,&quot;BR&quot;,&quot;BRO&quot;,&quot;BF-B&quot;,&quot;BG&quot;,&quot;CHRW&quot;,&quot;CDNS&quot;,&quot;CZR&quot;,&quot;CPT&quot;,&quot;CPB&quot;,&quot;COF&quot;,&quot;CAH&quot;,&quot;KMX&quot;,&quot;CCL&quot;,&quot;CARR&quot;,&quot;CTLT&quot;,&quot;CAT&quot;,&quot;CBOE&quot;,&quot;CBRE&quot;,&quot;CDW&quot;,&quot;CE&quot;,&quot;COR&quot;,&quot;CNC&quot;,&quot;CNP&quot;,&quot;CF&quot;,&quot;CHTR&quot;,&quot;CVX&quot;,&quot;CMG&quot;,&quot;CB&quot;,&quot;CHD&quot;,&quot;CI&quot;,&quot;CINF&quot;,&quot;CTAS&quot;,&quot;CSCO&quot;,&quot;C&quot;,&quot;CFG&quot;,&quot;CLX&quot;,&quot;CME&quot;,&quot;CMS&quot;,&quot;KO&quot;,&quot;CTSH&quot;,&quot;CL&quot;,&quot;CMCSA&quot;,&quot;CMA&quot;,&quot;CAG&quot;,&quot;COP&quot;,&quot;ED&quot;,&quot;STZ&quot;,&quot;CEG&quot;,&quot;COO&quot;,&quot;CPRT&quot;,&quot;GLW&quot;,&quot;CPAY&quot;,&quot;CTVA&quot;,&quot;CSGP&quot;,&quot;COST&quot;,&quot;CTRA&quot;,&quot;CRWD&quot;,&quot;CCI&quot;,&quot;CSX&quot;,&quot;CMI&quot;,&quot;CVS&quot;,&quot;DHR&quot;,&quot;DRI&quot;,&quot;DVA&quot;,&quot;DAY&quot;,&quot;DECK&quot;,&quot;DE&quot;,&quot;DELL&quot;,&quot;DAL&quot;,&quot;DVN&quot;,&quot;DXCM&quot;,&quot;FANG&quot;,&quot;DLR&quot;,&quot;DFS&quot;,&quot;DG&quot;,&quot;DLTR&quot;,&quot;D&quot;,&quot;DPZ&quot;,&quot;DOV&quot;,&quot;DOW&quot;,&quot;DHI&quot;,&quot;DTE&quot;,&quot;DUK&quot;,&quot;DD&quot;,&quot;EMN&quot;,&quot;ETN&quot;,&quot;EBAY&quot;,&quot;ECL&quot;,&quot;EIX&quot;,&quot;EW&quot;,&quot;EA&quot;,&quot;ELV&quot;,&quot;EMR&quot;,&quot;ENPH&quot;,&quot;ETR&quot;,&quot;EOG&quot;,&quot;EPAM&quot;,&quot;EQT&quot;,&quot;EFX&quot;,&quot;EQIX&quot;,&quot;EQR&quot;,&quot;ESS&quot;,&quot;EL&quot;,&quot;ETSY&quot;,&quot;EG&quot;,&quot;EVRG&quot;,&quot;ES&quot;,&quot;EXC&quot;,&quot;EXPE&quot;,&quot;EXPD&quot;,&quot;EXR&quot;,&quot;XOM&quot;,&quot;FFIV&quot;,&quot;FDS&quot;,&quot;FICO&quot;,&quot;FAST&quot;,&quot;FRT&quot;,&quot;FDX&quot;,&quot;FITB&quot;,&quot;FSLR&quot;,&quot;FE&quot;,&quot;FIS&quot;,&quot;FI&quot;,&quot;FLT&quot;,&quot;FMC&quot;,&quot;F&quot;,&quot;FTNT&quot;,&quot;FTV&quot;,&quot;FOXA&quot;,&quot;FOX&quot;,&quot;BEN&quot;,&quot;FCX&quot;,&quot;GRMN&quot;,&quot;IT&quot;,&quot;GE&quot;,&quot;GEHC&quot;,&quot;GEN&quot;,&quot;GD&quot;,&quot;GIS&quot;,&quot;GM&quot;,&quot;GPC&quot;,&quot;GILD&quot;,&quot;GPN&quot;,&quot;GL&quot;,&quot;GDDY&quot;,&quot;GS&quot;,&quot;HAL&quot;,&quot;HIG&quot;,&quot;HAS&quot;,&quot;HCA&quot;,&quot;DOC&quot;,&quot;HSIC&quot;,&quot;HSY&quot;,&quot;HES&quot;,&quot;HPE&quot;,&quot;HLT&quot;,&quot;HOLX&quot;,&quot;HD&quot;,&quot;HON&quot;,&quot;HRL&quot;,&quot;HST&quot;,&quot;HWM&quot;,&quot;HPQ&quot;,&quot;HUBB&quot;,&quot;HUM&quot;,&quot;HBAN&quot;,&quot;HII&quot;,&quot;IBM&quot;,&quot;IEX&quot;,&quot;IDXX&quot;,&quot;ITW&quot;,&quot;INCY&quot;,&quot;IR&quot;,&quot;PODD&quot;,&quot;INTC&quot;,&quot;ICE&quot;,&quot;IFF&quot;,&quot;IP&quot;,&quot;IPG&quot;,&quot;INTU&quot;,&quot;ISRG&quot;,&quot;IVZ&quot;,&quot;INVH&quot;,&quot;IQV&quot;,&quot;IRM&quot;,&quot;JBHT&quot;,&quot;JBL&quot;,&quot;JKHY&quot;,&quot;J&quot;,&quot;JNJ&quot;,&quot;JCI&quot;,&quot;JPM&quot;,&quot;JNPR&quot;,&quot;K&quot;,&quot;KVUE&quot;,&quot;KDP&quot;,&quot;KEY&quot;,&quot;KEYS&quot;,&quot;KMB&quot;,&quot;KIM&quot;,&quot;KMI&quot;,&quot;KKR&quot;,&quot;KLAC&quot;,&quot;KHC&quot;,&quot;KR&quot;,&quot;LHX&quot;,&quot;LH&quot;,&quot;LRCX&quot;,&quot;LW&quot;,&quot;LVS&quot;,&quot;LDOS&quot;,&quot;LEN&quot;,&quot;LIN&quot;,&quot;LYV&quot;,&quot;LKQ&quot;,&quot;LMT&quot;,&quot;L&quot;,&quot;LOW&quot;,&quot;LULU&quot;,&quot;LYB&quot;,&quot;MTB&quot;,&quot;MRO&quot;,&quot;MPC&quot;,&quot;MKTX&quot;,&quot;MAR&quot;,&quot;MMC&quot;,&quot;MLM&quot;,&quot;MAS&quot;,&quot;MA&quot;,&quot;MTCH&quot;,&quot;MKC&quot;,&quot;MCD&quot;,&quot;MCK&quot;,&quot;MDT&quot;,&quot;MRK&quot;,&quot;META&quot;,&quot;MET&quot;,&quot;MTD&quot;,&quot;MGM&quot;,&quot;MCHP&quot;,&quot;MU&quot;,&quot;MSFT&quot;,&quot;MAA&quot;,&quot;MRNA&quot;,&quot;MHK&quot;,&quot;MOH&quot;,&quot;TAP&quot;,&quot;MDLZ&quot;,&quot;MPWR&quot;,&quot;MNST&quot;,&quot;MCO&quot;,&quot;MS&quot;,&quot;MOS&quot;,&quot;MSI&quot;,&quot;MSCI&quot;,&quot;NDAQ&quot;,&quot;NTAP&quot;,&quot;NFLX&quot;,&quot;NEM&quot;,&quot;NWSA&quot;,&quot;NWS&quot;,&quot;NEE&quot;,&quot;NKE&quot;,&quot;NI&quot;,&quot;NDSN&quot;,&quot;NSC&quot;,&quot;NTRS&quot;,&quot;NOC&quot;,&quot;NCLH&quot;,&quot;NRG&quot;,&quot;NUE&quot;,&quot;NVDA&quot;,&quot;NVR&quot;,&quot;NXPI&quot;,&quot;ORLY&quot;,&quot;OXY&quot;,&quot;ODFL&quot;,&quot;OMC&quot;,&quot;ON&quot;,&quot;OKE&quot;,&quot;ORCL&quot;,&quot;OTIS&quot;,&quot;PCAR&quot;,&quot;PKG&quot;,&quot;PANW&quot;,&quot;PARA&quot;,&quot;PH&quot;,&quot;PAYX&quot;,&quot;PAYC&quot;,&quot;PYPL&quot;,&quot;PNR&quot;,&quot;PEP&quot;,&quot;PFE&quot;,&quot;PCG&quot;,&quot;PM&quot;,&quot;PSX&quot;,&quot;PNW&quot;,&quot;PNC&quot;,&quot;POOL&quot;,&quot;PPG&quot;,&quot;PPL&quot;,&quot;PFG&quot;,&quot;PG&quot;,&quot;PGR&quot;,&quot;PLD&quot;,&quot;PRU&quot;,&quot;PEG&quot;,&quot;PTC&quot;,&quot;PSA&quot;,&quot;PHM&quot;,&quot;QRVO&quot;,&quot;PWR&quot;,&quot;QCOM&quot;,&quot;DGX&quot;,&quot;RL&quot;,&quot;RJF&quot;,&quot;RTX&quot;,&quot;O&quot;,&quot;REG&quot;,&quot;REGN&quot;,&quot;RF&quot;,&quot;RSG&quot;,&quot;RMD&quot;,&quot;RVTY&quot;,&quot;ROK&quot;,&quot;ROL&quot;,&quot;ROP&quot;,&quot;ROST&quot;,&quot;RCL&quot;,&quot;SPGI&quot;,&quot;CRM&quot;,&quot;SBAC&quot;,&quot;SLB&quot;,&quot;STX&quot;,&quot;SRE&quot;,&quot;NOW&quot;,&quot;SHW&quot;,&quot;SPG&quot;,&quot;SWKS&quot;,&quot;SJM&quot;,&quot;SW&quot;,&quot;SNA&quot;,&quot;SOLV&quot;,&quot;SO&quot;,&quot;LUV&quot;,&quot;SWK&quot;,&quot;SBUX&quot;,&quot;STT&quot;,&quot;STLD&quot;,&quot;STE&quot;,&quot;SYK&quot;,&quot;SMCI&quot;,&quot;SYF&quot;,&quot;SNPS&quot;,&quot;SYY&quot;,&quot;TMUS&quot;,&quot;TROW&quot;,&quot;TTWO&quot;,&quot;TPR&quot;,&quot;TRGP&quot;,&quot;TGT&quot;,&quot;TEL&quot;,&quot;TDY&quot;,&quot;TFX&quot;,&quot;TER&quot;,&quot;TSLA&quot;,&quot;TXN&quot;,&quot;TXT&quot;,&quot;TMO&quot;,&quot;TJX&quot;,&quot;TSCO&quot;,&quot;TT&quot;,&quot;TDG&quot;,&quot;TRV&quot;,&quot;TRMB&quot;,&quot;TFC&quot;,&quot;TYL&quot;,&quot;TSN&quot;,&quot;USB&quot;,&quot;UBER&quot;,&quot;UDR&quot;,&quot;ULTA&quot;,&quot;UNP&quot;,&quot;UAL&quot;,&quot;UPS&quot;,&quot;URI&quot;,&quot;UNH&quot;,&quot;UHS&quot;,&quot;VLO&quot;,&quot;VTR&quot;,&quot;VRSN&quot;,&quot;VRSK&quot;,&quot;VZ&quot;,&quot;VRTX&quot;,&quot;VLTO&quot;,&quot;VFC&quot;,&quot;VTRS&quot;,&quot;VICI&quot;,&quot;V&quot;,&quot;VST&quot;,&quot;VMC&quot;,&quot;WRB&quot;,&quot;GWW&quot;,&quot;WAB&quot;,&quot;WBA&quot;,&quot;WMT&quot;,&quot;DIS&quot;,&quot;WBD&quot;,&quot;WM&quot;,&quot;WAT&quot;,&quot;WEC&quot;,&quot;WFC&quot;,&quot;WELL&quot;,&quot;WST&quot;,&quot;WDC&quot;,&quot;WY&quot;,&quot;WMB&quot;,&quot;WTW&quot;,&quot;WYNN&quot;,&quot;XEL&quot;,&quot;XYL&quot;,&quot;YUM&quot;,&quot;ZBRA&quot;,&quot;ZBH&quot;,&quot;ZTS&quot;];
+// Lista del S&P 500
+const SP500 = ["MMM","AOS","ABT","ABBV","ACN","ADBE","AMD","AES","AFL","A","APD","ABNB","AKAM","ALB","ARE","ALGN","ALLE","LNT","ALL","GOOGL","GOOG","MO","AMZN","AMCR","AEE","AAL","AEP","AXP","AIG","AMT","AWK","AMP","AME","AMGN","APH","ADI","ANSS","AON","APA","AAPL","AMAT","APTV","ACGL","ADM","ANET","AJG","AIZ","T","ATO","ADSK","ADP","AZO","AVB","AVY","AXON","BKR","BALL","BAC","BBWI","BAX","BDX","BRK-B","BBY","TECH","BIIB","BIO","BLK","BX","BK","BA","BKNG","BWA","BSX","BMY","AVGO","BR","BRO","BF-B","BG","CHRW","CDNS","CZR","CPT","CPB","COF","CAH","KMX","CCL","CARR","CTLT","CAT","CBOE","CBRE","CDW","CE","COR","CNC","CNP","CF","CHTR","CVX","CMG","CB","CHD","CI","CINF","CTAS","CSCO","C","CFG","CLX","CME","CMS","KO","CTSH","CL","CMCSA","CMA","CAG","COP","ED","STZ","CEG","COO","CPRT","GLW","CPAY","CTVA","CSGP","COST","CTRA","CRWD","CCI","CSX","CMI","CVS","DHR","DRI","DVA","DAY","DECK","DE","DELL","DAL","DVN","DXCM","FANG","DLR","DFS","DG","DLTR","D","DPZ","DOV","DOW","DHI","DTE","DUK","DD","EMN","ETN","EBAY","ECL","EIX","EW","EA","ELV","EMR","ENPH","ETR","EOG","EPAM","EQT","EFX","EQIX","EQR","ESS","EL","ETSY","EG","EVRG","ES","EXC","EXPE","EXPD","EXR","XOM","FFIV","FDS","FICO","FAST","FRT","FDX","FITB","FSLR","FE","FIS","FI","FLT","FMC","F","FTNT","FTV","FOXA","FOX","BEN","FCX","GRMN","IT","GE","GEHC","GEN","GD","GIS","GM","GPC","GILD","GPN","GL","GDDY","GS","HAL","HIG","HAS","HCA","DOC","HSIC","HSY","HES","HPE","HLT","HOLX","HD","HON","HRL","HST","HWM","HPQ","HUBB","HUM","HBAN","HII","IBM","IEX","IDXX","ITW","INCY","IR","PODD","INTC","ICE","IFF","IP","IPG","INTU","ISRG","IVZ","INVH","IQV","IRM","JBHT","JBL","JKHY","J","JNJ","JCI","JPM","JNPR","K","KVUE","KDP","KEY","KEYS","KMB","KIM","KMI","KKR","KLAC","KHC","KR","LHX","LH","LRCX","LW","LVS","LDOS","LEN","LIN","LYV","LKQ","LMT","L","LOW","LULU","LYB","MTB","MRO","MPC","MKTX","MAR","MMC","MLM","MAS","MA","MTCH","MKC","MCD","MCK","MDT","MRK","META","MET","MTD","MGM","MCHP","MU","MSFT","MAA","MRNA","MHK","MOH","TAP","MDLZ","MPWR","MNST","MCO","MS","MOS","MSI","MSCI","NDAQ","NTAP","NFLX","NEM","NWSA","NWS","NEE","NKE","NI","NDSN","NSC","NTRS","NOC","NCLH","NRG","NUE","NVDA","NVR","NXPI","ORLY","OXY","ODFL","OMC","ON","OKE","ORCL","OTIS","PCAR","PKG","PANW","PARA","PH","PAYX","PAYC","PYPL","PNR","PEP","PFE","PCG","PM","PSX","PNW","PNC","POOL","PPG","PPL","PFG","PG","PGR","PLD","PRU","PEG","PTC","PSA","PHM","QRVO","PWR","QCOM","DGX","RL","RJF","RTX","O","REG","REGN","RF","RSG","RMD","RVTY","ROK","ROL","ROP","ROST","RCL","SPGI","CRM","SBAC","SLB","STX","SRE","NOW","SHW","SPG","SWKS","SJM","SW","SNA","SOLV","SO","LUV","SWK","SBUX","STT","STLD","STE","SYK","SMCI","SYF","SNPS","SYY","TMUS","TROW","TTWO","TPR","TRGP","TGT","TEL","TDY","TFX","TER","TSLA","TXN","TXT","TMO","TJX","TSCO","TT","TDG","TRV","TRMB","TFC","TYL","TSN","USB","UBER","UDR","ULTA","UNP","UAL","UPS","URI","UNH","UHS","VLO","VTR","VRSN","VRSK","VZ","VRTX","VLTO","VFC","VTRS","VICI","V","VST","VMC","WRB","GWW","WAB","WBA","WMT","DIS","WBD","WM","WAT","WEC","WFC","WELL","WST","WDC","WY","WMB","WTW","WYNN","XEL","XYL","YUM","ZBRA","ZBH","ZTS"];
 
-// Mapeo de sectores (principales del S&amp;P 500)
+// Mapeo de sectores (principales del S&P 500)
 const SECTOR_MAP = {
   'A':'XLV',  'AAPL':'XLK',  'ABBV':'XLV',  'ABNB':'XLY',  'ABT':'XLV',  'ACN':'XLK',  'ADBE':'XLK',  'ADI':'XLK',  'ADP':'XLI',  'ADSK':'XLK',  'AEE':'XLU',  'AEP':'XLU',  'AFL':'XLF',  'AIG':'XLF',  'AJG':'XLF',  'AKAM':'XLK',  'ALB':'XLB',  'ALGN':'XLV',  'ALL':'XLF',  'ALLE':'XLI',  'AMAT':'XLK',  'AMCR':'XLB',  'AMD':'XLK',  'AME':'XLI',  'AMGN':'XLV',  'AMP':'XLF',  'AMT':'XLRE',  'AMZN':'XLY',  'ANSS':'XLK',  'AON':'XLF',  'AOS':'XLI',  'APA':'XLE',  'APD':'XLB',  'APH':'XLK',  'ARE':'XLRE',  'ATO':'XLU',  'ATVI':'XLC',  'AVB':'XLRE',  'AVGO':'XLK',  'AVY':'XLB',  'AWK':'XLU',  'AXON':'XLI',  'AXP':'XLF',  'AZO':'XLY',  'BA':'XLI',  'BAC':'XLF',  'BALL':'XLB',  'BAX':'XLV',  'BBY':'XLY',  'BDX':'XLV',  'BEN':'XLF',  'BG':'XLP',  'BIO':'XLV',  'BK':'XLF',  'BKNG':'XLY',  'BKR':'XLE',  'BLDR':'XLI',  'BLK':'XLF',  'BMY':'XLV',  'BR':'XLI',  'BRK.B':'XLF',  'BSX':'XLV',  'BWA':'XLY',  'BXP':'XLRE',  'C':'XLF',  'CAG':'XLP',  'CAH':'XLV',  'CARR':'XLI',  'CAT':'XLI',  'CB':'XLF',  'CBOE':'XLF',  'CBRE':'XLRE',  'CCI':'XLRE',  'CCL':'XLY',  'CDNS':'XLK',  'CE':'XLB',  'CEG':'XLU',  'CF':'XLB',  'CFG':'XLF',  'CHD':'XLP',  'CHK':'XLE',  'CHRW':'XLI',  'CHTR':'XLC',  'CI':'XLV',  'CINF':'XLF',  'CL':'XLP',  'CLX':'XLP',  'CMA':'XLF',  'CMCSA':'XLC',  'CME':'XLF',  'CMG':'XLY',  'CMI':'XLI',  'CMS':'XLU',  'CNC':'XLV',  'CNP':'XLU',  'COF':'XLF',  'COP':'XLE',  'COR':'XLV',  'COST':'XLP',  'CPB':'XLP',  'CPRT':'XLI',  'CPT':'XLRE',  'CRL':'XLV',  'CRM':'XLK',  'CSCO':'XLK',  'CSX':'XLI',  'CTRA':'XLE',  'CTSH':'XLK',  'CTVA':'XLB',  'CTXS':'XLK',  'CVS':'XLV',  'CVX':'XLE',  'CZR':'XLY',  'D':'XLU',  'DD':'XLB',  'DE':'XLI',  'DFS':'XLF',  'DG':'XLP',  'DGX':'XLV',  'DHI':'XLY',  'DHR':'XLV',  'DIS':'XLC',  'DISH':'XLC',  'DLR':'XLRE',  'DLTR':'XLP',  'DOC':'XLRE',  'DOV':'XLI',  'DOW':'XLB',  'DPZ':'XLY',  'DRI':'XLY',  'DTE':'XLU',  'DUK':'XLU',  'DVA':'XLV',  'DVN':'XLE',  'DXCM':'XLV',  'EA':'XLC',  'EBAY':'XLY',  'ECL':'XLB',  'ED':'XLU',  'EFX':'XLF',  'EIX':'XLU',  'ELV':'XLV',  'EMN':'XLB',  'EMR':'XLI',  'ENPH':'XLK',  'EOG':'XLE',  'EQIX':'XLRE',  'EQR':'XLRE',  'EQT':'XLE',  'ES':'XLU',  'ESS':'XLRE',  'ETN':'XLI',  'ETSY':'XLY',  'EVRG':'XLU',  'EW':'XLV',  'EXC':'XLU',  'EXPD':'XLI',  'EXPE':'XLY',  'EXR':'XLRE',  'F':'XLY',  'FANG':'XLE',  'FAST':'XLI',  'FCX':'XLB',  'FDS':'XLF',  'FDX':'XLI',  'FE':'XLU',  'FFIV':'XLK',  'FICO':'XLK',  'FIS':'XLF',  'FISV':'XLF',  'FITB':'XLF',  'FMC':'XLB',  'FOX':'XLC',  'FOXA':'XLC',  'FRT':'XLRE',  'FTI':'XLE',  'FTNT':'XLK',  'FTV':'XLI',  'GD':'XLI',  'GDDY':'XLK',  'GE':'XLI',  'GILD':'XLV',  'GIS':'XLP',  'GLW':'XLK',  'GM':'XLY',  'GNRC':'XLI',  'GOOG':'XLC',  'GOOGL':'XLC',  'GPC':'XLY',  'GRMN':'XLY',  'GS':'XLF',  'HAL':'XLE',  'HBAN':'XLF',  'HCA':'XLV',  'HD':'XLY',  'HES':'XLE',  'HIG':'XLF',  'HLT':'XLY',  'HOLX':'XLV',  'HON':'XLI',  'HPQ':'XLK',  'HRL':'XLP',  'HSIC':'XLV',  'HST':'XLRE',  'HSY':'XLP',  'HUBB':'XLI',  'HUM':'XLV',  'HWM':'XLI',  'ICE':'XLF',  'IDXX':'XLV',  'IEX':'XLI',  'IFF':'XLB',  'INTC':'XLK',  'INTU':'XLK',  'INVH':'XLRE',  'IP':'XLB',  'IPG':'XLC',  'IQV':'XLV',  'IR':'XLI',  'ISRG':'XLV',  'IT':'XLK',  'ITW':'XLI',  'IVZ':'XLF',  'J':'XLI',  'JBHT':'XLI',  'JNJ':'XLV',  'JNPR':'XLK',  'JPM':'XLF',  'K':'XLP',  'KDP':'XLP',  'KEY':'XLF',  'KEYS':'XLK',  'KIM':'XLRE',  'KLAC':'XLK',  'KMB':'XLP',  'KMI':'XLE',  'KMX':'XLY',  'KO':'XLP',  'KR':'XLP',  'L':'XLF',  'LDOS':'XLI',  'LEN':'XLY',  'LEN.B':'XLY',  'LH':'XLV',  'LHX':'XLI',  'LIN':'XLB',  'LKQ':'XLY',  'LLY':'XLV',  'LMT':'XLI',  'LNT':'XLU',  'LOW':'XLY',  'LRCX':'XLY',  'LUMN':'XLC',  'LVS':'XLY',  'LW':'XLP',  'LYV':'XLC',  'MA':'XLF',  'MAA':'XLRE',  'MAR':'XLY',  'MAS':'XLI',  'MCD':'XLY',  'MCHP':'XLK',  'MCK':'XLV',  'MCO':'XLF',  'MDLZ':'XLP',  'MDT':'XLV',  'MET':'XLF',  'META':'XLC',  'MGM':'XLY',  'MHK':'XLY',  'MKC':'XLP',  'MLM':'XLB',  'MMC':'XLF',  'MMM':'XLI',  'MNST':'XLP',  'MO':'XLP',  'MOH':'XLV',  'MPC':'XLE',  'MPW':'XLRE',  'MPWR':'XLK',  'MRK':'XLV',  'MRO':'XLE',  'MS':'XLF',  'MSCI':'XLF',  'MSFT':'XLK',  'MTB':'XLF',  'MTCH':'XLC',  'MTD':'XLV',  'NCLH':'XLY',  'NDAQ':'XLF',  'NDSN':'XLI',  'NEE':'XLU',  'NEM':'XLB',  'NFLX':'XLC',  'NI':'XLU',  'NKE':'XLY',  'NOC':'XLI',  'NOV':'XLE',  'NOW':'XLK',  'NSC':'XLI',  'NTAP':'XLK',  'NTCT':'XLK',  'NTRS':'XLF',  'NUE':'XLB',  'NVDA':'XLK',  'NWE':'XLU',  'NWS':'XLC',  'NWSA':'XLC',  'NXPI':'XLK',  'O':'XLRE',  'ODFL':'XLI',  'OGE':'XLU',  'OKE':'XLE',  'OMC':'XLC',  'ON':'XLK',  'ORLY':'XLY',  'OTIS':'XLI',  'OXY':'XLE',  'PANW':'XLK',  'PARA':'XLC',  'PAYC':'XLK',  'PAYX':'XLI',  'PCAR':'XLI',  'PEAK':'XLRE',  'PEG':'XLU',  'PEP':'XLP',  'PFE':'XLV',  'PG':'XLP',  'PGR':'XLF',  'PH':'XLI',  'PHM':'XLY',  'PKG':'XLB',  'PKI':'XLV',  'PLD':'XLRE',  'PM':'XLP',  'PNC':'XLF',  'PNW':'XLU',  'PODD':'XLV',  'POOL':'XLY',  'PPG':'XLB',  'PPL':'XLU',  'PRU':'XLF',  'PSA':'XLRE',  'PSX':'XLE',  'PTC':'XLK',  'PVH':'XLY',  'PWR':'XLI',  'PYPL':'XLF',  'QCOM':'XLK',  'RCL':'XLY',  'REG':'XLRE',  'REGN':'XLV',  'RF':'XLF',  'RL':'XLY',  'RMD':'XLV',  'ROK':'XLI',  'ROL':'XLI',  'ROP':'XLK',  'ROST':'XLY',  'RSG':'XLI',  'RTX':'XLI',  'SBUX':'XLY',  'SCHW':'XLF',  'SEE':'XLB',  'SHW':'XLB',  'SJM':'XLP',  'SLB':'XLE',  'SNA':'XLI',  'SNPS':'XLK',  'SO':'XLU',  'SPG':'XLRE',  'SPGI':'XLF',  'SRE':'XLU',  'STE':'XLV',  'STT':'XLF',  'STX':'XLK',  'STZ':'XLP',  'SUI':'XLRE',  'SWK':'XLI',  'SWKS':'XLK',  'SWX':'XLU',  'SYF':'XLF',  'SYK':'XLV',  'SYY':'XLP',  'T':'XLC',  'TAP':'XLP',  'TDG':'XLI',  'TDY':'XLK',  'TECH':'XLV',  'TER':'XLK',  'TFC':'XLF',  'TFX':'XLV',  'TJX':'XLY',  'TMO':'XLV',  'TMUS':'XLC',  'TPR':'XLY',  'TRGP':'XLE',  'TROW':'XLF',  'TRU':'XLF',  'TRV':'XLF',  'TSLA':'XLY',  'TSN':'XLP',  'TTWO':'XLC',  'TXN':'XLK',  'TXT':'XLI',  'TYL':'XLK',  'UDR':'XLRE',  'UHS':'XLV',  'ULTA':'XLY',  'UNH':'XLV',  'UNP':'XLI',  'UPS':'XLI',  'URI':'XLI',  'USB':'XLF',  'V':'XLF',  'VICI':'XLRE',  'VLO':'XLE',  'VMC':'XLB',  'VRSK':'XLI',  'VRSN':'XLK',  'VRTX':'XLV',  'VST':'XLU',  'VTR':'XLRE',  'VTRS':'XLV',  'VZ':'XLC',  'WAB':'XLI',  'WAT':'XLV',  'WBD':'XLC',  'WDC':'XLK',  'WEC':'XLU',  'WELL':'XLRE',  'WFC':'XLF',  'WHR':'XLY',  'WM':'XLI',  'WMB':'XLE',  'WMT':'XLP',  'WRB':'XLF',  'WST':'XLV',  'WTW':'XLF',  'WYNN':'XLY',  'XEL':'XLU',  'XOM':'XLE',  'XRAY':'XLV',  'XYL':'XLI',  'YUM':'XLY',  'ZBRA':'XLK',  'ZTS':'XLV'
 };
@@ -813,15 +813,15 @@ let scanResults = [];
 let scanning = false;
 
 // Indicadores (copiados del sistema ETHAN)
-function sma(arr,p){return arr.map((_,i)=>{if(i<p-1)return null;const sl=arr.slice(i-p+1,i+1).filter(v=>v!=null&amp;&amp;!isNaN(v));return sl.length===p?sl.reduce((a,b)=>a+b,0)/p:null;});}
-function ema(arr,p){const k=2/(p+1),out=new Array(arr.length).fill(null);let s=arr.findIndex(v=>v!=null&amp;&amp;!isNaN(v));if(s<0)return out;out[s]=arr[s];for(let i=s+1;i<arr.length;i++){const v=(arr[i]!=null&amp;&amp;!isNaN(arr[i]))?arr[i]:out[i-1];out[i]=v*k+out[i-1]*(1-k);}return out;}
-function macd(closes){const ef=ema(closes,12),es=ema(closes,26);const m=ef.map((v,i)=>(v!=null&amp;&amp;es[i]!=null)?v-es[i]:null);const sl=ema(m.map(v=>v??0),9);return{m,sl};}
+function sma(arr,p){return arr.map((_,i)=>{if(i<p-1)return null;const sl=arr.slice(i-p+1,i+1).filter(v=>v!=null&&!isNaN(v));return sl.length===p?sl.reduce((a,b)=>a+b,0)/p:null;});}
+function ema(arr,p){const k=2/(p+1),out=new Array(arr.length).fill(null);let s=arr.findIndex(v=>v!=null&&!isNaN(v));if(s<0)return out;out[s]=arr[s];for(let i=s+1;i<arr.length;i++){const v=(arr[i]!=null&&!isNaN(arr[i]))?arr[i]:out[i-1];out[i]=v*k+out[i-1]*(1-k);}return out;}
+function macd(closes){const ef=ema(closes,12),es=ema(closes,26);const m=ef.map((v,i)=>(v!=null&&es[i]!=null)?v-es[i]:null);const sl=ema(m.map(v=>v??0),9);return{m,sl};}
 function rsi(closes,p=14){const out=new Array(closes.length).fill(null);if(closes.length<p+1)return out;let g=0,l=0;for(let i=1;i<=p;i++){const d=closes[i]-closes[i-1];d>0?g+=d:l-=d;}let ag=g/p,al=l/p;out[p]=al===0?100:100-(100/(1+ag/al));for(let i=p+1;i<closes.length;i++){const d=closes[i]-closes[i-1];ag=(ag*(p-1)+(d>0?d:0))/p;al=(al*(p-1)+(d<0?-d:0))/p;out[i]=al===0?100:100-(100/(1+ag/al));}return out;}
 function stoch(highs,lows,closes,p){const rawK=closes.map((c,i)=>{if(i<p-1)return null;const hh=Math.max(...highs.slice(i-p+1,i+1));const ll=Math.min(...lows.slice(i-p+1,i+1));return hh===ll?50:(c-ll)/(hh-ll)*100;});const k=sma(rawK,3);const d=sma(k.map(v=>v??0),3);return{k,d};}
 function resample(ts,opens,highs,lows,closes,vols,freq){const groups={};ts.forEach((t,i)=>{const dd=new Date(t*1000);let key;if(freq==='W'){const day=dd.getDay();const diff=dd.getDate()-day+(day===0?-6:1);const mo=new Date(+dd);mo.setDate(diff);key=mo.toISOString().slice(0,10);}else{key=`${dd.getFullYear()}-${String(dd.getMonth()+1).padStart(2,'0')}`;}if(!groups[key]){groups[key]={o:opens[i],h:highs[i],l:lows[i],c:closes[i],v:vols[i]};}else{groups[key].h=Math.max(groups[key].h,highs[i]);groups[key].l=Math.min(groups[key].l,lows[i]);groups[key].c=closes[i];groups[key].v+=vols[i];}});const keys=Object.keys(groups).sort();return{dates:keys,opens:keys.map(k=>groups[k].o),highs:keys.map(k=>groups[k].h),lows:keys.map(k=>groups[k].l),closes:keys.map(k=>groups[k].c),vols:keys.map(k=>groups[k].v)};}
 
 async function fetchData(ticker){
-  const yUrl=`https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&amp;range=10y&amp;events=history`;
+  const yUrl=`https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=10y&events=history`;
   const proxies=[
     u=>`https://corsproxy.io/?${encodeURIComponent(u)}`,
     u=>`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
@@ -837,7 +837,7 @@ async function fetchData(ticker){
       const res=j.chart.result[0];
       const q=res.indicators.quote[0];
       const adj=res.indicators.adjclose?.[0]?.adjclose||q.close;
-      const ratio=adj.map((a,i)=>(q.close[i]&amp;&amp;a)?a/q.close[i]:1);
+      const ratio=adj.map((a,i)=>(q.close[i]&&a)?a/q.close[i]:1);
       return{
         timestamps:res.timestamp,
         opens:q.open.map((v,i)=>v*ratio[i]),
@@ -876,28 +876,28 @@ function analyzeQuick(raw){
   
   let score=0;
   const mc_ok=[
-    m_macd.m[mi]>0&amp;&amp;m_macd.m[mi]>m_macd.sl[mi],
-    (m_s89.k[mi]>80&amp;&amp;m_s89.k[mi]>m_s89.d[mi])||m_s89.k[mi]>92,
+    m_macd.m[mi]>0&&m_macd.m[mi]>m_macd.sl[mi],
+    (m_s89.k[mi]>80&&m_s89.k[mi]>m_s89.d[mi])||m_s89.k[mi]>92,
     m_rsi[mi]>65,
     m_s8.k[mi]>78,
-    m_sma10[mi]&amp;&amp;M.closes[mi]>m_sma10[mi]
+    m_sma10[mi]&&M.closes[mi]>m_sma10[mi]
   ];
   const sc_ok=[
-    w_macd.m[wi]>0&amp;&amp;w_macd.m[wi]>w_macd.sl[wi],
-    (w_s89.k[wi]>85&amp;&amp;w_s89.k[wi]>w_s89.d[wi])||w_s89.k[wi]>92,
+    w_macd.m[wi]>0&&w_macd.m[wi]>w_macd.sl[wi],
+    (w_s89.k[wi]>85&&w_s89.k[wi]>w_s89.d[wi])||w_s89.k[wi]>92,
     w_rsi[wi]>67,
-    w_sma20[wi]&amp;&amp;W.closes[wi]>w_sma20[wi]
+    w_sma20[wi]&&W.closes[wi]>w_sma20[wi]
   ];
   
   score=mc_ok.filter(x=>x).length+sc_ok.filter(x=>x).length;
   
   const mensualOk=mc_ok.every(x=>x);
   const semanalOk=sc_ok.every(x=>x);
-  const dailyReady=d_macd.m[di]>d_macd.sl[di]&amp;&amp;d_macd.m[di-1]<=d_macd.sl[di-1]&amp;&amp;d_rsi[di]>57&amp;&amp;d_macd.m[di]>0;
+  const dailyReady=d_macd.m[di]>d_macd.sl[di]&&d_macd.m[di-1]<=d_macd.sl[di-1]&&d_rsi[di]>57&&d_macd.m[di]>0;
   
   let estado='watching';
-  if(mensualOk&amp;&amp;semanalOk&amp;&amp;dailyReady)estado='ready';
-  else if(mensualOk&amp;&amp;semanalOk)estado='diario';
+  if(mensualOk&&semanalOk&&dailyReady)estado='ready';
+  else if(mensualOk&&semanalOk)estado='diario';
   else if(score>=7)estado='close';
   
   return{score,estado,price:closes[di]};
@@ -918,9 +918,9 @@ async function startScan(){
   fill.style.width='0%';
   
   document.getElementById('resultsContainer').innerHTML=`
-    <div class=&quot;empty-state&quot;>
-      <div class=&quot;spinner&quot;></div>
-      <div>Escaneando S&amp;P 500...</div>
+    <div class="empty-state">
+      <div class="spinner"></div>
+      <div>Escaneando S&P 500...</div>
     </div>
   `;
   
@@ -960,8 +960,8 @@ function renderResults(){
   
   let filtered=scanResults.filter(r=>{
     if(r.score<minScore)return false;
-    if(filterEstado!=='all'&amp;&amp;r.estado!==filterEstado)return false;
-    if(filterSector!=='all'&amp;&amp;r.sector!==filterSector)return false;
+    if(filterEstado!=='all'&&r.estado!==filterEstado)return false;
+    if(filterSector!=='all'&&r.sector!==filterSector)return false;
     return true;
   });
   
@@ -969,7 +969,7 @@ function renderResults(){
   
   if(filtered.length===0){
     document.getElementById('resultsContainer').innerHTML=`
-      <div class=&quot;empty-state&quot;>
+      <div class="empty-state">
         <div>No se encontraron valores que cumplan los filtros</div>
       </div>
     `;
@@ -983,18 +983,18 @@ function renderResults(){
     
     return`
       <tr>
-        <td class=&quot;ticker-cell&quot;>${r.ticker}</td>
-        <td class=&quot;sector-cell&quot;>${r.sector?SECTOR_NAMES[r.sector]:'-'}</td>
-        <td class=&quot;score-cell ${scoreClass}&quot;>${r.score}/10</td>
-        <td class=&quot;${estadoClass}&quot;>${estadoText}</td>
+        <td class="ticker-cell">${r.ticker}</td>
+        <td class="sector-cell">${r.sector?SECTOR_NAMES[r.sector]:'-'}</td>
+        <td class="score-cell ${scoreClass}">${r.score}/10</td>
+        <td class="${estadoClass}">${estadoText}</td>
         <td>${r.price?r.price.toFixed(2):'-'}</td>
-        <td><button class=&quot;btn-add&quot; onclick=&quot;addToWatchlist('${r.ticker}')&quot;>+ Watchlist</button></td>
+        <td><button class="btn-add" onclick="addToWatchlist('${r.ticker}')">+ Watchlist</button></td>
       </tr>
     `;
   }).join('');
   
   document.getElementById('resultsContainer').innerHTML=`
-    <table class=&quot;results-table&quot;>
+    <table class="results-table">
       <thead>
         <tr>
           <th>TICKER</th>
@@ -1378,79 +1378,79 @@ function analyze() {
                       zone.includes('verde') ? 'bullish' : 'bearish';
   
   const html = `
-    <div class=&quot;main-score ${signalClass}&quot;>
-      <div class=&quot;score-label&quot;>Score Total Macro</div>
-      <div class=&quot;score-number ${signalClass}&quot;>${score > 0 ? '+' : ''}${score}/${maxScore}</div>
-      <div class=&quot;score-label&quot;>${zoneLabel}</div>
-      <div style=&quot;margin-top:16px;font-size:11px;opacity:0.8;&quot;>
+    <div class="main-score ${signalClass}">
+      <div class="score-label">Score Total Macro</div>
+      <div class="score-number ${signalClass}">${score > 0 ? '+' : ''}${score}/${maxScore}</div>
+      <div class="score-label">${zoneLabel}</div>
+      <div style="margin-top:16px;font-size:11px;opacity:0.8;">
         Adelantados: +${MACRO_DATA.adelantados.score}/${MACRO_DATA.adelantados.max} · 
         Monetarios: +${MACRO_DATA.monetarios.score}/${MACRO_DATA.monetarios.max}
       </div>
     </div>
     
-    <div style=&quot;background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:32px;&quot;>
-      <div style=&quot;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px;color:var(--text2);&quot;>
+    <div style="background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:32px;">
+      <div style="font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px;color:var(--text2);">
         📊 Escala de Interpretación
       </div>
-      <div style=&quot;display:grid;gap:8px;&quot;>
+      <div style="display:grid;gap:8px;">
         ${MACRO_DATA.scale.map(s => `
-          <div style=&quot;padding:8px 12px;background:var(--s2);border-radius:4px;display:flex;justify-content:space-between;align-items:center;${s.zone === zone ? 'border-left:4px solid var(--green);' : ''}&quot;>
-            <span style=&quot;font-size:11px;&quot;>${s.label}</span>
-            <span style=&quot;font-size:11px;color:var(--text2);&quot;>${s.min > 0 ? '+' : ''}${s.min} a ${s.max > 0 ? '+' : ''}${s.max}</span>
+          <div style="padding:8px 12px;background:var(--s2);border-radius:4px;display:flex;justify-content:space-between;align-items:center;${s.zone === zone ? 'border-left:4px solid var(--green);' : ''}">
+            <span style="font-size:11px;">${s.label}</span>
+            <span style="font-size:11px;color:var(--text2);">${s.min > 0 ? '+' : ''}${s.min} a ${s.max > 0 ? '+' : ''}${s.max}</span>
           </div>
         `).join('')}
       </div>
     </div>
     
-    <div style=&quot;margin-bottom:32px;&quot;>
-      <div style=&quot;font-size:14px;font-weight:600;letter-spacing:1px;margin-bottom:16px;&quot;>🔮 INDICADORES ADELANTADOS</div>
-      <div class=&quot;indicators-grid&quot;>
+    <div style="margin-bottom:32px;">
+      <div style="font-size:14px;font-weight:600;letter-spacing:1px;margin-bottom:16px;">🔮 INDICADORES ADELANTADOS</div>
+      <div class="indicators-grid">
         ${Object.entries(MACRO_DATA.leading).map(([key, ind]) => `
-          <div class=&quot;indicator-card&quot;>
-            <div class=&quot;indicator-title&quot;>${ind.label}</div>
-            <div class=&quot;indicator-value ${ind.signal}&quot;>${ind.value > 0 ? '+' : ''}${ind.value}${ind.unit}</div>
-            <div class=&quot;indicator-change&quot;>${ind.desc}</div>
+          <div class="indicator-card">
+            <div class="indicator-title">${ind.label}</div>
+            <div class="indicator-value ${ind.signal}">${ind.value > 0 ? '+' : ''}${ind.value}${ind.unit}</div>
+            <div class="indicator-change">${ind.desc}</div>
           </div>
         `).join('')}
       </div>
     </div>
     
-    <div style=&quot;margin-bottom:32px;&quot;>
-      <div style=&quot;font-size:14px;font-weight:600;letter-spacing:1px;margin-bottom:16px;&quot;>💰 INDICADORES MONETARIOS (Ponderados)</div>
-      <div class=&quot;indicators-grid&quot;>
+    <div style="margin-bottom:32px;">
+      <div style="font-size:14px;font-weight:600;letter-spacing:1px;margin-bottom:16px;">💰 INDICADORES MONETARIOS (Ponderados)</div>
+      <div class="indicators-grid">
         ${Object.entries(MACRO_DATA.monetary).map(([key, ind]) => `
-          <div class=&quot;indicator-card&quot;>
-            <div class=&quot;indicator-title&quot;>${ind.label} (×${ind.weight})</div>
-            <div class=&quot;indicator-value ${ind.signal}&quot;>${typeof ind.value === 'number' ? (ind.value > 0 &amp;&amp; !ind.unit.includes('T') ? '+' : '') + ind.value.toFixed(2) : ind.value}${ind.unit}</div>
-            <div class=&quot;indicator-change&quot;>${ind.desc}</div>
+          <div class="indicator-card">
+            <div class="indicator-title">${ind.label} (×${ind.weight})</div>
+            <div class="indicator-value ${ind.signal}">${typeof ind.value === 'number' ? (ind.value > 0 && !ind.unit.includes('T') ? '+' : '') + ind.value.toFixed(2) : ind.value}${ind.unit}</div>
+            <div class="indicator-change">${ind.desc}</div>
           </div>
         `).join('')}
       </div>
     </div>
     
-    <div class=&quot;charts-grid&quot;>
-      <div class=&quot;chart-card&quot;>
-        <div class=&quot;chart-title&quot;>Evolución Score Total</div>
-        <canvas id=&quot;scoreChart&quot;></canvas>
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-title">Evolución Score Total</div>
+        <canvas id="scoreChart"></canvas>
       </div>
       
-      <div class=&quot;chart-card&quot;>
-        <div class=&quot;chart-title&quot;>Curva USD (10Y-2Y)</div>
-        <canvas id=&quot;curvaChart&quot;></canvas>
+      <div class="chart-card">
+        <div class="chart-title">Curva USD (10Y-2Y)</div>
+        <canvas id="curvaChart"></canvas>
       </div>
       
-      <div class=&quot;chart-card&quot;>
-        <div class=&quot;chart-title&quot;>M2 Global (% YoY)</div>
-        <canvas id=&quot;m2Chart&quot;></canvas>
+      <div class="chart-card">
+        <div class="chart-title">M2 Global (% YoY)</div>
+        <canvas id="m2Chart"></canvas>
       </div>
       
-      <div class=&quot;chart-card&quot;>
-        <div class=&quot;chart-title&quot;>LEI (% 6m anualizado)</div>
-        <canvas id=&quot;leiChart&quot;></canvas>
+      <div class="chart-card">
+        <div class="chart-title">LEI (% 6m anualizado)</div>
+        <canvas id="leiChart"></canvas>
       </div>
     </div>
     
-    <button class=&quot;btn&quot; onclick=&quot;analyze()&quot;>⟲ ACTUALIZAR VISTA</button>
+    <button class="btn" onclick="analyze()">⟲ ACTUALIZAR VISTA</button>
   `;
   
   document.getElementById('content').innerHTML = html;
@@ -1879,9 +1879,9 @@ body {
 let allData = null;
 let currentTab = 'dashboard';
 
-function sma(arr,p){return arr.map((_,i)=>{if(i<p-1)return null;const sl=arr.slice(i-p+1,i+1).filter(v=>v!=null&amp;&amp;!isNaN(v));return sl.length===p?sl.reduce((a,b)=>a+b,0)/p:null;});}
-function ema(arr,p){const k=2/(p+1),out=new Array(arr.length).fill(null);let s=arr.findIndex(v=>v!=null&amp;&amp;!isNaN(v));if(s<0)return out;out[s]=arr[s];for(let i=s+1;i<arr.length;i++){const v=(arr[i]!=null&amp;&amp;!isNaN(arr[i]))?arr[i]:out[i-1];out[i]=v*k+out[i-1]*(1-k);}return out;}
-function macd(closes){const ef=ema(closes,12),es=ema(closes,26);const m=ef.map((v,i)=>(v!=null&amp;&amp;es[i]!=null)?v-es[i]:null);const sl=ema(m.map(v=>v??0),9);return{m,sl};}
+function sma(arr,p){return arr.map((_,i)=>{if(i<p-1)return null;const sl=arr.slice(i-p+1,i+1).filter(v=>v!=null&&!isNaN(v));return sl.length===p?sl.reduce((a,b)=>a+b,0)/p:null;});}
+function ema(arr,p){const k=2/(p+1),out=new Array(arr.length).fill(null);let s=arr.findIndex(v=>v!=null&&!isNaN(v));if(s<0)return out;out[s]=arr[s];for(let i=s+1;i<arr.length;i++){const v=(arr[i]!=null&&!isNaN(arr[i]))?arr[i]:out[i-1];out[i]=v*k+out[i-1]*(1-k);}return out;}
+function macd(closes){const ef=ema(closes,12),es=ema(closes,26);const m=ef.map((v,i)=>(v!=null&&es[i]!=null)?v-es[i]:null);const sl=ema(m.map(v=>v??0),9);return{m,sl};}
 function rsi(closes,p=14){const out=new Array(closes.length).fill(null);if(closes.length<p+1)return out;let g=0,l=0;for(let i=1;i<=p;i++){const d=closes[i]-closes[i-1];d>0?g+=d:l-=d;}let ag=g/p,al=l/p;out[p]=al===0?100:100-(100/(1+ag/al));for(let i=p+1;i<closes.length;i++){const d=closes[i]-closes[i-1];ag=(ag*(p-1)+(d>0?d:0))/p;al=(al*(p-1)+(d<0?-d:0))/p;out[i]=al===0?100:100-(100/(1+ag/al));}return out;}
 function stoch(highs,lows,closes,p){const rawK=closes.map((c,i)=>{if(i<p-1)return null;const hh=Math.max(...highs.slice(i-p+1,i+1));const ll=Math.min(...lows.slice(i-p+1,i+1));return hh===ll?50:(c-ll)/(hh-ll)*100;});const k=sma(rawK,3);const d=sma(k.map(v=>v??0),3);return{k,d};}
 function resample(ts,opens,highs,lows,closes,vols,freq){const groups={};ts.forEach((t,i)=>{const dd=new Date(t*1000);let key;if(freq==='W'){const day=dd.getDay();const diff=dd.getDate()-day+(day===0?-6:1);const mo=new Date(+dd);mo.setDate(diff);key=mo.toISOString().slice(0,10);}else{key=`${dd.getFullYear()}-${String(dd.getMonth()+1).padStart(2,'0')}`;}if(!groups[key]){groups[key]={o:opens[i],h:highs[i],l:lows[i],c:closes[i],v:vols[i]};}else{groups[key].h=Math.max(groups[key].h,highs[i]);groups[key].l=Math.min(groups[key].l,lows[i]);groups[key].c=closes[i];groups[key].v+=vols[i];}});const keys=Object.keys(groups).sort();return{dates:keys,opens:keys.map(k=>groups[k].o),highs:keys.map(k=>groups[k].h),lows:keys.map(k=>groups[k].l),closes:keys.map(k=>groups[k].c),vols:keys.map(k=>groups[k].v)};}
@@ -1891,7 +1891,7 @@ const ASSETS = [
   { ticker: 'VEU', name: 'Vanguard FTSE All-World ex-US', type: 'RV', region: '🌍 Mundo', category: 'allocation' },
   { ticker: 'IEF', name: 'iShares 7-10Y Treasury Bond', type: 'RF', region: '🇺🇸 USA', category: 'allocation' },
   { ticker: 'BNDX', name: 'Vanguard Total Intl Bond', type: 'RF', region: '🌍 Mundo', category: 'allocation' },
-  { ticker: 'SPY', name: 'S&amp;P 500 ETF', type: 'INDEX', region: '📊 S&amp;P 500', category: 'indicator' },
+  { ticker: 'SPY', name: 'S&P 500 ETF', type: 'INDEX', region: '📊 S&P 500', category: 'indicator' },
   { ticker: 'GLD', name: 'SPDR Gold Trust', type: 'GOLD', region: '🥇 Oro', category: 'indicator' },
   { ticker: 'USO', name: 'United States Oil Fund', type: 'OIL', region: '🛢️ Petróleo', category: 'indicator' },
   { ticker: 'HYG', name: 'iShares High Yield Corp Bond', type: 'HY', region: '💳 Corp', category: 'indicator' },
@@ -1899,7 +1899,7 @@ const ASSETS = [
 ];
 
 async function fetchData(ticker){
-  const yUrl=`https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&amp;range=10y&amp;events=history`;
+  const yUrl=`https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=10y&events=history`;
   const proxies=[
     u=>`https://corsproxy.io/?${encodeURIComponent(u)}`,
     u=>`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
@@ -1913,7 +1913,7 @@ async function fetchData(ticker){
       const res=j.chart.result[0];
       const q=res.indicators.quote[0];
       const adj=res.indicators.adjclose?.[0]?.adjclose||q.close;
-      const ratio=adj.map((a,i)=>(q.close[i]&amp;&amp;a)?a/q.close[i]:1);
+      const ratio=adj.map((a,i)=>(q.close[i]&&a)?a/q.close[i]:1);
       return{
         timestamps:res.timestamp,
         opens:q.open.map((v,i)=>v*ratio[i]),
@@ -1945,17 +1945,17 @@ function analyzeAsset(raw){
   const wi=W.closes.length-1;
   
   const mc={
-    macd: m_macd.m[mi]>0 &amp;&amp; m_macd.m[mi]>m_macd.sl[mi],
-    s89: (m_s89.k[mi]>80&amp;&amp;m_s89.k[mi]>m_s89.d[mi])||m_s89.k[mi]>92,
+    macd: m_macd.m[mi]>0 && m_macd.m[mi]>m_macd.sl[mi],
+    s89: (m_s89.k[mi]>80&&m_s89.k[mi]>m_s89.d[mi])||m_s89.k[mi]>92,
     rsi: m_rsi[mi]>65,
-    precio: m_sma10[mi]&amp;&amp;M.closes[mi]>m_sma10[mi]
+    precio: m_sma10[mi]&&M.closes[mi]>m_sma10[mi]
   };
   
   const sc={
-    macd: w_macd.m[wi]>0&amp;&amp;w_macd.m[wi]>w_macd.sl[wi],
-    s89: (w_s89.k[wi]>85&amp;&amp;w_s89.k[wi]>w_s89.d[wi])||w_s89.k[wi]>92,
+    macd: w_macd.m[wi]>0&&w_macd.m[wi]>w_macd.sl[wi],
+    s89: (w_s89.k[wi]>85&&w_s89.k[wi]>w_s89.d[wi])||w_s89.k[wi]>92,
     rsi: w_rsi[wi]>67,
-    precio: w_sma20[wi]&amp;&amp;W.closes[wi]>w_sma20[wi]
+    precio: w_sma20[wi]&&W.closes[wi]>w_sma20[wi]
   };
   
   const score = Object.values(mc).filter(x=>x).length + Object.values(sc).filter(x=>x).length;
@@ -2028,17 +2028,17 @@ async function runAnalysis(){
 }
 
 function renderDashboard(allocation, top2, rec, gold, oil, hy, fx){
-  const recessionAlert = hy &amp;&amp; hy.score <= 3 ? 'red' : hy &amp;&amp; hy.score <= 5 ? 'yellow' : 'green';
-  const recessionLabel = hy &amp;&amp; hy.score <= 3 ? '⚠️ ALTO' : hy &amp;&amp; hy.score <= 5 ? '⚡ MODERADO' : '✓ BAJO';
+  const recessionAlert = hy && hy.score <= 3 ? 'red' : hy && hy.score <= 5 ? 'yellow' : 'green';
+  const recessionLabel = hy && hy.score <= 3 ? '⚠️ ALTO' : hy && hy.score <= 5 ? '⚡ MODERADO' : '✓ BAJO';
   
-  const hedgeDecision = fx &amp;&amp; fx.score >= 6 ? 'red' : fx &amp;&amp; fx.score >= 4 ? 'yellow' : 'green';
-  const hedgeLabel = fx &amp;&amp; fx.score >= 6 ? 'SÍ CUBRIR' : fx &amp;&amp; fx.score >= 4 ? 'VIGILAR' : 'NO CUBRIR';
+  const hedgeDecision = fx && fx.score >= 6 ? 'red' : fx && fx.score >= 4 ? 'yellow' : 'green';
+  const hedgeLabel = fx && fx.score >= 6 ? 'SÍ CUBRIR' : fx && fx.score >= 4 ? 'VIGILAR' : 'NO CUBRIR';
   
   // Generar warnings inteligentes
   const warnings = [];
   
   // Warning: Oro muy fuerte
-  if(gold &amp;&amp; gold.score >= 7) {
+  if(gold && gold.score >= 7) {
     warnings.push({
       type: 'caution',
       icon: '🥇',
@@ -2047,7 +2047,7 @@ function renderDashboard(allocation, top2, rec, gold, oil, hy, fx){
   }
   
   // Warning: Divergencia RV fuerte pero HY débil
-  if(rec.type === 'RV' &amp;&amp; hy &amp;&amp; hy.score <= 4) {
+  if(rec.type === 'RV' && hy && hy.score <= 4) {
     warnings.push({
       type: 'alert',
       icon: '⚠️',
@@ -2056,7 +2056,7 @@ function renderDashboard(allocation, top2, rec, gold, oil, hy, fx){
   }
   
   // Warning: Petróleo muy fuerte
-  if(oil &amp;&amp; oil.score >= 7) {
+  if(oil && oil.score >= 7) {
     warnings.push({
       type: 'caution',
       icon: '🛢️',
@@ -2065,7 +2065,7 @@ function renderDashboard(allocation, top2, rec, gold, oil, hy, fx){
   }
   
   // Warning: Todo claro - entorno óptimo
-  if(rec.type === 'RV' &amp;&amp; hy &amp;&amp; hy.score >= 6 &amp;&amp; gold &amp;&amp; gold.score <= 4) {
+  if(rec.type === 'RV' && hy && hy.score >= 6 && gold && gold.score <= 4) {
     warnings.push({
       type: 'ok',
       icon: '✓',
@@ -2074,7 +2074,7 @@ function renderDashboard(allocation, top2, rec, gold, oil, hy, fx){
   }
   
   // Warning: Modo defensivo total
-  if(rec.type === 'RF' &amp;&amp; gold &amp;&amp; gold.score >= 6) {
+  if(rec.type === 'RF' && gold && gold.score >= 6) {
     warnings.push({
       type: 'alert',
       icon: '🛡️',
@@ -2083,7 +2083,7 @@ function renderDashboard(allocation, top2, rec, gold, oil, hy, fx){
   }
   
   // Warning: EUR/USD muy fuerte - riesgo FX
-  if(fx &amp;&amp; fx.score >= 7) {
+  if(fx && fx.score >= 7) {
     warnings.push({
       type: 'alert',
       icon: '💱',
@@ -2092,7 +2092,7 @@ function renderDashboard(allocation, top2, rec, gold, oil, hy, fx){
   }
   
   // Warning: Volatilidad en petróleo
-  if(oil &amp;&amp; oil.score <= 3) {
+  if(oil && oil.score <= 3) {
     warnings.push({
       type: 'caution',
       icon: '📉',
@@ -2101,7 +2101,7 @@ function renderDashboard(allocation, top2, rec, gold, oil, hy, fx){
   }
   
   // Warning: HY extremadamente débil - recesión inminente
-  if(hy &amp;&amp; hy.score <= 2) {
+  if(hy && hy.score <= 2) {
     warnings.push({
       type: 'alert',
       icon: '🚨',
@@ -2110,78 +2110,78 @@ function renderDashboard(allocation, top2, rec, gold, oil, hy, fx){
   }
   
   const html = `
-    <div class=&quot;tab-content active&quot; id=&quot;tab-dashboard&quot;>
+    <div class="tab-content active" id="tab-dashboard">
       ${warnings.length > 0 ? `
-        <div class=&quot;warnings&quot;>
+        <div class="warnings">
           ${warnings.map(w => `
-            <div class=&quot;warning-item ${w.type}&quot;>
-              <div class=&quot;warning-icon&quot;>${w.icon}</div>
-              <div class=&quot;warning-text&quot;>${w.text}</div>
+            <div class="warning-item ${w.type}">
+              <div class="warning-icon">${w.icon}</div>
+              <div class="warning-text">${w.text}</div>
             </div>
           `).join('')}
         </div>
       ` : ''}
       
-      <div class=&quot;executive-dashboard&quot;>
-        <div class=&quot;decision-card ${rec.class}&quot;>
-          <div class=&quot;decision-icon&quot;>📈</div>
-          <div class=&quot;decision-label&quot;>Decisión de Inversión</div>
-          <div class=&quot;decision-value ${rec.class}&quot;>${rec.label}</div>
-          <div class=&quot;decision-desc&quot;>${rec.desc}</div>
+      <div class="executive-dashboard">
+        <div class="decision-card ${rec.class}">
+          <div class="decision-icon">📈</div>
+          <div class="decision-label">Decisión de Inversión</div>
+          <div class="decision-value ${rec.class}">${rec.label}</div>
+          <div class="decision-desc">${rec.desc}</div>
         </div>
         
-        <div class=&quot;decision-card ${recessionAlert}&quot;>
-          <div class=&quot;decision-icon&quot;>💳</div>
-          <div class=&quot;decision-label&quot;>Riesgo de Recesión</div>
-          <div class=&quot;decision-value ${recessionAlert}&quot;>${recessionLabel}</div>
-          <div class=&quot;decision-desc&quot;>${hy ? 'HYG Score: ' + hy.score + '/8' : 'Analizando...'}</div>
+        <div class="decision-card ${recessionAlert}">
+          <div class="decision-icon">💳</div>
+          <div class="decision-label">Riesgo de Recesión</div>
+          <div class="decision-value ${recessionAlert}">${recessionLabel}</div>
+          <div class="decision-desc">${hy ? 'HYG Score: ' + hy.score + '/8' : 'Analizando...'}</div>
         </div>
         
-        <div class=&quot;decision-card ${hedgeDecision}&quot;>
-          <div class=&quot;decision-icon&quot;>💱</div>
-          <div class=&quot;decision-label&quot;>Cobertura Cambiaria</div>
-          <div class=&quot;decision-value ${hedgeDecision}&quot;>${hedgeLabel}</div>
-          <div class=&quot;decision-desc&quot;>${fx ? 'EUR/USD Score: ' + fx.score + '/8' : 'Analizando...'}</div>
+        <div class="decision-card ${hedgeDecision}">
+          <div class="decision-icon">💱</div>
+          <div class="decision-label">Cobertura Cambiaria</div>
+          <div class="decision-value ${hedgeDecision}">${hedgeLabel}</div>
+          <div class="decision-desc">${fx ? 'EUR/USD Score: ' + fx.score + '/8' : 'Analizando...'}</div>
         </div>
       </div>
       
-      <div class=&quot;assets-compact&quot;>
+      <div class="assets-compact">
         ${allocation.map(a => `
-          <div class=&quot;asset-compact ${top2.includes(a) ? 'selected' : ''}&quot;>
-            <div class=&quot;asset-header-compact&quot;>
+          <div class="asset-compact ${top2.includes(a) ? 'selected' : ''}">
+            <div class="asset-header-compact">
               <div>
-                <div class=&quot;asset-ticker-compact&quot;>${a.ticker}</div>
-                <div style=&quot;font-size:9px;color:var(--text2);&quot;>${a.region}</div>
+                <div class="asset-ticker-compact">${a.ticker}</div>
+                <div style="font-size:9px;color:var(--text2);">${a.region}</div>
               </div>
-              <div class=&quot;asset-score-compact&quot; style=&quot;color:${a.score>=6?'var(--green)':a.score>=4?'var(--yellow)':'var(--text2)'}&quot;>${a.score}/8</div>
+              <div class="asset-score-compact" style="color:${a.score>=6?'var(--green)':a.score>=4?'var(--yellow)':'var(--text2)'}">${a.score}/8</div>
             </div>
-            <div class=&quot;asset-conditions-compact&quot;>
-              <span class=&quot;cond-mini ${a.mensual?.macd?'ok':'fail'}&quot;>M·MACD</span>
-              <span class=&quot;cond-mini ${a.mensual?.s89?'ok':'fail'}&quot;>M·S89</span>
-              <span class=&quot;cond-mini ${a.mensual?.rsi?'ok':'fail'}&quot;>M·RSI</span>
-              <span class=&quot;cond-mini ${a.mensual?.precio?'ok':'fail'}&quot;>M·P>SMA</span>
-              <span class=&quot;cond-mini ${a.semanal?.macd?'ok':'fail'}&quot;>W·MACD</span>
-              <span class=&quot;cond-mini ${a.semanal?.s89?'ok':'fail'}&quot;>W·S89</span>
-              <span class=&quot;cond-mini ${a.semanal?.rsi?'ok':'fail'}&quot;>W·RSI</span>
-              <span class=&quot;cond-mini ${a.semanal?.precio?'ok':'fail'}&quot;>W·P>SMA</span>
+            <div class="asset-conditions-compact">
+              <span class="cond-mini ${a.mensual?.macd?'ok':'fail'}">M·MACD</span>
+              <span class="cond-mini ${a.mensual?.s89?'ok':'fail'}">M·S89</span>
+              <span class="cond-mini ${a.mensual?.rsi?'ok':'fail'}">M·RSI</span>
+              <span class="cond-mini ${a.mensual?.precio?'ok':'fail'}">M·P>SMA</span>
+              <span class="cond-mini ${a.semanal?.macd?'ok':'fail'}">W·MACD</span>
+              <span class="cond-mini ${a.semanal?.s89?'ok':'fail'}">W·S89</span>
+              <span class="cond-mini ${a.semanal?.rsi?'ok':'fail'}">W·RSI</span>
+              <span class="cond-mini ${a.semanal?.precio?'ok':'fail'}">W·P>SMA</span>
             </div>
           </div>
         `).join('')}
         
         ${[allData.find(a => a.ticker === 'SPY'), gold, oil, hy, fx].filter(Boolean).map(a => `
-          <div class=&quot;asset-compact&quot;>
-            <div class=&quot;asset-header-compact&quot;>
+          <div class="asset-compact">
+            <div class="asset-header-compact">
               <div>
-                <div class=&quot;asset-ticker-compact&quot;>${a.ticker.replace('=X','')}</div>
-                <div style=&quot;font-size:9px;color:var(--text2);&quot;>${a.region}</div>
+                <div class="asset-ticker-compact">${a.ticker.replace('=X','')}</div>
+                <div style="font-size:9px;color:var(--text2);">${a.region}</div>
               </div>
-              <div class=&quot;asset-score-compact&quot; style=&quot;color:${a.score>=6?'var(--green)':a.score>=4?'var(--yellow)':'var(--red)'}&quot;>${a.score}/8</div>
+              <div class="asset-score-compact" style="color:${a.score>=6?'var(--green)':a.score>=4?'var(--yellow)':'var(--red)'}">${a.score}/8</div>
             </div>
-            <div style=&quot;font-size:10px;color:var(--text2);margin-top:4px;&quot;>
+            <div style="font-size:10px;color:var(--text2);margin-top:4px;">
               ${a.type === 'INDEX' ? (a.score>=7 ? '🚀 Mercado fuerte' : a.score>=4 ? 'Neutral' : '📉 Débil') :
-                a.type === 'GOLD' &amp;&amp; a.score>=7 ? '⚠️ Refugio fuerte' : 
-                a.type === 'HY' &amp;&amp; a.score<=3 ? '⚠️ Estrés de crédito' :
-                a.type === 'FX' &amp;&amp; a.score>=6 ? 'Euro fuerte - Cubrir' :
+                a.type === 'GOLD' && a.score>=7 ? '⚠️ Refugio fuerte' : 
+                a.type === 'HY' && a.score<=3 ? '⚠️ Estrés de crédito' :
+                a.type === 'FX' && a.score>=6 ? 'Euro fuerte - Cubrir' :
                 'Normal'}
             </div>
           </div>
@@ -2189,11 +2189,11 @@ function renderDashboard(allocation, top2, rec, gold, oil, hy, fx){
       </div>
     </div>
     
-    <div class=&quot;tab-content&quot; id=&quot;tab-params&quot;>
+    <div class="tab-content" id="tab-params">
       ${renderParameters()}
     </div>
     
-    <button class=&quot;btn&quot; onclick=&quot;runAnalysis()&quot;>⟲ ACTUALIZAR</button>
+    <button class="btn" onclick="runAnalysis()">⟲ ACTUALIZAR</button>
   `;
   
   document.getElementById('content').innerHTML = html;
@@ -2204,23 +2204,23 @@ function renderDashboard(allocation, top2, rec, gold, oil, hy, fx){
 }
 
 function renderParameters(){
-  if(!allData) return '<div class=&quot;loading&quot;>Cargando datos...</div>';
+  if(!allData) return '<div class="loading">Cargando datos...</div>';
   
   return `
-    <div class=&quot;charts-grid&quot;>
-      <div class=&quot;chart-card&quot;>
-        <div class=&quot;chart-title&quot;>Evolución Normalizada (60d)</div>
-        <canvas id=&quot;evolutionChart&quot;></canvas>
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-title">Evolución Normalizada (60d)</div>
+        <canvas id="evolutionChart"></canvas>
       </div>
       
-      <div class=&quot;chart-card&quot;>
-        <div class=&quot;chart-title&quot;>Momentum (% cambio 20d)</div>
-        <canvas id=&quot;momentumChart&quot;></canvas>
+      <div class="chart-card">
+        <div class="chart-title">Momentum (% cambio 20d)</div>
+        <canvas id="momentumChart"></canvas>
       </div>
     </div>
     
-    <div class=&quot;percentiles-table&quot;>
-      <div class=&quot;chart-title&quot;>Análisis 52 Semanas</div>
+    <div class="percentiles-table">
+      <div class="chart-title">Análisis 52 Semanas</div>
       <table>
         <thead>
           <tr>
@@ -2241,8 +2241,8 @@ function renderParameters(){
               <td>$${a.max52?.toFixed(2) || 'N/A'}</td>
               <td>${a.percentile?.toFixed(0) || 'N/A'}%</td>
               <td>
-                <div class=&quot;percentile-bar&quot;>
-                  <div class=&quot;percentile-fill&quot; style=&quot;width:${a.percentile || 0}%&quot;></div>
+                <div class="percentile-bar">
+                  <div class="percentile-fill" style="width:${a.percentile || 0}%"></div>
                 </div>
               </td>
             </tr>
@@ -2251,9 +2251,9 @@ function renderParameters(){
       </table>
     </div>
     
-    <div class=&quot;chart-card&quot; style=&quot;margin-bottom:20px;&quot;>
-      <div class=&quot;chart-title&quot;>Matriz de Correlaciones (60 días)</div>
-      <div id=&quot;correlationMatrix&quot;></div>
+    <div class="chart-card" style="margin-bottom:20px;">
+      <div class="chart-title">Matriz de Correlaciones (60 días)</div>
+      <div id="correlationMatrix"></div>
     </div>
   `;
 }
@@ -2261,7 +2261,7 @@ function renderParameters(){
 function renderCharts(){
   if(!allData) return;
   
-  const validAssets = allData.filter(a => a.closes &amp;&amp; a.closes.length > 0);
+  const validAssets = allData.filter(a => a.closes && a.closes.length > 0);
   
   // Evolución
   const labels = Array.from({length: 60}, (_, i) => `-${60-i}d`);
@@ -2317,15 +2317,15 @@ function renderCharts(){
   const tickers = validAssets.map(a => a.ticker.replace('=X',''));
   const corr = calculateCorrelationMatrix(validAssets);
   
-  let corrHTML = '<div style=&quot;display:grid;grid-template-columns:60px repeat(' + tickers.length + ',1fr);gap:2px;font-size:9px;&quot;>';
-  corrHTML += '<div></div>' + tickers.map(t => `<div style=&quot;text-align:center;font-weight:600;&quot;>${t}</div>`).join('');
+  let corrHTML = '<div style="display:grid;grid-template-columns:60px repeat(' + tickers.length + ',1fr);gap:2px;font-size:9px;">';
+  corrHTML += '<div></div>' + tickers.map(t => `<div style="text-align:center;font-weight:600;">${t}</div>`).join('');
   
   tickers.forEach((t1, i) => {
-    corrHTML += `<div style=&quot;font-weight:600;padding:4px;&quot;>${t1}</div>`;
+    corrHTML += `<div style="font-weight:600;padding:4px;">${t1}</div>`;
     tickers.forEach((t2, j) => {
       const val = corr[i][j];
       const color = val > 0.7 ? '#00ff87' : val > 0.3 ? '#3b82f6' : val < -0.3 ? '#ff3b5c' : '#5a6478';
-      corrHTML += `<div style=&quot;background:${color}20;color:${color};text-align:center;padding:4px;border-radius:2px;font-size:9px;&quot;>${val.toFixed(2)}</div>`;
+      corrHTML += `<div style="background:${color}20;color:${color};text-align:center;padding:4px;border-radius:2px;font-size:9px;">${val.toFixed(2)}</div>`;
     });
   });
   corrHTML += '</div>';
@@ -2379,7 +2379,7 @@ function switchTabInternal(tab){
   
   document.getElementById('tab-' + tab).classList.add('active');
   
-  if(tab === 'params' &amp;&amp; allData){
+  if(tab === 'params' && allData){
     setTimeout(renderCharts, 100);
   }
 }
@@ -2634,8 +2634,8 @@ async function analyze() {
   btn.disabled = true;
   
   document.getElementById('content').innerHTML = `
-    <div class=&quot;loading&quot;>
-      <div class=&quot;spinner&quot;></div>
+    <div class="loading">
+      <div class="spinner"></div>
       <div>Analizando ${ticker}...</div>
     </div>
   `;
@@ -2650,7 +2650,7 @@ async function analyze() {
     renderAnalysis(ticker, data);
   } catch(err) {
     document.getElementById('content').innerHTML = `
-      <div class=&quot;error&quot;>
+      <div class="error">
         <strong>Error:</strong> ${err.message}
       </div>
     `;
@@ -2724,103 +2724,103 @@ function renderAnalysis(ticker, allData) {
   
   const revenues = incomeHistory.map(i => {
     const val = extractValue(i.totalRevenue);
-    return val !== 'N/A' &amp;&amp; !isNaN(val) ? val / 1e9 : 0;
+    return val !== 'N/A' && !isNaN(val) ? val / 1e9 : 0;
   }).reverse();
   
   const netIncome = incomeHistory.map(i => {
     const val = extractValue(i.netIncome);
-    return val !== 'N/A' &amp;&amp; !isNaN(val) ? val / 1e9 : 0;
+    return val !== 'N/A' && !isNaN(val) ? val / 1e9 : 0;
   }).reverse();
   
   const assets = balanceHistory.map(b => {
     const val = extractValue(b.totalAssets);
-    return val !== 'N/A' &amp;&amp; !isNaN(val) ? val / 1e9 : 0;
+    return val !== 'N/A' && !isNaN(val) ? val / 1e9 : 0;
   }).reverse();
   
   const liabilities = balanceHistory.map(b => {
     const val = extractValue(b.totalLiab);
-    return val !== 'N/A' &amp;&amp; !isNaN(val) ? val / 1e9 : 0;
+    return val !== 'N/A' && !isNaN(val) ? val / 1e9 : 0;
   }).reverse();
   
   const operatingCashflow = cashflowHistory.map(c => {
     const val = extractValue(c.totalCashFromOperatingActivities);
-    return val !== 'N/A' &amp;&amp; !isNaN(val) ? val / 1e9 : 0;
+    return val !== 'N/A' && !isNaN(val) ? val / 1e9 : 0;
   }).reverse();
   
   const capex = cashflowHistory.map(c => {
     const val = extractValue(c.capitalExpenditures || 0);
-    return val !== 'N/A' &amp;&amp; !isNaN(val) ? Math.abs(val) / 1e9 : 0;
+    return val !== 'N/A' && !isNaN(val) ? Math.abs(val) / 1e9 : 0;
   }).reverse();
   
   const fcf = operatingCashflow.map((ocf, i) => ocf - (capex[i] || 0));
   
   const html = `
-    <div class=&quot;metrics-grid&quot;>
-      <div class=&quot;metric-card&quot;>
-        <div class=&quot;metric-label&quot;>💰 Precio</div>
-        <div class=&quot;metric-value neutral&quot;>$${fmt(metrics.price)}</div>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">💰 Precio</div>
+        <div class="metric-value neutral">$${fmt(metrics.price)}</div>
       </div>
-      <div class=&quot;metric-card&quot;>
-        <div class=&quot;metric-label&quot;>📊 Market Cap</div>
-        <div class=&quot;metric-value neutral&quot;>${fmtBillions(metrics.marketCap)}</div>
+      <div class="metric-card">
+        <div class="metric-label">📊 Market Cap</div>
+        <div class="metric-value neutral">${fmtBillions(metrics.marketCap)}</div>
       </div>
-      <div class=&quot;metric-card&quot;>
-        <div class=&quot;metric-label&quot;>📈 PER</div>
-        <div class=&quot;metric-value ${getClass(metrics.per, 25, true)}&quot;>${fmt(metrics.per)}x</div>
+      <div class="metric-card">
+        <div class="metric-label">📈 PER</div>
+        <div class="metric-value ${getClass(metrics.per, 25, true)}">${fmt(metrics.per)}x</div>
       </div>
-      <div class=&quot;metric-card&quot;>
-        <div class=&quot;metric-label&quot;>📉 PEG</div>
-        <div class=&quot;metric-value ${getClass(metrics.peg, 2, true)}&quot;>${fmt(metrics.peg)}</div>
+      <div class="metric-card">
+        <div class="metric-label">📉 PEG</div>
+        <div class="metric-value ${getClass(metrics.peg, 2, true)}">${fmt(metrics.peg)}</div>
       </div>
-      <div class=&quot;metric-card&quot;>
-        <div class=&quot;metric-label&quot;>🏆 ROE</div>
-        <div class=&quot;metric-value ${getClass(metrics.roe, 0.15)}&quot;>${fmtPct(metrics.roe)}</div>
+      <div class="metric-card">
+        <div class="metric-label">🏆 ROE</div>
+        <div class="metric-value ${getClass(metrics.roe, 0.15)}">${fmtPct(metrics.roe)}</div>
       </div>
-      <div class=&quot;metric-card&quot;>
-        <div class=&quot;metric-label&quot;>💼 ROA</div>
-        <div class=&quot;metric-value ${getClass(metrics.roa, 0.05)}&quot;>${fmtPct(metrics.roa)}</div>
+      <div class="metric-card">
+        <div class="metric-label">💼 ROA</div>
+        <div class="metric-value ${getClass(metrics.roa, 0.05)}">${fmtPct(metrics.roa)}</div>
       </div>
-      <div class=&quot;metric-card&quot;>
-        <div class=&quot;metric-label&quot;>📊 Deuda/Equity</div>
-        <div class=&quot;metric-value ${getClass(metrics.debtToEquity, 100, true)}&quot;>${fmt(metrics.debtToEquity)}%</div>
+      <div class="metric-card">
+        <div class="metric-label">📊 Deuda/Equity</div>
+        <div class="metric-value ${getClass(metrics.debtToEquity, 100, true)}">${fmt(metrics.debtToEquity)}%</div>
       </div>
-      <div class=&quot;metric-card&quot;>
-        <div class=&quot;metric-label&quot;>💧 Current Ratio</div>
-        <div class=&quot;metric-value ${getClass(metrics.currentRatio, 1)}&quot;>${fmt(metrics.currentRatio)}</div>
+      <div class="metric-card">
+        <div class="metric-label">💧 Current Ratio</div>
+        <div class="metric-value ${getClass(metrics.currentRatio, 1)}">${fmt(metrics.currentRatio)}</div>
       </div>
-      <div class=&quot;metric-card&quot;>
-        <div class=&quot;metric-label&quot;>💹 Profit Margin</div>
-        <div class=&quot;metric-value ${getClass(metrics.profitMargin, 0.10)}&quot;>${fmtPct(metrics.profitMargin)}</div>
+      <div class="metric-card">
+        <div class="metric-label">💹 Profit Margin</div>
+        <div class="metric-value ${getClass(metrics.profitMargin, 0.10)}">${fmtPct(metrics.profitMargin)}</div>
       </div>
-      <div class=&quot;metric-card&quot;>
-        <div class=&quot;metric-label&quot;>📈 Revenue Growth</div>
-        <div class=&quot;metric-value ${getClass(metrics.revenueGrowth, 0)}&quot;>${fmtPct(metrics.revenueGrowth)}</div>
+      <div class="metric-card">
+        <div class="metric-label">📈 Revenue Growth</div>
+        <div class="metric-value ${getClass(metrics.revenueGrowth, 0)}">${fmtPct(metrics.revenueGrowth)}</div>
       </div>
     </div>
     
     ${hasHistoricalData ? `
-    <div class=&quot;charts-grid&quot;>
-      <div class=&quot;chart-card&quot;>
-        <div class=&quot;chart-title&quot;>Ingresos vs Beneficio Neto ($ Billions)</div>
-        <canvas id=&quot;revenueChart&quot;></canvas>
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-title">Ingresos vs Beneficio Neto ($ Billions)</div>
+        <canvas id="revenueChart"></canvas>
       </div>
       
-      <div class=&quot;chart-card&quot;>
-        <div class=&quot;chart-title&quot;>Activos vs Pasivos ($ Billions)</div>
-        <canvas id=&quot;balanceChart&quot;></canvas>
+      <div class="chart-card">
+        <div class="chart-title">Activos vs Pasivos ($ Billions)</div>
+        <canvas id="balanceChart"></canvas>
       </div>
       
-      <div class=&quot;chart-card&quot;>
-        <div class=&quot;chart-title&quot;>Free Cash Flow ($ Billions)</div>
-        <canvas id=&quot;fcfChart&quot;></canvas>
+      <div class="chart-card">
+        <div class="chart-title">Free Cash Flow ($ Billions)</div>
+        <canvas id="fcfChart"></canvas>
       </div>
       
-      <div class=&quot;chart-card&quot;>
-        <div class=&quot;chart-title&quot;>Márgenes y Rentabilidad</div>
-        <canvas id=&quot;marginsChart&quot;></canvas>
+      <div class="chart-card">
+        <div class="chart-title">Márgenes y Rentabilidad</div>
+        <canvas id="marginsChart"></canvas>
       </div>
     </div>
-    ` : '<div style=&quot;text-align:center;color:var(--text2);padding:40px;&quot;>No hay datos históricos disponibles para este ticker</div>'}
+    ` : '<div style="text-align:center;color:var(--text2);padding:40px;">No hay datos históricos disponibles para este ticker</div>'}
   `;
   
   document.getElementById('content').innerHTML = html;
