@@ -798,16 +798,24 @@ function renderCharts(){
 
 function calculateCorrelationMatrix(assets){
   const n = assets.length;
-  const matrix = Array(n).fill(0).map(() => Array(n).fill(0));
+  const matrix = Array(n).fill(0).map(() => Array(n).fill(NaN));
+  
+  // Usar la longitud mínima para alinear todos los arrays
+  const minLen = Math.min(...assets.map(a => a.closes ? a.closes.length : 0));
+  if(minLen < 2) return matrix;
+  
+  // Calcular returns alineados para todos los assets
+  const allReturns = assets.map(a => {
+    const cl = a.closes.slice(-minLen);
+    return cl.map((c,k) => k > 0 ? (c / cl[k-1]) - 1 : null).slice(1);
+  });
   
   for(let i = 0; i < n; i++){
     for(let j = 0; j < n; j++){
       if(i === j) {
         matrix[i][j] = 1;
-      } else {
-        const returns1 = assets[i].closes.map((c,k) => k > 0 ? (c / assets[i].closes[k-1]) - 1 : 0);
-        const returns2 = assets[j].closes.map((c,k) => k > 0 ? (c / assets[j].closes[k-1]) - 1 : 0);
-        matrix[i][j] = correlation(returns1, returns2);
+      } else if(allReturns[i] && allReturns[j]) {
+        matrix[i][j] = correlation(allReturns[i], allReturns[j]);
       }
     }
   }
