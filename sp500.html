@@ -311,13 +311,11 @@ function resample(ts,opens,highs,lows,closes,vols,freq){const groups={};ts.forEa
 async function fetchData(ticker){
   const yUrl=`https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=10y&events=history`;
   const proxies=[
+    u=>`https://ethan-proxy.miguel-gomez-anton.workers.dev/?url=${encodeURIComponent(u)}`,
     u=>`https://corsproxy.io/?${encodeURIComponent(u)}`,
     u=>`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
     u=>`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
-    u=>`https://thingproxy.freeboard.io/fetch/${u}`,
     u=>`https://cors-proxy.fringe.zone/${u}`,
-    u=>`https://proxy.cors.sh/${u}`,
-    u=>`https://api.cors.lol/?url=${encodeURIComponent(u)}`,
   ];
   let lastErr;
   for(const fn of proxies){
