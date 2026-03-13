@@ -743,8 +743,11 @@ async function fetchData(ticker) {
   const yUrl=`https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=10y&events=history`;
   const proxies=[
     u=>`https://corsproxy.io/?${encodeURIComponent(u)}`,
+    u=>`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
     u=>`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
     u=>`https://thingproxy.freeboard.io/fetch/${u}`,
+    u=>`https://cors-proxy.fringe.zone/${u}`,
+    u=>`https://proxy.cors.sh/${u}`,
   ];
   let lastErr;
   for(const fn of proxies){
@@ -1792,8 +1795,11 @@ async function fetchYahoo(ticker) {
   // Lista de proxies CORS a intentar en orden
   const proxies = [
     url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+    url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
     url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
     url => `https://thingproxy.freeboard.io/fetch/${url}`,
+    url => `https://cors-proxy.fringe.zone/${url}`,
+    url => `https://proxy.cors.sh/${url}`,
   ];
 
   let lastError = null;
@@ -2711,8 +2717,11 @@ async function fetchData(ticker) {
   const yUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=10y&events=history`;
   const proxies = [
     u => `https://corsproxy.io/?${encodeURIComponent(u)}`,
+    u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
     u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
     u => `https://thingproxy.freeboard.io/fetch/${u}`,
+    u => `https://cors-proxy.fringe.zone/${u}`,
+    u => `https://proxy.cors.sh/${u}`,
   ];
   let lastErr;
   for (const fn of proxies) {
