@@ -148,6 +148,9 @@ iframe.active { display: block; }
     <button class="nav-btn" onclick="show('back')" id="btn-back">
       ⟲&nbsp; Backtesting
     </button>
+    <button class="nav-btn" onclick="show('gestion')" id="btn-gestion">
+      💼&nbsp; Gestión<span class="badge" id="gestion-badge" style="display:none;">0</span>
+    </button>
   </nav>
   <div class="topbar-right" id="clock">—</div>
 </div>
@@ -1975,31 +1978,44 @@ function renderResults(data, result, ticker) {
         </div>
         <div class=&quot;signals-grid&quot;>
           <div class=&quot;signal-card&quot;>
-            <div class=&quot;signal-icon&quot;>📊</div>
-            <div class=&quot;signal-name&quot;>RSI 5 < 40 gira</div>
-            <div class=&quot;signal-status ${señal_rsi5_w ? 'active' : 'inactive'}&quot;>${señal_rsi5_w ? 'ACTIVA' : 'NO'}</div>
-            <div class=&quot;signal-desc&quot;>RSI5W: ${fmt(sc.vals.rsi5)}</div>
-          </div>
-          <div class=&quot;signal-card&quot;>
             <div class=&quot;signal-icon&quot;>📉</div>
-            <div class=&quot;signal-name&quot;>Rebote SMA 5W</div>
+            <div class=&quot;signal-name&quot;>Rebote SMA5 Semanal</div>
             <div class=&quot;signal-status ${señal_sma5_w ? 'active' : 'inactive'}&quot;>${señal_sma5_w ? 'ACTIVA' : 'NO'}</div>
             <div class=&quot;signal-desc&quot;>SMA5W: ${fmtPrice(sc.vals.sma5)}</div>
           </div>
           <div class=&quot;signal-card&quot;>
-            <div class=&quot;signal-icon&quot;>🔄</div>
-            <div class=&quot;signal-name&quot;>Stoch89 giro alza</div>
+            <div class=&quot;signal-icon&quot;>🆕</div>
+            <div class=&quot;signal-name&quot;>RSI5+Stoch5 Semanal</div>
+            <div class=&quot;signal-status ${señal_rsi5_w ? 'active' : 'inactive'}&quot;>${señal_rsi5_w ? 'ACTIVA' : 'NO'}</div>
+            <div class=&quot;signal-desc&quot;>RSI5W: ${fmt(sc.vals.rsi5)}</div>
+          </div>
+          <div class=&quot;signal-card&quot;>
+            <div class=&quot;signal-icon&quot;>📊</div>
+            <div class=&quot;signal-name&quot;>MACD + RSI Diario</div>
+            <div class=&quot;signal-status ${señal_diaria ? 'active' : 'inactive'}&quot;>${señal_diaria ? 'ACTIVA' : 'NO'}</div>
+            <div class=&quot;signal-desc&quot;>MACD: ${fmt(dc.vals.macd)}</div>
+          </div>
+          <div class=&quot;signal-card&quot;>
+            <div class=&quot;signal-icon&quot;>📈</div>
+            <div class=&quot;signal-name&quot;>Rebote SMA5 Diario</div>
             <div class=&quot;signal-status ${señal_stoch89_w ? 'active' : 'inactive'}&quot;>${señal_stoch89_w ? 'ACTIVA' : 'NO'}</div>
             <div class=&quot;signal-desc&quot;>Stoch89W: ${fmt(sc.vals.stoch89)}</div>
           </div>
-        </div>
-
-        <div style=&quot;margin-top:16px; padding:16px; background:var(--surface2); border-left: 3px solid ${hasDiario ? 'var(--ok)' : hasSemanal ? 'var(--warn)' : 'var(--danger)'}; display:flex; justify-content:space-between; align-items:center&quot;>
-          <div style=&quot;font-size:10px; letter-spacing:2px; color:var(--text2); text-transform:uppercase&quot;>Señal MACD Diario</div>
-          <div style=&quot;font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:${hasDiario ? 'var(--ok)' : 'var(--danger)'}&quot;>
-            ${hasDiario ? '🚀 ENTRADA ACTIVA' : 'SIN CRUCE'}
+          <div class=&quot;signal-card&quot;>
+            <div class=&quot;signal-icon&quot;>🆕</div>
+            <div class=&quot;signal-name&quot;>RSI5 Pullback Diario</div>
+            <div class=&quot;signal-status inactive&quot;>NO</div>
+            <div class=&quot;signal-desc&quot;>RSI>60 → 40 → rebota</div>
+          </div>
+          <div class=&quot;signal-card&quot;>
+            <div class=&quot;signal-icon&quot;>🔥</div>
+            <div class=&quot;signal-name&quot;>Canal Bajista</div>
+            <div class=&quot;signal-status inactive&quot;>NO</div>
+            <div class=&quot;signal-desc&quot;>Ruptura + volumen</div>
           </div>
         </div>
+
+        
       </div>
 
     </div><!-- /timeframe-grid -->
@@ -2538,25 +2554,35 @@ footer {
 
   <!-- SELECTOR DE SISTEMA DE ENTRADA -->
   <div class=&quot;entry-selector&quot;>
-    <button class=&quot;entry-btn active&quot; id=&quot;btn-macd&quot; onclick=&quot;selectEntry('macd', this)&quot;>
+    <button class=&quot;entry-btn active&quot; id=&quot;btn-sma5w&quot; onclick=&quot;selectEntry('sma5w', this)&quot;>
       <div class=&quot;btn-num&quot;>SISTEMA 01</div>
-      <div class=&quot;btn-name&quot;>MACD + RSI Diario</div>
-      <div class=&quot;btn-desc&quot;>MACD cruza al alza + RSI14 &amp;gt; 57</div>
-    </button>
-    <button class=&quot;entry-btn&quot; id=&quot;btn-sma5w&quot; onclick=&quot;selectEntry('sma5w', this)&quot;>
-      <div class=&quot;btn-num&quot;>SISTEMA 02</div>
       <div class=&quot;btn-name&quot;>Rebote SMA5 Semanal</div>
       <div class=&quot;btn-desc&quot;>Precio toca SMA5 semanal y rebota al alza</div>
     </button>
-    <button class=&quot;entry-btn&quot; id=&quot;btn-sma5d&quot; onclick=&quot;selectEntry('sma5d', this)&quot;>
+    <button class=&quot;entry-btn&quot; id=&quot;btn-rsi5w&quot; onclick=&quot;selectEntry('rsi5w', this)&quot;>
+      <div class=&quot;btn-num&quot;>SISTEMA 02</div>
+      <div class=&quot;btn-name&quot;>🆕 RSI5+Stoch5 Semanal</div>
+      <div class=&quot;btn-desc&quot;>RSI &amp;lt; 50 y Stoch cayendo</div>
+    </button>
+    <button class=&quot;entry-btn&quot; id=&quot;btn-macd&quot; onclick=&quot;selectEntry('macd', this)&quot;>
       <div class=&quot;btn-num&quot;>SISTEMA 03</div>
+      <div class=&quot;btn-name&quot;>MACD + RSI Diario</div>
+      <div class=&quot;btn-desc&quot;>MACD cruza al alza + RSI14 &amp;gt; 57</div>
+    </button>
+    <button class=&quot;entry-btn&quot; id=&quot;btn-sma5d&quot; onclick=&quot;selectEntry('sma5d', this)&quot;>
+      <div class=&quot;btn-num&quot;>SISTEMA 04</div>
       <div class=&quot;btn-name&quot;>Rebote SMA5 Diario</div>
       <div class=&quot;btn-desc&quot;>Precio toca SMA5 diaria y rebota al alza</div>
     </button>
     <button class=&quot;entry-btn&quot; id=&quot;btn-rsi5d&quot; onclick=&quot;selectEntry('rsi5d', this)&quot;>
-      <div class=&quot;btn-num&quot;>SISTEMA 04</div>
-      <div class=&quot;btn-name&quot;>RSI5 Diario</div>
-      <div class=&quot;btn-desc&quot;>RSI5 baja y sube por encima de 60</div>
+      <div class=&quot;btn-num&quot;>SISTEMA 05</div>
+      <div class=&quot;btn-name&quot;>🆕 RSI5 Pullback</div>
+      <div class=&quot;btn-desc&quot;>RSI &amp;gt; 60 → 40 → rebota</div>
+    </button>
+    <button class=&quot;entry-btn&quot; id=&quot;btn-canal&quot; onclick=&quot;selectEntry('canal', this)&quot;>
+      <div class=&quot;btn-num&quot;>SISTEMA 06</div>
+      <div class=&quot;btn-name&quot;>🔥 Canal Bajista</div>
+      <div class=&quot;btn-desc&quot;>Ruptura canal + volumen</div>
     </button>
   </div>
 
@@ -2805,6 +2831,7 @@ function runEngine(raw, entryMode, exitMode) {
   const d_rsi5  = rsi(closes, 5);
   const d_sma5  = sma(closes, 5);
   const d_sma10 = sma(closes, 10);
+  const d_sma20 = sma(closes, 20);
 
   // Indicadores SEMANAL adicionales
   const w_sma5  = sma(W.closes, 5);
@@ -2865,7 +2892,10 @@ function runEngine(raw, entryMode, exitMode) {
       const mOk = mensualOk(mi);
       const wOk = semanalOk(wi);
 
-      if (mOk &amp;&amp; wOk &amp;&amp; i > 0) {
+      // La señal 'canal' NO requiere filtros completos
+      const skipFiltros = (entryMode === 'canal');
+      
+      if ((skipFiltros || (mOk &amp;&amp; wOk)) &amp;&amp; i > 0) {
         let señal = false;
 
         if (entryMode === 'macd') {
@@ -2895,6 +2925,51 @@ function runEngine(raw, entryMode, exitMode) {
           const rsi5_prev = d_rsi5[i - 1];
           señal = rsi5_curr != null &amp;&amp; rsi5_prev != null &amp;&amp;
                   rsi5_curr > 60 &amp;&amp; rsi5_prev <= 60;
+
+        } else if (entryMode === 'rsi5w') {
+          // NUEVA: RSI5+Stoch5 Semanal
+          const w_stoch5 = stoch(W.highs, W.lows, W.closes, 5);
+          const w_rsi5 = rsi(W.closes, 5);
+          señal = wi >= 2 &amp;&amp;
+            (w_rsi5[wi-1] < 50 || w_rsi5[wi-2] < 50) &amp;&amp;
+            w_stoch5.k[wi-1] < w_stoch5.k[wi-2] &amp;&amp;
+            w_rsi5[wi] > 60 &amp;&amp; w_rsi5[wi-1] <= 60 &amp;&amp;
+            w_stoch5.k[wi] > w_stoch5.k[wi-1];
+
+        } else if (entryMode === 'rsi5_pullback') {
+          // NUEVA: RSI5 Pullback
+          let estuvoFuerte = false;
+          for(let j = i-10; j < i; j++) {
+            if(j >= 0 &amp;&amp; d_rsi5[j] > 60) { estuvoFuerte = true; break; }
+          }
+          señal = i >= 5 &amp;&amp; estuvoFuerte &amp;&amp;
+            d_rsi5[i-1] >= 38 &amp;&amp; d_rsi5[i-1] <= 42 &amp;&amp;
+            d_rsi5[i] > d_rsi5[i-1] &amp;&amp; d_rsi5[i-1] < d_rsi5[i-2];
+
+        } else if (entryMode === 'canal') {
+          // NUEVA: Canal Bajista (NO requiere filtros)
+          let canal = null;
+          if(i >= 16) {
+            const s = i - 15, mxs = [], mns = [];
+            for(let j = s; j <= i; j++) {
+              if(j > s &amp;&amp; j < i) {
+                if(highs[j] > highs[j-1] &amp;&amp; highs[j] > highs[j+1]) mxs.push({idx:j, p:highs[j]});
+                if(lows[j] < lows[j-1] &amp;&amp; lows[j] < lows[j+1]) mns.push({idx:j, p:lows[j]});
+              }
+            }
+            if(mxs.length >= 2 &amp;&amp; mns.length >= 2) {
+              const m1=mxs[mxs.length-1], m2=mxs[mxs.length-2];
+              const pm = (m1.p - m2.p) / (m1.idx - m2.idx);
+              if(pm < 0) canal = m1.p + pm * (i - m1.idx);
+            }
+          }
+          const d_vol_avg = sma(vols, 20);
+          señal = i >= 25 &amp;&amp; canal != null &amp;&amp;
+            Math.abs(closes[i] - d_sma5[i]) / d_sma5[i] < 0.03 &amp;&amp;
+            closes[i] > canal &amp;&amp; closes[i-1] <= canal &amp;&amp;
+            vols[i] > d_vol_avg[i] * 1.1 &amp;&amp;
+            ((d_sma5[i] > d_sma10[i] &amp;&amp; d_sma5[i-1] <= d_sma10[i-1]) ||
+             (d_sma20[i] &amp;&amp; d_sma5[i] > d_sma20[i] &amp;&amp; d_sma5[i-1] <= d_sma20[i-1]));
         }
 
         if (señal) {
@@ -3045,7 +3120,7 @@ function renderResults(ticker, name, result, best, allResults) {
     </div>`).join('');
 
   // Construir grid de comparación de todas las combinaciones
-  const entryKeys = ['macd', 'sma5w', 'sma5d', 'rsi5d'];
+  const entryKeys = ['sma5w', 'rsi5w', 'macd', 'sma5d', 'rsi5_pullback', 'canal'];
   const exitKeys  = ['sma10w', 'sma10d'];
 
   const comboGrid = entryKeys.map(en => {
@@ -3164,10 +3239,12 @@ function renderResults(ticker, name, result, best, allResults) {
 // ══════════════════════════════════════════════
 
 const ENTRY_NAMES = {
-  macd:  'MACD + RSI Diario',
   sma5w: 'Rebote SMA5 Semanal',
+  rsi5w: 'RSI5+Stoch5 Semanal',
+  macd:  'MACD + RSI Diario',
   sma5d: 'Rebote SMA5 Diario',
-  rsi5d: 'RSI5 Diario'
+  rsi5_pullback: 'RSI5 Pullback',
+  canal: 'Canal Bajista'
 };
 const EXIT_NAMES = {
   sma10w: 'Stop SMA10 Semanal',
@@ -3215,7 +3292,7 @@ async function runBacktest() {
     };
 
     // Ejecutar todas las combinaciones
-    const entries = ['macd', 'sma5w', 'sma5d', 'rsi5d'];
+    const entries = ['sma5w', 'rsi5w', 'macd', 'sma5d', 'rsi5_pullback', 'canal'];
     const exits   = ['sma10w', 'sma10d'];
     const allResults = [];
 
@@ -3256,10 +3333,558 @@ async function runBacktest() {
 </body>
 </html>
 "></iframe>
+  <iframe id="frame-gestion" srcdoc="<!DOCTYPE html>
+<html lang=&quot;es&quot;>
+<head>
+<meta charset=&quot;UTF-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+<title>ETHAN - Gestión de Posiciones</title>
+<style>
+:root {
+  --bg: #040e0e;
+  --surface1: #051818;
+  --surface2: #062424;
+  --border: #1a3c3c;
+  --text1: #d4dbe8;
+  --text2: #8a9aa8;
+  --text3: #6a7a88;
+  --ok: #40d9c0;
+  --warn: #f5a623;
+  --danger: #ff6b6b;
+  --accent: #40d9c0;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--text1);
+  padding: 20px;
+}
+.header { margin-bottom: 24px; }
+.title {
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--accent);
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.subtitle {
+  font-size: 10px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+.add-position {
+  background: var(--surface1);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+.input-group {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 120px;
+  gap: 12px;
+  align-items: end;
+}
+.input-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.input-label {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: var(--text3);
+  text-transform: uppercase;
+}
+input, select {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--text1);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  padding: 10px 12px;
+  outline: none;
+  transition: all 0.2s;
+}
+input:focus, select:focus {
+  border-color: var(--accent);
+  background: var(--bg);
+}
+.btn {
+  background: var(--accent);
+  border: none;
+  border-radius: 3px;
+  color: var(--bg);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  padding: 10px 20px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+.btn:hover {
+  background: #35c4ad;
+  transform: translateY(-1px);
+}
+.positions-container { display: grid; gap: 16px; }
+.position-card {
+  background: var(--surface1);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 20px;
+}
+.position-card.alert {
+  border-left: 4px solid var(--danger);
+  animation: pulse 2s infinite;
+}
+.position-card.stop-hit {
+  background: linear-gradient(135deg, var(--surface1) 0%, rgba(245, 166, 35, 0.15) 100%);
+  border: 2px solid var(--warn);
+}
+@keyframes pulse {
+  0%, 100% { border-left-color: var(--danger); }
+  50% { border-left-color: var(--warn); }
+}
+.position-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.ticker-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+.delete-btn {
+  background: none;
+  border: none;
+  color: var(--text3);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px 8px;
+  transition: color 0.2s;
+}
+.delete-btn:hover { color: var(--danger); }
+.position-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.metric-label {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: var(--text3);
+  text-transform: uppercase;
+}
+.metric-value { font-size: 16px; font-weight: 600; }
+.metric-value.price { color: var(--text1); }
+.metric-value.profit { color: var(--ok); }
+.metric-value.loss { color: var(--danger); }
+.metric-value.neutral { color: var(--text2); }
+.escape-alert {
+  background: var(--danger);
+  color: white;
+  padding: 16px;
+  border-radius: 4px;
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+}
+.escape-icon { font-size: 24px; }
+.escape-text { flex: 1; }
+.escape-title {
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.escape-desc {
+  font-size: 10px;
+  opacity: 0.9;
+  font-weight: 400;
+}
+.loading {
+  text-align: center;
+  color: var(--text2);
+  padding: 40px;
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text3);
+}
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.3;
+}
+.empty-text {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.stop-comparison {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 12px;
+  margin-top: 12px;
+}
+.stop-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 11px;
+}
+.stop-label { color: var(--text2); }
+.stop-value { font-weight: 600; }
+.stop-distance {
+  font-size: 9px;
+  color: var(--text3);
+  margin-left: 8px;
+}
+</style>
+</head>
+<body>
+
+<div class=&quot;header&quot;>
+  <div class=&quot;title&quot;>📊 Gestión de Posiciones</div>
+  <div class=&quot;subtitle&quot;>Monitoreo de stops y detección de Escape Falso al Alza</div>
+</div>
+
+<div class=&quot;add-position&quot;>
+  <div class=&quot;input-group&quot;>
+    <div class=&quot;input-field&quot;>
+      <label class=&quot;input-label&quot;>Ticker</label>
+      <input type=&quot;text&quot; id=&quot;tickerInput&quot; placeholder=&quot;AAPL&quot; style=&quot;text-transform: uppercase;&quot;>
+    </div>
+    <div class=&quot;input-field&quot;>
+      <label class=&quot;input-label&quot;>Precio Entrada</label>
+      <input type=&quot;number&quot; id=&quot;entryInput&quot; placeholder=&quot;150.00&quot; step=&quot;0.01&quot;>
+    </div>
+    <div class=&quot;input-field&quot;>
+      <label class=&quot;input-label&quot;>Stop Usado</label>
+      <select id=&quot;stopTypeInput&quot;>
+        <option value=&quot;semanal&quot;>SMA10 Semanal</option>
+        <option value=&quot;diario&quot;>SMA10 Diario</option>
+      </select>
+    </div>
+    <button class=&quot;btn&quot; id=&quot;addBtn&quot;>+ Añadir</button>
+  </div>
+</div>
+
+<div id=&quot;positionsContainer&quot; class=&quot;positions-container&quot;>
+  <div class=&quot;empty-state&quot;>
+    <div class=&quot;empty-icon&quot;>📈</div>
+    <div class=&quot;empty-text&quot;>No hay posiciones. Añade una arriba.</div>
+  </div>
 </div>
 
 <script>
-const frames = ['watch', 'dash', 'back'];
+let positions = JSON.parse(localStorage.getItem('ethan_positions') || '[]');
+
+function calcSMA(arr, period) {
+  const result = [];
+  for (let i = 0; i < arr.length; i++) {
+    if (i < period - 1) {
+      result.push(null);
+    } else {
+      const sum = arr.slice(i - period + 1, i + 1).reduce((a, b) => a + b, 0);
+      result.push(sum / period);
+    }
+  }
+  return result;
+}
+
+function resampleWeekly(timestamps, opens, highs, lows, closes, volumes) {
+  const weeks = {};
+  for (let i = 0; i < timestamps.length; i++) {
+    const date = new Date(timestamps[i] * 1000);
+    const day = date.getDay();
+    const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+    const monday = new Date(date);
+    monday.setDate(diff);
+    const weekKey = monday.toISOString().slice(0, 10);
+    if (!weeks[weekKey]) {
+      weeks[weekKey] = {
+        timestamp: monday.getTime() / 1000,
+        open: opens[i],
+        high: highs[i],
+        low: lows[i],
+        close: closes[i],
+        volume: volumes[i]
+      };
+    } else {
+      weeks[weekKey].high = Math.max(weeks[weekKey].high, highs[i]);
+      weeks[weekKey].low = Math.min(weeks[weekKey].low, lows[i]);
+      weeks[weekKey].close = closes[i];
+      weeks[weekKey].volume += volumes[i];
+    }
+  }
+  const sorted = Object.entries(weeks).sort((a, b) => a[1].timestamp - b[1].timestamp);
+  return {
+    timestamps: sorted.map(w => w[1].timestamp),
+    opens: sorted.map(w => w[1].open),
+    highs: sorted.map(w => w[1].high),
+    lows: sorted.map(w => w[1].low),
+    closes: sorted.map(w => w[1].close),
+    volumes: sorted.map(w => w[1].volume)
+  };
+}
+
+function detectEscapeFalso(highs, closes) {
+  const len = highs.length;
+  if (len < 5) return false;
+  const curr = len - 1;
+  const prev1 = len - 2;
+  const prev2 = len - 3;
+  let maxAnterior = 0;
+  for (let i = Math.max(0, prev2 - 10); i < prev2; i++) {
+    maxAnterior = Math.max(maxAnterior, highs[i]);
+  }
+  const nuevoMaximo = highs[prev2] > maxAnterior;
+  const cierreDebajo1 = closes[prev1] < highs[prev2];
+  const cierreDebajo2 = closes[curr] < highs[prev2];
+  const bajista1 = closes[prev1] < closes[prev2];
+  const bajista2 = closes[curr] < closes[prev1];
+  return nuevoMaximo && cierreDebajo1 && cierreDebajo2 && bajista1 && bajista2;
+}
+
+async function addPosition() {
+  const ticker = document.getElementById('tickerInput').value.trim().toUpperCase();
+  const entry = parseFloat(document.getElementById('entryInput').value);
+  const stopType = document.getElementById('stopTypeInput').value;
+  
+  if (!ticker || !entry || entry <= 0) {
+    alert('Por favor completa todos los campos correctamente');
+    return;
+  }
+  
+  if (positions.find(p => p.ticker === ticker)) {
+    alert('Esta posición ya existe');
+    return;
+  }
+  
+  positions.push({ ticker, entry, stopType, addedAt: Date.now() });
+  savePositions();
+  
+  document.getElementById('tickerInput').value = '';
+  document.getElementById('entryInput').value = '';
+  
+  await loadPositions();
+}
+
+function deletePosition(ticker) {
+  if (confirm('¿Eliminar ' + ticker + '?')) {
+    positions = positions.filter(p => p.ticker !== ticker);
+    savePositions();
+    loadPositions();
+  }
+}
+
+function savePositions() {
+  localStorage.setItem('ethan_positions', JSON.stringify(positions));
+}
+
+async function loadPositions() {
+  const container = document.getElementById('positionsContainer');
+  
+  if (positions.length === 0) {
+    container.innerHTML = '<div class=&quot;empty-state&quot;><div class=&quot;empty-icon&quot;>📈</div><div class=&quot;empty-text&quot;>No hay posiciones. Añade una arriba.</div></div>';
+    updateBadge(0);
+    return;
+  }
+  
+  container.innerHTML = '<div class=&quot;loading&quot;>Cargando datos...</div>';
+  
+  let html = '';
+  let alertCount = 0;
+  
+  for (const pos of positions) {
+    try {
+      const data = await fetchData(pos.ticker);
+      const analysis = analyzePosition(pos, data);
+      html += renderPositionCard(pos, analysis);
+      
+      // Contar alertas
+      if (analysis.escapeFalso || analysis.tocoStop) {
+        alertCount++;
+      }
+    } catch (error) {
+      html += renderErrorCard(pos, error.message);
+    }
+  }
+  
+  container.innerHTML = html;
+  updateBadge(alertCount);
+}
+
+function updateBadge(count) {
+  // Enviar mensaje al padre para actualizar el badge
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage({ type: 'gestion-alerts', count: count }, '*');
+  }
+}
+
+async function fetchData(ticker) {
+  const yahooUrl = 'https://query1.finance.yahoo.com/v8/finance/chart/' + ticker + '?interval=1d&range=6mo';
+  
+  const proxies = [
+    u => 'https://soft-field-156f.miguel-gomez-anton.workers.dev/?url=' + encodeURIComponent(u),
+    u => 'https://corsproxy.io/?' + encodeURIComponent(u),
+    u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
+    u => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u),
+    u => 'https://cors-proxy.fringe.zone/' + u
+  ];
+  
+  let lastErr;
+  for (const fn of proxies) {
+    try {
+      const response = await fetch(fn(yahooUrl));
+      const json = await response.json();
+      
+      if (!json.chart || !json.chart.result || !json.chart.result[0]) {
+        throw new Error('No se pudieron obtener datos');
+      }
+      
+      const result = json.chart.result[0];
+      const quote = result.indicators.quote[0];
+      
+      return {
+        timestamps: result.timestamp,
+        opens: quote.open,
+        highs: quote.high,
+        lows: quote.low,
+        closes: quote.close,
+        volumes: quote.volume
+      };
+    } catch (err) {
+      lastErr = err;
+      continue;
+    }
+  }
+  
+  throw lastErr || new Error('Todos los proxies fallaron');
+}
+
+function analyzePosition(pos, data) {
+  const { highs, lows, closes, volumes, timestamps } = data;
+  
+  const currentPrice = closes[closes.length - 1];
+  
+  const sma10d = calcSMA(closes, 10);
+  const stopDiario = sma10d[sma10d.length - 1];
+  
+  const weekly = resampleWeekly(timestamps, data.opens, highs, lows, closes, volumes);
+  const sma10w = calcSMA(weekly.closes, 10);
+  const stopSemanal = sma10w[sma10w.length - 1];
+  
+  const activeStop = pos.stopType === 'semanal' ? stopSemanal : stopDiario;
+  
+  const escapeFalso = detectEscapeFalso(highs, closes);
+  
+  const pnlPercent = ((currentPrice - pos.entry) / pos.entry) * 100;
+  
+  const distToStopPercent = ((currentPrice - activeStop) / currentPrice) * 100;
+  
+  // Detectar si tocó el stop (margen de 1%)
+  const tocoStop = currentPrice <= activeStop * 1.01;
+  
+  return {
+    currentPrice,
+    stopDiario,
+    stopSemanal,
+    activeStop,
+    escapeFalso,
+    tocoStop,
+    pnlPercent,
+    distToStopPercent
+  };
+}
+
+function renderPositionCard(pos, analysis) {
+  const pnlClass = analysis.pnlPercent > 0 ? 'profit' : analysis.pnlPercent < 0 ? 'loss' : 'neutral';
+  const alertClass = analysis.escapeFalso ? 'alert' : '';
+  const stopClass = analysis.tocoStop ? 'stop-hit' : '';
+  
+  let card = '<div class=&quot;position-card ' + alertClass + ' ' + stopClass + '&quot;>';
+  card += '<div class=&quot;position-header&quot;>';
+  card += '<div class=&quot;ticker-name&quot;>' + pos.ticker + '</div>';
+  card += '<button class=&quot;delete-btn&quot; onclick=&quot;deletePosition(\'' + pos.ticker + '\')&quot;>✕</button>';
+  card += '</div>';
+  
+  card += '<div class=&quot;position-grid&quot;>';
+  card += '<div class=&quot;metric&quot;><div class=&quot;metric-label&quot;>Precio Actual</div><div class=&quot;metric-value price&quot;>$' + analysis.currentPrice.toFixed(2) + '</div></div>';
+  card += '<div class=&quot;metric&quot;><div class=&quot;metric-label&quot;>Precio Entrada</div><div class=&quot;metric-value neutral&quot;>$' + pos.entry.toFixed(2) + '</div></div>';
+  card += '<div class=&quot;metric&quot;><div class=&quot;metric-label&quot;>P&L</div><div class=&quot;metric-value ' + pnlClass + '&quot;>' + (analysis.pnlPercent > 0 ? '+' : '') + analysis.pnlPercent.toFixed(2) + '%</div></div>';
+  card += '<div class=&quot;metric&quot;><div class=&quot;metric-label&quot;>Stop Activo (' + pos.stopType + ')</div><div class=&quot;metric-value neutral&quot;>$' + analysis.activeStop.toFixed(2) + '</div></div>';
+  card += '</div>';
+  
+  card += '<div class=&quot;stop-comparison&quot;>';
+  card += '<div class=&quot;stop-row&quot;><span class=&quot;stop-label&quot;>SMA10 Diario:</span><span class=&quot;stop-value&quot;>$' + analysis.stopDiario.toFixed(2) + ' <span class=&quot;stop-distance&quot;>(' + ((analysis.currentPrice - analysis.stopDiario) / analysis.currentPrice * 100).toFixed(1) + '%)</span></span></div>';
+  card += '<div class=&quot;stop-row&quot;><span class=&quot;stop-label&quot;>SMA10 Semanal:</span><span class=&quot;stop-value&quot;>$' + analysis.stopSemanal.toFixed(2) + '<span class=&quot;stop-distance&quot;>(' + ((analysis.currentPrice - analysis.stopSemanal) / analysis.currentPrice * 100).toFixed(1) + '%)</span></span></div>';
+  card += '</div>';
+  
+  if (analysis.tocoStop) {
+    card += '<div class=&quot;escape-alert&quot; style=&quot;background: var(--warn);&quot;><div class=&quot;escape-icon&quot;>🛑</div><div class=&quot;escape-text&quot;><div class=&quot;escape-title&quot;>⚠️ STOP TOCADO</div><div class=&quot;escape-desc&quot;>El precio ha alcanzado tu stop loss. Considera cerrar la posición.</div></div></div>';
+  }
+  
+  if (analysis.escapeFalso) {
+    card += '<div class=&quot;escape-alert&quot;><div class=&quot;escape-icon&quot;>🚨</div><div class=&quot;escape-text&quot;><div class=&quot;escape-title&quot;>⚠️ ESCAPE FALSO DETECTADO</div><div class=&quot;escape-desc&quot;>El precio hizo nuevo máximo pero cayó inmediatamente. Considera salir antes del stop.</div></div></div>';
+  }
+  
+  card += '</div>';
+  return card;
+}
+
+function renderErrorCard(pos, errorMsg) {
+  let card = '<div class=&quot;position-card&quot;>';
+  card += '<div class=&quot;position-header&quot;>';
+  card += '<div class=&quot;ticker-name&quot;>' + pos.ticker + '</div>';
+  card += '<button class=&quot;delete-btn&quot; onclick=&quot;deletePosition(\'' + pos.ticker + '\')&quot;>✕</button>';
+  card += '</div>';
+  card += '<div style=&quot;padding: 20px; text-align: center; color: var(--danger);&quot;>Error: ' + errorMsg + '</div>';
+  card += '</div>';
+  return card;
+}
+
+// Event listener
+document.getElementById('addBtn').addEventListener('click', addPosition);
+
+// Cargar al inicio
+loadPositions();
+
+// Recargar cada 30 segundos
+setInterval(loadPositions, 30000);
+</script>
+
+</body>
+</html>
+"></iframe>
+</div>
+
+<script>
+const frames = ['watch', 'dash', 'back', 'gestion'];
 const loaded = {};
 
 function show(id) {
