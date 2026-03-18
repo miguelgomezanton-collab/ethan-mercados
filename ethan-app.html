@@ -3658,16 +3658,21 @@ input:focus, select:focus {
 let positions = JSON.parse(localStorage.getItem('ethan_positions') || '[]');
 
 function calcEMA(arr, period) {
-  const result = [];
-  for (let i = 0; i < arr.length; i++) {
-    if (i < period - 1) {
-      result.push(null);
+  const k = 2 / (period + 1);
+  let startIdx = 0;
+  while (startIdx < arr.length && (arr[startIdx] == null || isNaN(arr[startIdx]))) startIdx++;
+  if (startIdx >= arr.length) return new Array(arr.length).fill(null);
+  
+  const ema = new Array(arr.length).fill(null);
+  ema[startIdx] = arr[startIdx];
+  for (let i = startIdx + 1; i < arr.length; i++) {
+    if (arr[i] == null || isNaN(arr[i])) {
+      ema[i] = ema[i-1];
     } else {
-      const sum = arr.slice(i - period + 1, i + 1).reduce((a, b) => a + b, 0);
-      result.push(sum / period);
+      ema[i] = arr[i] * k + ema[i - 1] * (1 - k);
     }
   }
-  return result;
+  return ema;
 }
 
 function resampleWeekly(timestamps, opens, highs, lows, closes, volumes) {
