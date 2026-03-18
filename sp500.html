@@ -301,11 +301,43 @@ let scanResults = [];
 let scanning = false;
 
 // Indicadores (copiados del sistema ETHAN)
-function sma(arr,p){return arr.map((_,i)=>{if(i<p-1)return null;const sl=arr.slice(i-p+1,i+1).filter(v=>v!=null&&!isNaN(v));return sl.length===p?sl.reduce((a,b)=>a+b,0)/p:null;});}
+function ema(arr,p){return arr.map((_,i)=>{if(i<p-1)return null;const sl=arr.slice(i-p+1,i+1).filter(v=>v!=null&&!isNaN(v));return sl.length===p?sl.reduce((a,b)=>a+b,0)/p:null;}
+function ema(arr, period) {
+  if (!arr || arr.length === 0) return [];
+  const result = [];
+  const multiplier = 2 / (period + 1);
+  
+  let emaValue = 0;
+  let count = 0;
+  for (let i = 0; i < Math.min(period, arr.length); i++) {
+    if (arr[i] != null) {
+      emaValue += arr[i];
+      count++;
+    }
+  }
+  if (count > 0) {
+    emaValue = emaValue / count;
+  }
+  
+  for (let i = 0; i < arr.length; i++) {
+    if (i < period - 1) {
+      result.push(null);
+    } else if (i === period - 1) {
+      result.push(emaValue);
+    } else {
+      if (arr[i] != null) {
+        emaValue = (arr[i] - emaValue) * multiplier + emaValue;
+      }
+      result.push(emaValue);
+    }
+  }
+  return result;
+}
+);}
 function ema(arr,p){const k=2/(p+1),out=new Array(arr.length).fill(null);let s=arr.findIndex(v=>v!=null&&!isNaN(v));if(s<0)return out;out[s]=arr[s];for(let i=s+1;i<arr.length;i++){const v=(arr[i]!=null&&!isNaN(arr[i]))?arr[i]:out[i-1];out[i]=v*k+out[i-1]*(1-k);}return out;}
 function macd(closes){const ef=ema(closes,12),es=ema(closes,26);const m=ef.map((v,i)=>(v!=null&&es[i]!=null)?v-es[i]:null);const sl=ema(m.map(v=>v??0),9);return{m,sl};}
 function rsi(closes,p=14){const out=new Array(closes.length).fill(null);if(closes.length<p+1)return out;let g=0,l=0;for(let i=1;i<=p;i++){const d=closes[i]-closes[i-1];d>0?g+=d:l-=d;}let ag=g/p,al=l/p;out[p]=al===0?100:100-(100/(1+ag/al));for(let i=p+1;i<closes.length;i++){const d=closes[i]-closes[i-1];ag=(ag*(p-1)+(d>0?d:0))/p;al=(al*(p-1)+(d<0?-d:0))/p;out[i]=al===0?100:100-(100/(1+ag/al));}return out;}
-function stoch(highs,lows,closes,p){const rawK=closes.map((c,i)=>{if(i<p-1)return null;const hh=Math.max(...highs.slice(i-p+1,i+1));const ll=Math.min(...lows.slice(i-p+1,i+1));return hh===ll?50:(c-ll)/(hh-ll)*100;});const k=sma(rawK,3);const d=sma(k.map(v=>v??0),3);return{k,d};}
+function stoch(highs,lows,closes,p){const rawK=closes.map((c,i)=>{if(i<p-1)return null;const hh=Math.max(...highs.slice(i-p+1,i+1));const ll=Math.min(...lows.slice(i-p+1,i+1));return hh===ll?50:(c-ll)/(hh-ll)*100;});const k=ema(rawK,3);const d=ema(k.map(v=>v??0),3);return{k,d};}
 function resample(ts,opens,highs,lows,closes,vols,freq){const groups={};ts.forEach((t,i)=>{const dd=new Date(t*1000);let key;if(freq==='W'){const day=dd.getDay();const diff=dd.getDate()-day+(day===0?-6:1);const mo=new Date(+dd);mo.setDate(diff);key=mo.toISOString().slice(0,10);}else{key=`${dd.getFullYear()}-${String(dd.getMonth()+1).padStart(2,'0')}`;}if(!groups[key]){groups[key]={o:opens[i],h:highs[i],l:lows[i],c:closes[i],v:vols[i]};}else{groups[key].h=Math.max(groups[key].h,highs[i]);groups[key].l=Math.min(groups[key].l,lows[i]);groups[key].c=closes[i];groups[key].v+=vols[i];}});const keys=Object.keys(groups).sort();return{dates:keys,opens:keys.map(k=>groups[k].o),highs:keys.map(k=>groups[k].h),lows:keys.map(k=>groups[k].l),closes:keys.map(k=>groups[k].c),vols:keys.map(k=>groups[k].v)};}
 
 async function fetchData(ticker){
@@ -351,13 +383,13 @@ function analyzeQuick(raw){
   const m_s89=stoch(M.highs,M.lows,M.closes,89);
   const m_s8=stoch(M.highs,M.lows,M.closes,8);
   const m_rsi=rsi(M.closes,14);
-  const m_sma10=sma(M.closes,10);
+  const m_ema10=ema(M.closes,10);
   const mi=M.closes.length-1;
   
   const w_macd=macd(W.closes);
   const w_s89=stoch(W.highs,W.lows,W.closes,89);
   const w_rsi=rsi(W.closes,14);
-  const w_sma20=sma(W.closes,20);
+  const w_ema20=ema(W.closes,20);
   const wi=W.closes.length-1;
   
   const d_macd=macd(closes);
@@ -370,13 +402,13 @@ function analyzeQuick(raw){
     (m_s89.k[mi]>80&&m_s89.k[mi]>m_s89.d[mi])||m_s89.k[mi]>92,
     m_rsi[mi]>65,
     m_s8.k[mi]>78,
-    m_sma10[mi]&&M.closes[mi]>m_sma10[mi]
+    m_ema10[mi]&&M.closes[mi]>m_ema10[mi]
   ];
   const sc_ok=[
     w_macd.m[wi]>0&&w_macd.m[wi]>w_macd.sl[wi],
     (w_s89.k[wi]>85&&w_s89.k[wi]>w_s89.d[wi])||w_s89.k[wi]>92,
     w_rsi[wi]>67,
-    w_sma20[wi]&&W.closes[wi]>w_sma20[wi]
+    w_ema20[wi]&&W.closes[wi]>w_ema20[wi]
   ];
   
   score=mc_ok.filter(x=>x).length+sc_ok.filter(x=>x).length;
