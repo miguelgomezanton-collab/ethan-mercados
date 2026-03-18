@@ -3799,6 +3799,7 @@ function analyzePosition(pos, data) {
   const sma10w = calcSMA(weekly.closes, 10);
   const stopSemanal = sma10w[sma10w.length - 1];
   
+  // El stop activo es el que el usuario eligió
   const activeStop = pos.stopType === 'semanal' ? stopSemanal : stopDiario;
   
   const escapeFalso = detectEscapeFalso(highs, closes);
@@ -3807,8 +3808,8 @@ function analyzePosition(pos, data) {
   
   const distToStopPercent = ((currentPrice - activeStop) / currentPrice) * 100;
   
-  // Detectar si tocó el stop (margen de 1%)
-  const tocoStop = currentPrice <= activeStop * 1.01;
+  // Detectar si tocó SOLO el stop que eligió el usuario (con margen de 0.5%)
+  const tocoStop = currentPrice <= activeStop * 1.005;
   
   return {
     currentPrice,
@@ -3846,7 +3847,7 @@ function renderPositionCard(pos, analysis) {
   card += '</div>';
   
   if (analysis.tocoStop) {
-    card += '<div class=&quot;escape-alert&quot; style=&quot;background: var(--warn);&quot;><div class=&quot;escape-icon&quot;>🛑</div><div class=&quot;escape-text&quot;><div class=&quot;escape-title&quot;>⚠️ STOP TOCADO</div><div class=&quot;escape-desc&quot;>El precio ha alcanzado tu stop loss. Considera cerrar la posición.</div></div></div>';
+    card += '<div class=&quot;escape-alert&quot; style=&quot;background: var(--warn);&quot;><div class=&quot;escape-icon&quot;>🛑</div><div class=&quot;escape-text&quot;><div class=&quot;escape-title&quot;>⚠️ STOP TOCADO (SMA10 ' + (pos.stopType === 'semanal' ? 'SEMANAL' : 'DIARIO') + ')</div><div class=&quot;escape-desc&quot;>El precio ha alcanzado tu stop loss dinámico en $' + analysis.activeStop.toFixed(2) + '. Considera cerrar la posición.</div></div></div>';
   }
   
   if (analysis.escapeFalso) {
