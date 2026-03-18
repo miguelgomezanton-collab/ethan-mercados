@@ -58,7 +58,7 @@ nav {
 .nav-btn {
   background: none;
   border: none;
-  color: var(--text-dim);
+  color: #8a9aa8;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 11px;
   font-weight: 500;
@@ -68,6 +68,15 @@ nav {
   transition: all 0.2s;
   text-transform: uppercase;
   position: relative;
+  border-bottom: 2px solid transparent;
+}
+.nav-btn:hover {
+  color: #40d9c0;
+  border-bottom-color: #40d9c0;
+}
+.nav-btn.active {
+  color: #40d9c0;
+  border-bottom-color: #40d9c0;
 }
 .nav-btn .badge {
   position: absolute;
@@ -3614,7 +3623,7 @@ input:focus, select:focus {
 
 <div class=&quot;header&quot;>
   <div class=&quot;title&quot;>📊 Gestión de Posiciones</div>
-  <div class=&quot;subtitle&quot;>Monitoreo de stops y detección de Escape Falso al Alza · <span id=&quot;last-update&quot; style=&quot;color: var(--text3);&quot;>Cargando...</span></div>
+  <div class=&quot;subtitle&quot;>Monitoreo de stops y detección de Escape Falso al Alza · Actualización automática cada 10s · <span id=&quot;last-update&quot; style=&quot;color: var(--text3);&quot;>Cargando...</span></div>
 </div>
 
 <div class=&quot;add-position&quot;>
@@ -3932,8 +3941,8 @@ document.getElementById('addBtn').addEventListener('click', addPosition);
 // Cargar al inicio
 loadPositions();
 
-// Recargar cada 30 segundos
-setInterval(loadPositions, 30000);
+// Recargar cada 10 segundos para tener datos más frescos
+setInterval(loadPositions, 10000);
 </script>
 
 </body>
