@@ -56,40 +56,19 @@ nav {
 }
 
 .nav-btn {
-  background: none;
+  background: transparent;
   border: none;
-  color: #8a9aa8;
+  border-bottom: 3px solid transparent;
+  color: #6a9e94;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 11px;
   font-weight: 500;
-  letter-spacing: 1px;
-  padding: 8px 16px;
-  cursor: pointer;
-  transition: all 0.2s;
+  letter-spacing: 3px;
   text-transform: uppercase;
-  position: relative;
-  border-bottom: 2px solid transparent;
-}
-.nav-btn:hover {
-  color: #40d9c0;
-  border-bottom-color: #40d9c0;
-}
-.nav-btn.active {
-  color: #40d9c0;
-  border-bottom-color: #40d9c0;
-}
-.nav-btn .badge {
-  position: absolute;
-  top: 2px;
-  right: 4px;
-  background: #ff6b6b;
-  color: white;
-  font-size: 9px;
-  font-weight: 700;
-  padding: 2px 5px;
-  border-radius: 10px;
-  min-width: 16px;
-  text-align: center;
+  padding: 0 32px;
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
 }
 .nav-btn:hover { color: #8cb0a8; }
 .nav-btn.active {
@@ -588,20 +567,11 @@ footer {
 const STORAGE_KEY = 'ethan_watchlist_v1';
 
 function loadList() {
-  try { 
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : []; 
-  }
-  catch { 
-    return []; 
-  }
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { return []; }
 }
 function saveList(list) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-  } catch {
-    // localStorage no disponible
-  }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
 }
 
 let watchTickers = loadList(); // ['CNP', 'AAPL', ...]
@@ -611,45 +581,12 @@ let expanded     = {};         // qué cards están expandidas
 // ══════════════════════════════════════════════
 // INDICADORES (misma lógica que dashboard)
 // ══════════════════════════════════════════════
-function ema(arr, p) {
+function sma(arr, p) {
   return arr.map((_,i) => {
     if (i<p-1) return null;
     const sl = arr.slice(i-p+1,i+1).filter(v=>v!=null&amp;&amp;!isNaN(v));
     return sl.length===p ? sl.reduce((a,b)=>a+b,0)/p : null;
-  }
-function ema(arr, period) {
-  if (!arr || arr.length === 0) return [];
-  const result = [];
-  const multiplier = 2 / (period + 1);
-  
-  // Primera EMA es la SMA
-  let emaValue = 0;
-  let count = 0;
-  for (let i = 0; i < Math.min(period, arr.length); i++) {
-    if (arr[i] != null) {
-      emaValue += arr[i];
-      count++;
-    }
-  }
-  if (count > 0) {
-    emaValue = emaValue / count;
-  }
-  
-  for (let i = 0; i < arr.length; i++) {
-    if (i < period - 1) {
-      result.push(null);
-    } else if (i === period - 1) {
-      result.push(emaValue);
-    } else {
-      if (arr[i] != null) {
-        emaValue = (arr[i] - emaValue) * multiplier + emaValue;
-      }
-      result.push(emaValue);
-    }
-  }
-  return result;
-}
-);
+  });
 }
 function smaStrict(arr, p) {
   return arr.map((_,i) => {
@@ -733,14 +670,14 @@ function analyze(raw) {
   const d_mc=calcMACD(closes);
   const d_r14=calcRSI(closes,14);
   const d_r5=calcRSI(closes,5);
-  const d_ema5=ema(closes,5), d_ema10=ema(closes,10);
+  const d_sma5=sma(closes,5), d_sma10=sma(closes,10);
   const di=n-1;
 
   // Semanal
   const w_mc=calcMACD(W.closes);
   const w_s89=calcStoch(W.highs,W.lows,W.closes,89);
   const w_r14=calcRSI(W.closes,14);
-  const w_ema10=ema(W.closes,10), w_ema20=ema(W.closes,20);
+  const w_sma10=sma(W.closes,10), w_sma20=sma(W.closes,20);
   const wi=W.closes.length-1;
 
   // Mensual
@@ -748,7 +685,7 @@ function analyze(raw) {
   const m_s89=calcStoch(M.highs,M.lows,M.closes,89);
   const m_s8=calcStoch(M.highs,M.lows,M.closes,8);
   const m_r14=calcRSI(M.closes,14);
-  const m_ema10=ema(M.closes,10);
+  const m_sma10=sma(M.closes,10);
   const mi=M.closes.length-1;
 
   const fmt2 = v => v!=null&amp;&amp;!isNaN(v) ? v.toFixed(2) : '—';
@@ -758,14 +695,14 @@ function analyze(raw) {
   const mc_s89   = {ok: (m_s89.k[mi]>80&amp;&amp;m_s89.k[mi]>m_s89.d[mi])||m_s89.k[mi]>92, opt:m_s89.k[mi]>92, label:'Stoch89>80', val:`${fmt2(m_s89.k[mi])}`};
   const mc_rsi   = {ok: m_r14[mi]>65, label:'RSI>65', val:`${fmt2(m_r14[mi])}`};
   const mc_s8    = {ok: m_s8.k[mi]>78, label:'Stoch8>78', val:`${fmt2(m_s8.k[mi])}`};
-  const mc_precio= {ok: m_ema10[mi]!=null&amp;&amp;M.closes[mi]>m_ema10[mi], label:'P>EMA10', val:`${fmt2(M.closes[mi])}`};
+  const mc_precio= {ok: m_sma10[mi]!=null&amp;&amp;M.closes[mi]>m_sma10[mi], label:'P>SMA10', val:`${fmt2(M.closes[mi])}`};
   const mensualOk= mc_macd.ok&amp;&amp;mc_s89.ok&amp;&amp;mc_rsi.ok&amp;&amp;mc_s8.ok&amp;&amp;mc_precio.ok;
 
   // SEMANAL condiciones individuales
   const sc_macd  = {ok: w_mc.m[wi]>0&amp;&amp;w_mc.m[wi]>w_mc.sl[wi], label:'MACD>0↑', val:`${fmt2(w_mc.m[wi])}`};
   const sc_s89   = {ok: (w_s89.k[wi]>85&amp;&amp;w_s89.k[wi]>w_s89.d[wi])||w_s89.k[wi]>92, opt:w_s89.k[wi]>92, label:'Stoch89>85', val:`${fmt2(w_s89.k[wi])}`};
   const sc_rsi   = {ok: w_r14[wi]>67, label:'RSI>67', val:`${fmt2(w_r14[wi])}`};
-  const sc_precio= {ok: w_ema20[wi]!=null&amp;&amp;W.closes[wi]>w_ema20[wi], label:'P>EMA20', val:`${fmt2(W.closes[wi])}`};
+  const sc_precio= {ok: w_sma20[wi]!=null&amp;&amp;W.closes[wi]>w_sma20[wi], label:'P>SMA20', val:`${fmt2(W.closes[wi])}`};
   const semanalOk= sc_macd.ok&amp;&amp;sc_s89.ok&amp;&amp;sc_rsi.ok&amp;&amp;sc_precio.ok;
 
   // DIARIO timing
@@ -798,7 +735,7 @@ function analyze(raw) {
       macd_cross:{ok:dc_macd_cross, label:'MACD↑ cruza', val:dc_macd_cross?'SÍ':'NO'},
       rsi57:     {ok:dc_rsi57, label:'RSI>57', val:fmt2(d_r14[di])},
     },
-    stopSemanal: w_ema10[wi],
+    stopSemanal: w_sma10[wi],
   };
 }
 
@@ -1597,7 +1534,7 @@ document.getElementById('tickerInput').addEventListener('keydown', e => {
 
 // ---- INDICADORES ----
 
-function calcEMA(arr, period) {
+function calcSMA(arr, period) {
   // Ignora nulls correctamente
   return arr.map((_, i) => {
     if (i < period - 1) return null;
@@ -1730,9 +1667,9 @@ function evaluateETHAN(data) {
   const d_stoch8 = calcStoch(highs, lows, closes, 8);
   const d_rsi14 = calcRSI(closes, 14);
   const d_rsi5 = calcRSI(closes, 5);
-  const d_ema5 = calcEMA(closes, 5);
-  const d_ema10 = calcEMA(closes, 10);
-  const d_ema20 = calcEMA(closes, 20);
+  const d_sma5 = calcSMA(closes, 5);
+  const d_sma10 = calcSMA(closes, 10);
+  const d_sma20 = calcSMA(closes, 20);
 
   const di = n - 1; // último índice diario
   const price = closes[di];
@@ -1743,9 +1680,9 @@ function evaluateETHAN(data) {
   const w_stoch89 = calcStoch(weekly.highs, weekly.lows, weekly.closes, 89);
   const w_rsi14 = calcRSI(weekly.closes, 14);
   const w_rsi5 = calcRSI(weekly.closes, 5);
-  const w_ema5 = calcEMA(weekly.closes, 5);
-  const w_ema10 = calcEMA(weekly.closes, 10);
-  const w_ema20 = calcEMA(weekly.closes, 20);
+  const w_sma5 = calcSMA(weekly.closes, 5);
+  const w_sma10 = calcSMA(weekly.closes, 10);
+  const w_sma20 = calcSMA(weekly.closes, 20);
 
   const wi = weekly.closes.length - 1;
 
@@ -1755,7 +1692,7 @@ function evaluateETHAN(data) {
   const m_stoch89 = calcStoch(monthly.highs, monthly.lows, monthly.closes, 89);
   const m_stoch8 = calcStoch(monthly.highs, monthly.lows, monthly.closes, 8);
   const m_rsi14 = calcRSI(monthly.closes, 14);
-  const m_ema10 = calcEMA(monthly.closes, 10);
+  const m_sma10 = calcSMA(monthly.closes, 10);
 
   const mi = monthly.closes.length - 1;
 
@@ -1766,7 +1703,7 @@ function evaluateETHAN(data) {
     stoch89_opt: m_stoch89.k[mi] > 92,
     rsi14: m_rsi14[mi] > 65,
     stoch8: m_stoch8.k[mi] > 78,
-    precio: monthly.closes[mi] > m_ema10[mi],
+    precio: monthly.closes[mi] > m_sma10[mi],
     vals: {
       macd: m_macd.macd[mi],
       macd_sig: m_macd.signal[mi],
@@ -1774,7 +1711,7 @@ function evaluateETHAN(data) {
       stoch89d: m_stoch89.d[mi],
       stoch8: m_stoch8.k[mi],
       rsi14: m_rsi14[mi],
-      sma10: m_ema10[mi],
+      sma10: m_sma10[mi],
       close: monthly.closes[mi]
     }
   };
@@ -1786,16 +1723,16 @@ function evaluateETHAN(data) {
     stoch89: (w_stoch89.k[wi] > 85 &amp;&amp; w_stoch89.k[wi] > w_stoch89.d[wi]) || w_stoch89.k[wi] > 92,
     stoch89_opt: w_stoch89.k[wi] > 92,
     rsi14: w_rsi14[wi] > 67,
-    precio: weekly.closes[wi] > w_ema20[wi],
+    precio: weekly.closes[wi] > w_sma20[wi],
     vals: {
       macd: w_macd.macd[wi],
       macd_sig: w_macd.signal[wi],
       stoch89: w_stoch89.k[wi],
       stoch89d: w_stoch89.d[wi],
       rsi14: w_rsi14[wi],
-      sma20: w_ema20[wi],
-      sma10: w_ema10[wi],
-      sma5: w_ema5[wi],
+      sma20: w_sma20[wi],
+      sma10: w_sma10[wi],
+      sma5: w_sma5[wi],
       rsi5: w_rsi5[wi],
       close: weekly.closes[wi]
     }
@@ -1814,16 +1751,16 @@ function evaluateETHAN(data) {
       macd_sig: d_macd.signal[di],
       stoch89: d_stoch89.k[di],
       rsi14: d_rsi14[di],
-      sma5: d_ema5[di],
-      sma10: d_ema10[di],
-      sma20: d_ema20[di]
+      sma5: d_sma5[di],
+      sma10: d_sma10[di],
+      sma20: d_sma20[di]
     }
   };
   dc.cumple = dc.macd_pos &amp;&amp; dc.stoch89 &amp;&amp; dc.rsi14;
 
   // === SEÑALES DE ENTRADA SEMANAL ===
   const señal_rsi5_w = wi > 0 &amp;&amp; w_rsi5[wi - 1] < 40 &amp;&amp; w_rsi5[wi] >= 40;
-  const señal_sma5_w = wi > 0 &amp;&amp; weekly.closes[wi - 1] < w_ema5[wi - 1] &amp;&amp; weekly.closes[wi] > w_ema5[wi];
+  const señal_sma5_w = wi > 0 &amp;&amp; weekly.closes[wi - 1] < w_sma5[wi - 1] &amp;&amp; weekly.closes[wi] > w_sma5[wi];
   const señal_stoch89_w = wi > 0 &amp;&amp;
     w_stoch89.k[wi - 1] < w_stoch89.d[wi - 1] &amp;&amp;
     w_stoch89.k[wi] > w_stoch89.d[wi] &amp;&amp;
@@ -1846,7 +1783,7 @@ function evaluateETHAN(data) {
   if (mc.cumple &amp;&amp; sc.cumple) score++;
 
   // === STOPS ===
-  const stopSemanal = w_ema10[wi];
+  const stopSemanal = w_sma10[wi];
   const stopResistencia = null; // requiere análisis de estructura de precios
 
   return { price, mc, sc, dc, señal_rsi5_w, señal_sma5_w, señal_stoch89_w, señal_diaria, score, stopSemanal };
@@ -1968,7 +1905,7 @@ function renderResults(data, result, ticker) {
       <div class=&quot;price-card&quot;>
         <div class=&quot;price-label&quot;>Stop semanal</div>
         <div class=&quot;price-value&quot; style=&quot;color:var(--danger); font-size:32px&quot;>${fmtPrice(stopSemanal)}</div>
-        <div class=&quot;price-sub&quot;>EMA 10 semanal · dist. ${stopDist != null ? fmt(stopDist) + '%' : '—'}</div>
+        <div class=&quot;price-sub&quot;>SMA 10 semanal · dist. ${stopDist != null ? fmt(stopDist) + '%' : '—'}</div>
       </div>
     </div>
 
@@ -1996,7 +1933,7 @@ function renderResults(data, result, ticker) {
           ${condRow(mc.stoch89, 'Estocástico 89 > 80', `${fmt(mc.vals.stoch89)}`, '> 80', mc.stoch89_opt)}
           ${condRow(mc.rsi14, 'RSI 14 > 65', `${fmt(mc.vals.rsi14)}`, '> 65')}
           ${condRow(mc.stoch8, 'Estocástico 8 > 78', `${fmt(mc.vals.stoch8)}`, '> 78')}
-          ${condRow(mc.precio, 'Precio > EMA 10', `${fmtPrice(mc.vals.close)} / SMA ${fmtPrice(mc.vals.sma10)}`, '')}
+          ${condRow(mc.precio, 'Precio > SMA 10', `${fmtPrice(mc.vals.close)} / SMA ${fmtPrice(mc.vals.sma10)}`, '')}
         </div>
       </div>
 
@@ -2010,7 +1947,7 @@ function renderResults(data, result, ticker) {
           ${condRow(sc.macd, 'MACD > 0 y alcista', `${fmt(sc.vals.macd)} / sig ${fmt(sc.vals.macd_sig)}`, '> 0')}
           ${condRow(sc.stoch89, 'Estocástico 89 > 85', `${fmt(sc.vals.stoch89)}`, '> 85', sc.stoch89_opt)}
           ${condRow(sc.rsi14, 'RSI 14 > 67', `${fmt(sc.vals.rsi14)}`, '> 67')}
-          ${condRow(sc.precio, 'Precio > EMA 20', `${fmtPrice(sc.vals.close)} / SMA ${fmtPrice(sc.vals.sma20)}`, '')}
+          ${condRow(sc.precio, 'Precio > SMA 20', `${fmtPrice(sc.vals.close)} / SMA ${fmtPrice(sc.vals.sma20)}`, '')}
         </div>
       </div>
 
@@ -2026,7 +1963,7 @@ function renderResults(data, result, ticker) {
           ${condRow(dc.rsi14, 'RSI 14 > 59', `${fmt(dc.vals.rsi14)}`, '> 59')}
           ${condRow(dc.macd_cross_up, 'MACD cruza al alza', dc.macd_cross_up ? 'SÍ' : 'NO', '')}
           <div style=&quot;padding:8px 14px; background:var(--surface2); font-size:10px; color:var(--text3); letter-spacing:1px;&quot;>
-            EMA5 ${fmtPrice(dc.vals.sma5)} · EMA10 ${fmtPrice(dc.vals.sma10)} · EMA20 ${fmtPrice(dc.vals.sma20)}
+            SMA5 ${fmtPrice(dc.vals.sma5)} · SMA10 ${fmtPrice(dc.vals.sma10)} · SMA20 ${fmtPrice(dc.vals.sma20)}
           </div>
         </div>
       </div>
@@ -2042,9 +1979,9 @@ function renderResults(data, result, ticker) {
         <div class=&quot;signals-grid&quot;>
           <div class=&quot;signal-card&quot;>
             <div class=&quot;signal-icon&quot;>📉</div>
-            <div class=&quot;signal-name&quot;>Rebote EMA5 Semanal</div>
+            <div class=&quot;signal-name&quot;>Rebote SMA5 Semanal</div>
             <div class=&quot;signal-status ${señal_sma5_w ? 'active' : 'inactive'}&quot;>${señal_sma5_w ? 'ACTIVA' : 'NO'}</div>
-            <div class=&quot;signal-desc&quot;>EMA5W: ${fmtPrice(sc.vals.sma5)}</div>
+            <div class=&quot;signal-desc&quot;>SMA5W: ${fmtPrice(sc.vals.sma5)}</div>
           </div>
           <div class=&quot;signal-card&quot;>
             <div class=&quot;signal-icon&quot;>🆕</div>
@@ -2060,7 +1997,7 @@ function renderResults(data, result, ticker) {
           </div>
           <div class=&quot;signal-card&quot;>
             <div class=&quot;signal-icon&quot;>📈</div>
-            <div class=&quot;signal-name&quot;>Rebote EMA5 Diario</div>
+            <div class=&quot;signal-name&quot;>Rebote SMA5 Diario</div>
             <div class=&quot;signal-status ${señal_stoch89_w ? 'active' : 'inactive'}&quot;>${señal_stoch89_w ? 'ACTIVA' : 'NO'}</div>
             <div class=&quot;signal-desc&quot;>Stoch89W: ${fmt(sc.vals.stoch89)}</div>
           </div>
@@ -2619,8 +2556,8 @@ footer {
   <div class=&quot;entry-selector&quot;>
     <button class=&quot;entry-btn active&quot; id=&quot;btn-sma5w&quot; onclick=&quot;selectEntry('sma5w', this)&quot;>
       <div class=&quot;btn-num&quot;>SISTEMA 01</div>
-      <div class=&quot;btn-name&quot;>Rebote EMA5 Semanal</div>
-      <div class=&quot;btn-desc&quot;>Precio toca EMA5 semanal y rebota al alza</div>
+      <div class=&quot;btn-name&quot;>Rebote SMA5 Semanal</div>
+      <div class=&quot;btn-desc&quot;>Precio toca SMA5 semanal y rebota al alza</div>
     </button>
     <button class=&quot;entry-btn&quot; id=&quot;btn-rsi5w&quot; onclick=&quot;selectEntry('rsi5w', this)&quot;>
       <div class=&quot;btn-num&quot;>SISTEMA 02</div>
@@ -2634,8 +2571,8 @@ footer {
     </button>
     <button class=&quot;entry-btn&quot; id=&quot;btn-sma5d&quot; onclick=&quot;selectEntry('sma5d', this)&quot;>
       <div class=&quot;btn-num&quot;>SISTEMA 04</div>
-      <div class=&quot;btn-name&quot;>Rebote EMA5 Diario</div>
-      <div class=&quot;btn-desc&quot;>Precio toca EMA5 diaria y rebota al alza</div>
+      <div class=&quot;btn-name&quot;>Rebote SMA5 Diario</div>
+      <div class=&quot;btn-desc&quot;>Precio toca SMA5 diaria y rebota al alza</div>
     </button>
     <button class=&quot;entry-btn&quot; id=&quot;btn-rsi5d&quot; onclick=&quot;selectEntry('rsi5d', this)&quot;>
       <div class=&quot;btn-num&quot;>SISTEMA 05</div>
@@ -2651,15 +2588,15 @@ footer {
 
   <!-- SELECTOR DE SISTEMA DE SALIDA -->
   <div class=&quot;exit-selector&quot;>
-    <button class=&quot;exit-btn active&quot; onclick=&quot;selectExit('ema10w', this)&quot;>
+    <button class=&quot;exit-btn active&quot; onclick=&quot;selectExit('sma10w', this)&quot;>
       <div class=&quot;btn-num&quot;>SALIDA 01</div>
       <div class=&quot;btn-name&quot;>Media 10 Semanal</div>
-      <div class=&quot;btn-desc&quot;>Cierre semanal por debajo de la EMA10 semanal</div>
+      <div class=&quot;btn-desc&quot;>Cierre semanal por debajo de la SMA10 semanal</div>
     </button>
-    <button class=&quot;exit-btn&quot; onclick=&quot;selectExit('ema10d', this)&quot;>
+    <button class=&quot;exit-btn&quot; onclick=&quot;selectExit('sma10d', this)&quot;>
       <div class=&quot;btn-num&quot;>SALIDA 02</div>
       <div class=&quot;btn-name&quot;>Media 10 Diaria</div>
-      <div class=&quot;btn-desc&quot;>Cierre diario por debajo de la EMA10 diaria</div>
+      <div class=&quot;btn-desc&quot;>Cierre diario por debajo de la SMA10 diaria</div>
     </button>
   </div>
 
@@ -2667,13 +2604,13 @@ footer {
   <div class=&quot;logic-panel&quot;>
     <div class=&quot;logic-block&quot;>
       <div class=&quot;logic-title&quot;>▶ Condiciones de ENTRADA</div>
-      <div class=&quot;logic-item&quot;><span style=&quot;color:var(--green)&quot;>✓</span> Mensual: MACD &amp;gt; 0 y alcista + Stoch89 &amp;gt; 80 + RSI14 &amp;gt; 65 + Stoch8 &amp;gt; 78 + Precio &amp;gt; EMA10</div>
-      <div class=&quot;logic-item&quot;><span style=&quot;color:var(--green)&quot;>✓</span> Semanal: MACD &amp;gt; 0 y alcista + Stoch89 &amp;gt; 85 + RSI14 &amp;gt; 67 + Precio &amp;gt; EMA20</div>
+      <div class=&quot;logic-item&quot;><span style=&quot;color:var(--green)&quot;>✓</span> Mensual: MACD &amp;gt; 0 y alcista + Stoch89 &amp;gt; 80 + RSI14 &amp;gt; 65 + Stoch8 &amp;gt; 78 + Precio &amp;gt; SMA10</div>
+      <div class=&quot;logic-item&quot;><span style=&quot;color:var(--green)&quot;>✓</span> Semanal: MACD &amp;gt; 0 y alcista + Stoch89 &amp;gt; 85 + RSI14 &amp;gt; 67 + Precio &amp;gt; SMA20</div>
       <div class=&quot;logic-item&quot; id=&quot;entry-desc&quot;><span style=&quot;color:var(--green)&quot;>✓</span> <span id=&quot;entry-desc-text&quot;>Diario: MACD cruza al alza + RSI14 &amp;gt; 57</span></div>
     </div>
     <div class=&quot;logic-block&quot;>
       <div class=&quot;logic-title&quot;>◀ Condiciones de SALIDA</div>
-      <div class=&quot;logic-item&quot;><span style=&quot;color:var(--red)&quot;>✗</span> <span id=&quot;exit-desc-text&quot;>Stop Media 10 semanal: cierre semanal por debajo de la EMA10 semanal</span></div>
+      <div class=&quot;logic-item&quot;><span style=&quot;color:var(--red)&quot;>✗</span> <span id=&quot;exit-desc-text&quot;>Stop Media 10 semanal: cierre semanal por debajo de la SMA10 semanal</span></div>
       <div class=&quot;logic-item&quot;><span style=&quot;color:var(--yellow)&quot;>!</span> Condiciones rotas: mensual o semanal dejan de cumplirse al cierre de semana</div>
       <div class=&quot;logic-item&quot;><span style=&quot;color:var(--blue)&quot;>○</span> El primero que se active genera la señal de salida</div>
     </div>
@@ -2704,7 +2641,7 @@ document.getElementById('tickerIn').addEventListener('keydown', e => {
 // INDICADORES
 // ══════════════════════════════════════════════
 
-function ema(arr, p) {
+function sma(arr, p) {
   return arr.map((_, i) => {
     if (i < p - 1) return null;
     const sl = arr.slice(i - p + 1, i + 1).filter(v => v != null &amp;&amp; !isNaN(v));
@@ -2754,8 +2691,8 @@ function stoch(highs, lows, closes, p=14) {
     const ll=Math.min(...lows.slice(i-p+1,i+1));
     return hh===ll ? 50 : (c-ll)/(hh-ll)*100;
   });
-  const kArr = ema(rawK, 3);
-  const dArr = ema(kArr.map(v=>v??0), 3);
+  const kArr = sma(rawK, 3);
+  const dArr = sma(kArr.map(v=>v??0), 3);
   return { k: kArr, d: dArr };
 }
 
@@ -2841,15 +2778,15 @@ async function fetchData(ticker) {
 // ── SISTEMA DE ENTRADA SELECCIONADO ──
 let entrySystem = 'macd'; // por defecto
 
-let exitSystem = 'ema10w'; // por defecto semanal
+let exitSystem = 'sma10w'; // por defecto semanal
 
 function selectExit(system, btn) {
   exitSystem = system;
   document.querySelectorAll('.exit-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   const descs = {
-    ema10w: 'Stop Media 10 semanal: cierre semanal por debajo de la EMA10 semanal',
-    ema10d: 'Stop Media 10 diaria: cierre diario por debajo de la EMA10 diaria'
+    sma10w: 'Stop Media 10 semanal: cierre semanal por debajo de la SMA10 semanal',
+    sma10d: 'Stop Media 10 diaria: cierre diario por debajo de la SMA10 diaria'
   };
   document.getElementById('exit-desc-text').innerHTML = descs[system];
 }
@@ -2860,8 +2797,8 @@ function selectEntry(system, btn) {
   btn.classList.add('active');
   const descs = {
     macd:  'Diario: MACD cruza al alza + RSI14 > 57 + MACD > 0',
-    sma5w: 'Semanal: precio cruza por encima de EMA5 semanal (rebote)',
-    sma5d: 'Diario: precio cruza por encima de EMA5 diaria (rebote)',
+    sma5w: 'Semanal: precio cruza por encima de SMA5 semanal (rebote)',
+    sma5d: 'Diario: precio cruza por encima de SMA5 diaria (rebote)',
     rsi5d: 'Diario: RSI5 baja y luego sube por encima de 60'
   };
   document.getElementById('entry-desc-text').innerHTML = descs[system];
@@ -2879,25 +2816,25 @@ function runEngine(raw, entryMode, exitMode) {
   const m_s89   = stoch(M.highs, M.lows, M.closes, 89);
   const m_s8    = stoch(M.highs, M.lows, M.closes, 8);
   const m_rsi   = rsi(M.closes, 14);
-  const m_ema10 = ema(M.closes, 10);
+  const m_sma10 = sma(M.closes, 10);
 
   // Indicadores SEMANAL
   const w_macd  = macd(W.closes);
   const w_s89   = stoch(W.highs, W.lows, W.closes, 89);
   const w_rsi   = rsi(W.closes, 14);
-  const w_ema20 = ema(W.closes, 20);
-  const w_ema10 = ema(W.closes, 10);
+  const w_sma20 = sma(W.closes, 20);
+  const w_sma10 = sma(W.closes, 10);
 
   // Indicadores DIARIO
   const d_macd  = macd(closes);
   const d_rsi14 = rsi(closes, 14);
   const d_rsi5  = rsi(closes, 5);
-  const d_ema5  = ema(closes, 5);
-  const d_ema10 = ema(closes, 10);
-  const d_ema20 = ema(closes, 20);
+  const d_sma5  = sma(closes, 5);
+  const d_sma10 = sma(closes, 10);
+  const d_sma20 = sma(closes, 20);
 
   // Indicadores SEMANAL adicionales
-  const w_ema5  = ema(W.closes, 5);
+  const w_sma5  = sma(W.closes, 5);
 
   // Función: obtener índice mensual para una fecha diaria
   function getMonthIdx(dateStr) {
@@ -2920,7 +2857,7 @@ function runEngine(raw, entryMode, exitMode) {
     const s89Ok  = (m_s89.k[mi]>80 &amp;&amp; m_s89.k[mi]>m_s89.d[mi]) || m_s89.k[mi]>92;
     const rsiOk  = m_rsi[mi]>65;
     const s8Ok   = m_s8.k[mi]>78;
-    const pOk    = M.closes[mi]>m_ema10[mi];
+    const pOk    = M.closes[mi]>m_sma10[mi];
     return macdOk &amp;&amp; s89Ok &amp;&amp; rsiOk &amp;&amp; s8Ok &amp;&amp; pOk;
   }
 
@@ -2930,7 +2867,7 @@ function runEngine(raw, entryMode, exitMode) {
     const macdOk = w_macd.m[wi]>0 &amp;&amp; w_macd.m[wi]>w_macd.sl[wi];
     const s89Ok  = (w_s89.k[wi]>85 &amp;&amp; w_s89.k[wi]>w_s89.d[wi]) || w_s89.k[wi]>92;
     const rsiOk  = w_rsi[wi]>67;
-    const pOk    = W.closes[wi]>w_ema20[wi];
+    const pOk    = W.closes[wi]>w_sma20[wi];
     return macdOk &amp;&amp; s89Ok &amp;&amp; rsiOk &amp;&amp; pOk;
   }
 
@@ -2967,18 +2904,18 @@ function runEngine(raw, entryMode, exitMode) {
           señal = macdCross &amp;&amp; d_rsi14[i] > 57 &amp;&amp; d_macd.m[i] > 0;
 
         } else if (entryMode === 'sma5w') {
-          // Precio cruza por encima de EMA5 semanal (cierre semanal actual > EMA5W y anterior no)
-          const w_sma5_curr = w_ema5[wi];
-          const w_sma5_prev = wi > 0 ? w_ema5[wi - 1] : null;
+          // Precio cruza por encima de SMA5 semanal (cierre semanal actual > SMA5W y anterior no)
+          const w_sma5_curr = w_sma5[wi];
+          const w_sma5_prev = wi > 0 ? w_sma5[wi - 1] : null;
           const w_close_curr = W.closes[wi];
           const w_close_prev = wi > 0 ? W.closes[wi - 1] : null;
           señal = w_sma5_curr != null &amp;&amp; w_sma5_prev != null &amp;&amp;
                   w_close_curr > w_sma5_curr &amp;&amp; w_close_prev <= w_sma5_prev;
 
         } else if (entryMode === 'sma5d') {
-          // Precio cruza por encima de EMA5 diaria
-          const sma5_curr = d_ema5[i];
-          const sma5_prev = d_ema5[i - 1];
+          // Precio cruza por encima de SMA5 diaria
+          const sma5_curr = d_sma5[i];
+          const sma5_prev = d_sma5[i - 1];
           señal = sma5_curr != null &amp;&amp; sma5_prev != null &amp;&amp;
                   closes[i] > sma5_curr &amp;&amp; closes[i - 1] <= sma5_prev;
 
@@ -3026,13 +2963,13 @@ function runEngine(raw, entryMode, exitMode) {
               if(pm < 0) canal = m1.p + pm * (i - m1.idx);
             }
           }
-          const d_vol_avg = ema(vols, 20);
+          const d_vol_avg = sma(vols, 20);
           señal = i >= 25 &amp;&amp; canal != null &amp;&amp;
-            Math.abs(closes[i] - d_ema5[i]) / d_ema5[i] < 0.03 &amp;&amp;
+            Math.abs(closes[i] - d_sma5[i]) / d_sma5[i] < 0.03 &amp;&amp;
             closes[i] > canal &amp;&amp; closes[i-1] <= canal &amp;&amp;
             vols[i] > d_vol_avg[i] * 1.1 &amp;&amp;
-            ((d_ema5[i] > d_ema10[i] &amp;&amp; d_ema5[i-1] <= d_ema10[i-1]) ||
-             (d_ema20[i] &amp;&amp; d_ema5[i] > d_ema20[i] &amp;&amp; d_ema5[i-1] <= d_ema20[i-1]));
+            ((d_sma5[i] > d_sma10[i] &amp;&amp; d_sma5[i-1] <= d_sma10[i-1]) ||
+             (d_sma20[i] &amp;&amp; d_sma5[i] > d_sma20[i] &amp;&amp; d_sma5[i-1] <= d_sma20[i-1]));
         }
 
         if (señal) {
@@ -3049,10 +2986,10 @@ function runEngine(raw, entryMode, exitMode) {
 
       // Stop según sistema seleccionado
       let stopHit = false;
-      if (exitMode === 'ema10w') {
-        stopHit = w_ema10[wi_e] != null &amp;&amp; W.closes[wi_e] != null &amp;&amp; W.closes[wi_e] < w_ema10[wi_e];
-      } else if (exitMode === 'ema10d') {
-        stopHit = d_ema10[i] != null &amp;&amp; closes[i] < d_ema10[i];
+      if (exitMode === 'sma10w') {
+        stopHit = w_sma10[wi_e] != null &amp;&amp; W.closes[wi_e] != null &amp;&amp; W.closes[wi_e] < w_sma10[wi_e];
+      } else if (exitMode === 'sma10d') {
+        stopHit = d_sma10[i] != null &amp;&amp; closes[i] < d_sma10[i];
       }
 
       // Condiciones rotas (al cierre de cada semana - viernes)
@@ -3179,12 +3116,12 @@ function renderResults(ticker, name, result, best, allResults) {
       <span>$${fmt(t.exitPrice)}</span>
       <span><span class=&quot;pct-chip ${t.pct>=0?'pos':'neg'}&quot;>${t.pct>=0?'+':''}${fmt(t.pct)}%</span></span>
       <span style=&quot;color:var(--text2)&quot;>${t.bars}d</span>
-      <span><span class=&quot;exit-tag ${t.exitType}&quot;>${t.exitType==='sma'?(t.exitMode==='ema10d'?'STOP EMA10D':'STOP EMA10W'):t.exitType==='cond'?'COND. ROTAS':'ABIERTA'}</span></span>
+      <span><span class=&quot;exit-tag ${t.exitType}&quot;>${t.exitType==='sma'?(t.exitMode==='sma10d'?'STOP SMA10D':'STOP SMA10W'):t.exitType==='cond'?'COND. ROTAS':'ABIERTA'}</span></span>
     </div>`).join('');
 
   // Construir grid de comparación de todas las combinaciones
   const entryKeys = ['sma5w', 'rsi5w', 'macd', 'sma5d', 'rsi5_pullback', 'canal'];
-  const exitKeys  = ['ema10w', 'ema10d'];
+  const exitKeys  = ['sma10w', 'sma10d'];
 
   const comboGrid = entryKeys.map(en => {
     return exitKeys.map(ex => {
@@ -3302,16 +3239,16 @@ function renderResults(ticker, name, result, best, allResults) {
 // ══════════════════════════════════════════════
 
 const ENTRY_NAMES = {
-  sma5w: 'Rebote EMA5 Semanal',
+  sma5w: 'Rebote SMA5 Semanal',
   rsi5w: 'RSI5+Stoch5 Semanal',
   macd:  'MACD + RSI Diario',
-  sma5d: 'Rebote EMA5 Diario',
+  sma5d: 'Rebote SMA5 Diario',
   rsi5_pullback: 'RSI5 Pullback',
   canal: 'Canal Bajista'
 };
 const EXIT_NAMES = {
-  ema10w: 'Stop EMA10 Semanal',
-  ema10d: 'Stop EMA10 Diario'
+  sma10w: 'Stop SMA10 Semanal',
+  sma10d: 'Stop SMA10 Diario'
 };
 
 async function runBacktest() {
@@ -3356,7 +3293,7 @@ async function runBacktest() {
 
     // Ejecutar todas las combinaciones
     const entries = ['sma5w', 'rsi5w', 'macd', 'sma5d', 'rsi5_pullback', 'canal'];
-    const exits   = ['ema10w', 'ema10d'];
+    const exits   = ['sma10w', 'sma10d'];
     const allResults = [];
 
     for (const en of entries) {
@@ -3632,7 +3569,7 @@ input:focus, select:focus {
 
 <div class=&quot;header&quot;>
   <div class=&quot;title&quot;>📊 Gestión de Posiciones</div>
-  <div class=&quot;subtitle&quot;>Monitoreo de stops y detección de Escape Falso al Alza · Actualización automática cada 10s · <span id=&quot;last-update&quot; style=&quot;color: var(--text3);&quot;>Cargando...</span></div>
+  <div class=&quot;subtitle&quot;>Monitoreo de stops y detección de Escape Falso al Alza</div>
 </div>
 
 <div class=&quot;add-position&quot;>
@@ -3648,8 +3585,8 @@ input:focus, select:focus {
     <div class=&quot;input-field&quot;>
       <label class=&quot;input-label&quot;>Stop Usado</label>
       <select id=&quot;stopTypeInput&quot;>
-        <option value=&quot;semanal&quot;>EMA10 Semanal</option>
-        <option value=&quot;diario&quot;>EMA10 Diario</option>
+        <option value=&quot;semanal&quot;>SMA10 Semanal</option>
+        <option value=&quot;diario&quot;>SMA10 Diario</option>
       </select>
     </div>
     <button class=&quot;btn&quot; id=&quot;addBtn&quot;>+ Añadir</button>
@@ -3666,22 +3603,17 @@ input:focus, select:focus {
 <script>
 let positions = JSON.parse(localStorage.getItem('ethan_positions') || '[]');
 
-function calcEMA(arr, period) {
-  const k = 2 / (period + 1);
-  let startIdx = 0;
-  while (startIdx < arr.length && (arr[startIdx] == null || isNaN(arr[startIdx]))) startIdx++;
-  if (startIdx >= arr.length) return new Array(arr.length).fill(null);
-  
-  const ema = new Array(arr.length).fill(null);
-  ema[startIdx] = arr[startIdx];
-  for (let i = startIdx + 1; i < arr.length; i++) {
-    if (arr[i] == null || isNaN(arr[i])) {
-      ema[i] = ema[i-1];
+function calcSMA(arr, period) {
+  const result = [];
+  for (let i = 0; i < arr.length; i++) {
+    if (i < period - 1) {
+      result.push(null);
     } else {
-      ema[i] = arr[i] * k + ema[i - 1] * (1 - k);
+      const sum = arr.slice(i - period + 1, i + 1).reduce((a, b) => a + b, 0);
+      result.push(sum / period);
     }
   }
-  return ema;
+  return result;
 }
 
 function resampleWeekly(timestamps, opens, highs, lows, closes, volumes) {
@@ -3805,11 +3737,6 @@ async function loadPositions() {
   
   container.innerHTML = html;
   updateBadge(alertCount);
-  
-  // Actualizar timestamp
-  const now = new Date();
-  const timeStr = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-  document.getElementById('last-update').textContent = 'Última actualización: ' + timeStr;
 }
 
 function updateBadge(count) {
@@ -3864,14 +3791,13 @@ function analyzePosition(pos, data) {
   const { highs, lows, closes, volumes, timestamps } = data;
   
   const currentPrice = closes[closes.length - 1];
-  const lastTimestamp = timestamps[timestamps.length - 1];
   
-  const ema10d = calcEMA(closes, 10);
-  const stopDiario = ema10d[ema10d.length - 1];
+  const sma10d = calcSMA(closes, 10);
+  const stopDiario = sma10d[sma10d.length - 1];
   
   const weekly = resampleWeekly(timestamps, data.opens, highs, lows, closes, volumes);
-  const ema10w = calcEMA(weekly.closes, 10);
-  const stopSemanal = ema10w[ema10w.length - 1];
+  const sma10w = calcSMA(weekly.closes, 10);
+  const stopSemanal = sma10w[sma10w.length - 1];
   
   // El stop activo es el que el usuario eligió
   const activeStop = pos.stopType === 'semanal' ? stopSemanal : stopDiario;
@@ -3887,7 +3813,6 @@ function analyzePosition(pos, data) {
   
   return {
     currentPrice,
-    lastTimestamp,
     stopDiario,
     stopSemanal,
     activeStop,
@@ -3903,11 +3828,6 @@ function renderPositionCard(pos, analysis) {
   const alertClass = analysis.escapeFalso ? 'alert' : '';
   const stopClass = analysis.tocoStop ? 'stop-hit' : '';
   
-  // Fecha del último dato
-  const lastDataDate = new Date(analysis.lastTimestamp * 1000);
-  const dateStr = lastDataDate.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
-  const timeStr = lastDataDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-  
   let card = '<div class=&quot;position-card ' + alertClass + ' ' + stopClass + '&quot;>';
   card += '<div class=&quot;position-header&quot;>';
   card += '<div class=&quot;ticker-name&quot;>' + pos.ticker + '</div>';
@@ -3915,19 +3835,19 @@ function renderPositionCard(pos, analysis) {
   card += '</div>';
   
   card += '<div class=&quot;position-grid&quot;>';
-  card += '<div class=&quot;metric&quot;><div class=&quot;metric-label&quot;>Precio Actual</div><div class=&quot;metric-value price&quot;>$' + analysis.currentPrice.toFixed(2) + '</div><div style=&quot;font-size: 8px; color: var(--text3); margin-top: 2px;&quot;>' + dateStr + ' ' + timeStr + '</div></div>';
+  card += '<div class=&quot;metric&quot;><div class=&quot;metric-label&quot;>Precio Actual</div><div class=&quot;metric-value price&quot;>$' + analysis.currentPrice.toFixed(2) + '</div></div>';
   card += '<div class=&quot;metric&quot;><div class=&quot;metric-label&quot;>Precio Entrada</div><div class=&quot;metric-value neutral&quot;>$' + pos.entry.toFixed(2) + '</div></div>';
   card += '<div class=&quot;metric&quot;><div class=&quot;metric-label&quot;>P&L</div><div class=&quot;metric-value ' + pnlClass + '&quot;>' + (analysis.pnlPercent > 0 ? '+' : '') + analysis.pnlPercent.toFixed(2) + '%</div></div>';
   card += '<div class=&quot;metric&quot;><div class=&quot;metric-label&quot;>Stop Activo (' + pos.stopType + ')</div><div class=&quot;metric-value neutral&quot;>$' + analysis.activeStop.toFixed(2) + '</div></div>';
   card += '</div>';
   
   card += '<div class=&quot;stop-comparison&quot;>';
-  card += '<div class=&quot;stop-row&quot;><span class=&quot;stop-label&quot;>EMA10 Diario:</span><span class=&quot;stop-value&quot;>$' + analysis.stopDiario.toFixed(2) + ' <span class=&quot;stop-distance&quot;>(' + ((analysis.currentPrice - analysis.stopDiario) / analysis.currentPrice * 100).toFixed(1) + '%)</span></span></div>';
-  card += '<div class=&quot;stop-row&quot;><span class=&quot;stop-label&quot;>EMA10 Semanal:</span><span class=&quot;stop-value&quot;>$' + analysis.stopSemanal.toFixed(2) + '<span class=&quot;stop-distance&quot;>(' + ((analysis.currentPrice - analysis.stopSemanal) / analysis.currentPrice * 100).toFixed(1) + '%)</span></span></div>';
+  card += '<div class=&quot;stop-row&quot;><span class=&quot;stop-label&quot;>SMA10 Diario:</span><span class=&quot;stop-value&quot;>$' + analysis.stopDiario.toFixed(2) + ' <span class=&quot;stop-distance&quot;>(' + ((analysis.currentPrice - analysis.stopDiario) / analysis.currentPrice * 100).toFixed(1) + '%)</span></span></div>';
+  card += '<div class=&quot;stop-row&quot;><span class=&quot;stop-label&quot;>SMA10 Semanal:</span><span class=&quot;stop-value&quot;>$' + analysis.stopSemanal.toFixed(2) + '<span class=&quot;stop-distance&quot;>(' + ((analysis.currentPrice - analysis.stopSemanal) / analysis.currentPrice * 100).toFixed(1) + '%)</span></span></div>';
   card += '</div>';
   
   if (analysis.tocoStop) {
-    card += '<div class=&quot;escape-alert&quot; style=&quot;background: var(--warn);&quot;><div class=&quot;escape-icon&quot;>🛑</div><div class=&quot;escape-text&quot;><div class=&quot;escape-title&quot;>⚠️ STOP TOCADO (EMA10 ' + (pos.stopType === 'semanal' ? 'SEMANAL' : 'DIARIO') + ')</div><div class=&quot;escape-desc&quot;>El precio ha alcanzado tu stop loss dinámico en $' + analysis.activeStop.toFixed(2) + '. Considera cerrar la posición.</div></div></div>';
+    card += '<div class=&quot;escape-alert&quot; style=&quot;background: var(--warn);&quot;><div class=&quot;escape-icon&quot;>🛑</div><div class=&quot;escape-text&quot;><div class=&quot;escape-title&quot;>⚠️ STOP TOCADO (SMA10 ' + (pos.stopType === 'semanal' ? 'SEMANAL' : 'DIARIO') + ')</div><div class=&quot;escape-desc&quot;>El precio ha alcanzado tu stop loss dinámico en $' + analysis.activeStop.toFixed(2) + '. Considera cerrar la posición.</div></div></div>';
   }
   
   if (analysis.escapeFalso) {
@@ -3955,8 +3875,8 @@ document.getElementById('addBtn').addEventListener('click', addPosition);
 // Cargar al inicio
 loadPositions();
 
-// Recargar cada 10 segundos para tener datos más frescos
-setInterval(loadPositions, 10000);
+// Recargar cada 30 segundos
+setInterval(loadPositions, 30000);
 </script>
 
 </body>
