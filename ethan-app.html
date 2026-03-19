@@ -588,11 +588,20 @@ footer {
 const STORAGE_KEY = 'ethan_watchlist_v1';
 
 function loadList() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-  catch { return []; }
+  try { 
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : []; 
+  }
+  catch { 
+    return []; 
+  }
 }
 function saveList(list) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  } catch {
+    // localStorage no disponible
+  }
 }
 
 let watchTickers = loadList(); // ['CNP', 'AAPL', ...]
@@ -602,8 +611,44 @@ let expanded     = {};         // qué cards están expandidas
 // ══════════════════════════════════════════════
 // INDICADORES (misma lógica que dashboard)
 // ══════════════════════════════════════════════
-
-
+function ema(arr, p) {
+  return arr.map((_,i) => {
+    if (i<p-1) return null;
+    const sl = arr.slice(i-p+1,i+1).filter(v=>v!=null&amp;&amp;!isNaN(v));
+    return sl.length===p ? sl.reduce((a,b)=>a+b,0)/p : null;
+  }
+function ema(arr, period) {
+  if (!arr || arr.length === 0) return [];
+  const result = [];
+  const multiplier = 2 / (period + 1);
+  
+  // Primera EMA es la SMA
+  let emaValue = 0;
+  let count = 0;
+  for (let i = 0; i < Math.min(period, arr.length); i++) {
+    if (arr[i] != null) {
+      emaValue += arr[i];
+      count++;
+    }
+  }
+  if (count > 0) {
+    emaValue = emaValue / count;
+  }
+  
+  for (let i = 0; i < arr.length; i++) {
+    if (i < period - 1) {
+      result.push(null);
+    } else if (i === period - 1) {
+      result.push(emaValue);
+    } else {
+      if (arr[i] != null) {
+        emaValue = (arr[i] - emaValue) * multiplier + emaValue;
+      }
+      result.push(emaValue);
+    }
+  }
+  return result;
+}
 );
 }
 function smaStrict(arr, p) {
@@ -614,9 +659,6 @@ function smaStrict(arr, p) {
     return sl.reduce((a,b)=>a+b,0)/p;
   });
 }
-
-  return out;
-}
 function ema(arr, p) {
   const k=2/(p+1), out=new Array(arr.length).fill(null);
   let s=arr.findIndex(v=>v!=null&amp;&amp;!isNaN(v));
@@ -626,6 +668,8 @@ function ema(arr, p) {
     const v=(arr[i]!=null&amp;&amp;!isNaN(arr[i]))?arr[i]:out[i-1];
     out[i]=v*k+out[i-1]*(1-k);
   }
+  return out;
+}
 function calcMACD(closes,f=12,s=26,sig=9) {
   const ef=ema(closes,f), es=ema(closes,s);
   const m=ef.map((v,i)=>(v!=null&amp;&amp;es[i]!=null)?v-es[i]:null);
@@ -1553,9 +1597,27 @@ document.getElementById('tickerInput').addEventListener('keydown', e => {
 
 // ---- INDICADORES ----
 
+function calcEMA(arr, period) {
+  // Ignora nulls correctamente
+  return arr.map((_, i) => {
+    if (i < period - 1) return null;
+    const slice = arr.slice(i - period + 1, i + 1);
+    const valid = slice.filter(v => v != null &amp;&amp; !isNaN(v));
+    if (valid.length < period) return null;
+    return valid.reduce((a, b) => a + b, 0) / valid.length;
+  });
+}
 
-
-
+function calcSMASimple(arr, period) {
+  // Requiere todos los valores presentes en la ventana
+  return arr.map((_, i) => {
+    if (i < period - 1) return null;
+    const slice = arr.slice(i - period + 1, i + 1);
+    const valid = slice.filter(v => v != null &amp;&amp; !isNaN(v));
+    if (valid.length < period) return null;
+    return valid.reduce((a, b) => a + b, 0) / valid.length;
+  });
+}
 
 function calcEMA(arr, period) {
   const k = 2 / (period + 1);
@@ -2642,10 +2704,23 @@ document.getElementById('tickerIn').addEventListener('keydown', e => {
 // INDICADORES
 // ══════════════════════════════════════════════
 
-);
+function ema(arr, p) {
+  return arr.map((_, i) => {
+    if (i < p - 1) return null;
+    const sl = arr.slice(i - p + 1, i + 1).filter(v => v != null &amp;&amp; !isNaN(v));
+    return sl.length === p ? sl.reduce((a,b)=>a+b,0)/p : null;
+  });
 }
 
-
+function ema(arr, p) {
+  const k = 2/(p+1), out = new Array(arr.length).fill(null);
+  let start = arr.findIndex(v => v != null &amp;&amp; !isNaN(v));
+  if (start < 0) return out;
+  out[start] = arr[start];
+  for (let i = start+1; i < arr.length; i++) {
+    const v = arr[i] != null &amp;&amp; !isNaN(arr[i]) ? arr[i] : out[i-1];
+    out[i] = v * k + out[i-1] * (1-k);
+  }
   return out;
 }
 
