@@ -561,6 +561,20 @@ footer {
 </div>
 
 <script>
+function calcSMASimple(arr, period) {
+  const result = [];
+  for (let i = 0; i < arr.length; i++) {
+    if (i < period - 1) {
+      result.push(null);
+    } else {
+      const slice = arr.slice(i - period + 1, i + 1);
+      const valid = slice.filter(v => v != null &amp;&amp; !isNaN(v));
+      result.push(valid.length === period ? valid.reduce((a,b)=>a+b,0)/period : null);
+    }
+  }
+  return result;
+}
+
 // ══════════════════════════════════════════════
 // PERSISTENCIA
 // ══════════════════════════════════════════════
@@ -583,22 +597,22 @@ let expanded     = {};         // qué cards están expandidas
 // ══════════════════════════════════════════════
 function ema(arr, p) {
   const k=2/(p+1), out=new Array(arr.length).fill(null);
-  let s=arr.findIndex(v=>v!=null&&!isNaN(v));
+  let s=arr.findIndex(v=>v!=null&amp;&amp;!isNaN(v));
   if (s<0) return out;
   out[s]=arr[s];
   for (let i=s+1;i<arr.length;i++) {
-    const v=(arr[i]!=null&&!isNaN(arr[i]))?arr[i]:out[i-1];
+    const v=(arr[i]!=null&amp;&amp;!isNaN(arr[i]))?arr[i]:out[i-1];
     out[i]=v*k+out[i-1]*(1-k);
   }
   return out;
 }
 function ema(arr, p) {
   const k=2/(p+1), out=new Array(arr.length).fill(null);
-  let s=arr.findIndex(v=>v!=null&&!isNaN(v));
+  let s=arr.findIndex(v=>v!=null&amp;&amp;!isNaN(v));
   if (s<0) return out;
   out[s]=arr[s];
   for (let i=s+1;i<arr.length;i++) {
-    const v=(arr[i]!=null&&!isNaN(arr[i]))?arr[i]:out[i-1];
+    const v=(arr[i]!=null&amp;&amp;!isNaN(arr[i]))?arr[i]:out[i-1];
     out[i]=v*k+out[i-1]*(1-k);
   }
   return out;
@@ -635,16 +649,17 @@ function calcRSI(closes,p=14) {
   }
   return out;
 }
-function calcStoch(highs,lows,closes,p=14) {
-  const rawK=closes.map((c,i)=>{
-    if(i<p-1) return null;
-    const hh=Math.max(...highs.slice(i-p+1,i+1));
-    const ll=Math.min(...lows.slice(i-p+1,i+1));
-    return hh===ll?50:(c-ll)/(hh-ll)*100;
+function calcStoch(highs, lows, closes, period=14, smoothK=3) {
+  const rawK = closes.map((c, i) => {
+    if (i < period - 1) return null;
+    const hh = Math.max(...highs.slice(i-period+1, i+1));
+    const ll = Math.min(...lows.slice(i-period+1, i+1));
+    if (hh === ll) return 50;
+    return ((c - ll) / (hh - ll)) * 100;
   });
-  const k=ema(rawK,3);
-  const d=ema(k.map(v=>v??0),3);
-  return {k,d};
+  const k = calcSMASimple(rawK, smoothK);
+  const d = calcSMASimple(k.map(v=>v??0), 3);
+  return {k, d};
 }
 function resample(ts,opens,highs,lows,closes,vols,freq) {
   const groups={};
