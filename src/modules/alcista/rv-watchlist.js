@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════
-// MÓDULO: Watchlist · Renta Variable
+// MÓDULO: Watchlist · Renta Variable v2.0
 // Replicación exacta del sistema original:
 // - Cards expandibles con desglose M/W/D
 // - Score 0-10 (punto 10 = mensualOk AND semanalOk)
@@ -13,9 +13,9 @@ const STORAGE_KEY = 'ethan_watchlist_v1';
 const VOL_AVG = 11;
 
 const PROXIES = [
-  u => `https://soft-field-156f.miguel-gomez-anton.workers.dev/?url=${encodeURIComponent(u)}`,
   u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
   u => `https://corsproxy.io/?${encodeURIComponent(u)}`,
+  u => `https://soft-field-156f.miguel-gomez-anton.workers.dev/?url=${encodeURIComponent(u)}`,
   u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`
 ];
 
@@ -387,3 +387,4 @@ export function addToWatchlist(ticker){
     }
   }catch(e){}
 }
+
