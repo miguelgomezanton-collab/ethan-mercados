@@ -1,0 +1,18 @@
+{
+  "name": "ethan-mercados",
+  "version": "3.0.0",
+  "description": "Plataforma de análisis e inversión en bolsa — ETHAN Mercados",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "firebase": "^11.0.0",
+    "chart.js": "^4.4.0"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  }
+}

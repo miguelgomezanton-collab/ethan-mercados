@@ -1,138 +1,117 @@
-# ETHAN Mercados · Plataforma de Trading
+# ETHAN Mercados · Plataforma v3.0
 
-Sistema completo de análisis técnico y gestión de carteras con backtesting del sistema ETHAN.
+Plataforma de análisis e inversión en bolsa. Arquitectura: Vite (vanilla JS,
+sin framework) + Firebase (Auth + Firestore) + Vercel.
 
-## 📦 Estructura de Archivos
+## Estructura
 
 ```
-ETHAN_FINAL/
-├── index.html              # Plataforma principal (multi-módulo)
-├── ethan-app.html         # Watchlist independiente
-├── alertas.html           # Sistema de alertas
-├── ethan_mercados.html    # Versión alternativa
-├── fundamental.html       # Análisis fundamental
-├── macro.html            # Indicadores macro
-├── portfolio.html        # Gestión de cartera
-├── risk.html             # Risk Management
-├── sectors.html          # Análisis sectorial
-└── operaciones.json      # Datos de operaciones
+ethan-mercados/
+├── index.html              # Shell único: login + sidebar + main
+├── src/
+│   ├── main.js              # Punto de entrada: conecta auth, sidebar, router
+│   ├── firebase.js          # Inicialización Firebase (Auth + Firestore)
+│   ├── auth.js               # login / logout / sesión
+│   ├── state.js              # Estado global compartido + sync con Firestore
+│   ├── router.js             # Navegación entre módulos (sin iframes)
+│   ├── styles/main.css       # Paleta teal-on-black, tipografías
+│   └── modules/
+│       ├── macro/            # 1.1 Coyuntura · 1.2 Indicadores · 1.3 Liquidez
+│       ├── alcista/           # 2.1 RV · 2.2 RF · 2.3 Commodities
+│       ├── bajista/           # 3.1-3.3 Screener Sectores/SP500/Watchlist
+│       ├── cartera/           # 4.1-4.6 Allocation/Cartera/Money/Risk/Backtest/Vitácora
+│       └── fundamentales/     # 5. Análisis Fundamental
+├── firestore.rules           # Reglas de seguridad (cada usuario solo ve sus datos)
+├── vercel.json
+└── package.json
 ```
 
-## 🚀 Despliegue en GitHub Pages
-
-### 1. Subir a GitHub
+## Setup local
 
 ```bash
-git add .
-git commit -m "Deploy ETHAN platform"
-git push origin main
+npm install
 ```
 
-### 2. Activar GitHub Pages
+### 1. Configurar Firebase
 
-1. Ve a **Settings** → **Pages**
-2. Source: **Deploy from branch**
-3. Branch: **main** / **root**
-4. Click **Save**
+Edita `src/firebase.js` y sustituye el objeto `firebaseConfig` por el que te
+da la consola de Firebase (Project settings → General → Your apps).
 
-### 3. Acceder
+### 2. Desplegar las reglas de Firestore
 
-Tu plataforma estará en:
+Necesitas Firebase CLI instalado (`npm install -g firebase-tools`) y haber
+hecho login (`firebase login`). Después:
+
+```bash
+firebase init firestore   # selecciona tu proyecto, acepta firestore.rules existente
+firebase deploy --only firestore:rules
 ```
-https://tu-usuario.github.io/tu-repo/
+
+Esto es importante: sin estas reglas, cualquiera con la apiKey pública
+podría leer o escribir en tu base de datos. Con ellas, cada usuario solo
+puede tocar los documentos bajo `/users/{su_propio_uid}/...`.
+
+### 3. Arrancar en local
+
+```bash
+npm run dev
 ```
 
-## 📋 Módulos Incluidos
+Abre `http://localhost:5173`, inicia sesión con el usuario que creaste en
+Firebase Authentication.
 
-### **index.html** (Principal)
-- **Macro**: Indicadores macroeconómicos
-- **Asset Allocation**: Análisis de activos (VTI, VEU, IEF, BNDX, SPY, GLD, USO, HYG, EUR/USD)
-- **Sectores**: Análisis de ETFs sectoriales
-- **S&P 500**: Screener completo del S&P 500
-- **Screener**: Filtrado de valores
-- **Cartera**: Gestión de portfolio
-- **Fundamental**: Análisis fundamental
+## Deploy en Vercel
 
-### **ethan-app.html** (Watchlist Independiente)
-- Watchlist multi-ticker
-- Análisis técnico completo
-- Dashboard con backtesting
+```bash
+npm install -g vercel
+vercel
+```
 
-### **Otros Módulos**
-- **alertas.html**: Notificaciones y alertas
-- **portfolio.html**: Gestión avanzada de cartera
-- **risk.html**: Gestión de riesgo
-- **sectors.html**: Análisis sectorial standalone
+Sigue las instrucciones (vincula tu cuenta, elige el proyecto). Vercel
+detecta `vercel.json` y usa Vite automáticamente. Para producción:
 
-## ⚙️ Sistema ETHAN
+```bash
+vercel --prod
+```
 
-### Filtros Mensuales
-- MACD > 0 y MACD > Signal
-- Stoch(89) > 80 y K > D, o K > 92
-- RSI(14) > 65
-- Stoch(8) > 78
-- Precio > SMA(10)
+## Modelo de datos en Firestore
 
-### Filtros Semanales
-- MACD > 0 y MACD > Signal
-- Stoch(89) > 85 y K > D, o K > 92
-- RSI(14) > 67
-- Precio > SMA(20)
+```
+users/{uid}/
+  operaciones_alcista/{docId}    → { valor, ticker, fechaEntrada, fechaSalida,
+                                       precioEntrada, precioSalida, capital,
+                                       peso, plusvalia, rentabilidad, dias, motivo }
+  operaciones_bajista/{docId}    → { valor, ticker, fecha, precio, capital, peso }
+  vitacora/{docId}               → { ticker, estado, msd, nota, fecha }
+```
 
-### Señales de Entrada
-- **MACD**: Cruce alcista + RSI(14) > 57 + MACD > 0
-- **SMA5 Semanal**: Precio cruza SMA(5) al alza
-- **SMA5 Diario**: Precio cruza SMA(5) al alza
-- **RSI5 Diario**: RSI(5) cruza 60 al alza
+Cada módulo nuevo que añadas puede crear su propia subcolección bajo
+`users/{uid}/` siguiendo el mismo patrón — mira `src/state.js` para ver
+cómo se registran suscripciones en tiempo real (`onSnapshot`) y funciones
+de escritura (`addDoc`, `updateDoc`, `deleteDoc`).
 
-### Salida
-- Precio < SMA(10) semanal
-- Filtros mensuales/semanales rotos (viernes)
+## Añadir un módulo nuevo
 
-## 🔧 Correcciones Aplicadas
+1. Crea `src/modules/<grupo>/<nombre>.js` exportando:
+   ```js
+   export async function render(container, { actionsSlot }) {
+     container.innerHTML = `...`;
+     return { destroy() { /* limpiar listeners/intervals */ } };
+   }
+   ```
+2. Regístralo en `src/main.js` con `registerPage(...)`.
+3. Añade el `<div class="mod" data-page="...">` correspondiente en el
+   sidebar de `index.html`.
 
-✅ **index.html**: 63 entidades `&amp;&amp;` corregidas
-✅ **ethan-app.html**: 116 entidades `&amp;&amp;` corregidas
-✅ **operaciones.json**: Validado y formateado
-✅ Todos los proxies actualizados para Yahoo Finance
+## Estado actual (placeholder vs conectado)
 
-## 📊 Operaciones Registradas
+- **Conectados a Firestore en tiempo real**: Cartera (4.2), Vitácora (4.6)
+- **Placeholders** (UI lista, pendiente de migrar lógica real desde los
+  HTML originales): el resto de los 17 módulos
 
-El archivo `operaciones.json` contiene:
-- **Alcista**: 17 operaciones, +29.58% rentabilidad
-- **Bajista**: 20 posiciones registradas
+## Migración de datos antiguos
 
-## 🌐 APIs Utilizadas
-
-- **Yahoo Finance**: Datos históricos de precios
-- **Proxies CORS**: 
-  - corsproxy.io
-  - api.codetabs.com
-  - thingproxy.freeboard.io
-
-## 📱 Compatibilidad
-
-- ✅ Chrome/Edge
-- ✅ Firefox
-- ✅ Safari
-- ✅ Mobile responsive
-
-## 🔒 Sin Backend
-
-Todo funciona 100% en el navegador:
-- No requiere servidor
-- No requiere base de datos
-- localStorage para persistencia local
-
-## 📝 Notas
-
-- Los datos se actualizan en tiempo real desde Yahoo Finance
-- El backtesting se ejecuta localmente
-- La persistencia usa localStorage del navegador
-- Compatible con GitHub Pages (hosting estático gratuito)
-
----
-
-**Versión**: 2.0  
-**Última actualización**: Marzo 2026  
-**Autor**: ethan mercados
+Si quieres importar tus operaciones de `operaciones.json` a Firestore,
+puedes escribir un script puntual de importación con el SDK de admin de
+Firebase, o pegarlas manualmente desde el módulo Cartera una vez esté
+ampliado con un formulario de importación masiva.
