@@ -1,0 +1,18 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "functions": {
+    "api/smart-money.js": { "maxDuration": 60 },
+    "api/fundamental.js": { "maxDuration": 60 }
+  },
+  "crons": [
+    {
+      "path": "/api/cron-daily-prices",
+      "schedule": "30 21 * * *"
+    }
+  ],
+  "rewrites": [
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ]
+}
