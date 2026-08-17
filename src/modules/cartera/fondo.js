@@ -626,7 +626,10 @@ export async function render(container, { actionsSlot, savedState }) {
             <div class="fondo-strip-sub">(VL ${fmtVL(vlActual)} / ${VL_INICIAL})</div>
           </div>
           <div class="fondo-strip-cell">
-            <div class="fondo-strip-lbl">CAGR Anualizado</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div class="fondo-strip-lbl">CAGR Anualizado</div>
+              <span style="font-family:var(--mono);font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:rgba(74,222,128,0.12);color:var(--green);">✓ AUDIT</span>
+            </div>
             <div class="fondo-strip-val" style="color:${(m?.annReturn||0)>=0?'var(--green)':'var(--red)'};">${fmtPct((m?.annReturn||0)*100)}</div>
             <div class="fondo-strip-sub">365 días/año</div>
           </div>
@@ -690,9 +693,9 @@ export async function render(container, { actionsSlot, savedState }) {
 
         <div class="fondo-metrics">
           ${mc('YTD', fmtPct(((m?.ytd)||0)*100), null, (m?.ytd||0)>=0?'good':'bad', 'Rentabilidad acumulada desde el 1 de enero del año en curso.', true)}
-          ${mc('MTD', m?.mtd!=null?fmtPct(m.mtd*100):'—', null, m?.mtd!=null?(m.mtd>=0?'good':'bad'):'neu', 'Rentabilidad del mes en curso.')}
+          ${mc('MTD', m?.mtd!=null?fmtPct(m.mtd*100):'—', null, m?.mtd!=null?(m.mtd>=0?'good':'bad'):'neu', 'Rentabilidad del mes en curso.', true)}
           ${mc('P&L Realizado', fmtE(pnlRealizado), pnlRealizado>=0?'Ganancia':'Pérdida', pnlRealizado>=0?'good':'bad', 'Suma de beneficios y pérdidas de todas las operaciones cerradas.', true)}
-          ${mc('P&L No Realizado', fmtE(pnlNoRealizado), pnlNoRealizado>=0?'Latente+':'Latente−', pnlNoRealizado>=0?'good':'bad', 'P&L de las posiciones abiertas a precio actual. Se actualiza al abrir Posiciones.')}
+          ${mc('P&L No Realizado', fmtE(pnlNoRealizado), pnlNoRealizado>=0?'Latente+':'Latente−', pnlNoRealizado>=0?'good':'bad', 'P&L de las posiciones abiertas a precio actual. Se actualiza al abrir Posiciones.', true)}
           ${mc('Valor Liquidativo', fmtVL(vlActual), null, 'neu', `Precio por participación hoy. Inicio: ${VL_INICIAL.toFixed(4)}. Sube/baja con el P&L de la cartera.`, true)}
           ${mc('Valor Cartera', fmtE(valorCartera), null, 'neu', `VL (${fmtVL(vlActual)}) × ${m?.participaciones?.toFixed(2)||'—'} participaciones.`, true)}
         </div>
@@ -727,18 +730,18 @@ export async function render(container, { actionsSlot, savedState }) {
 
         <div class="fondo-section">Ratios ajustados por riesgo</div>
         <div class="fondo-metrics">
-          ${m?.sharpe!=null ? mc('Sharpe Ratio', m.sharpe.toFixed(2), m.sharpe>=1.5?'Excelente':m.sharpe>=1?'Sólido':m.sharpe>=0.5?'Aceptable':'Débil', m.sharpe>=1?'good':m.sharpe>=0.5?'warn':'bad', 'Retorno anualizado / volatilidad diaria × √252. Calculado sobre retornos diarios reales del VL.') : mc('Sharpe Ratio', 'N/A', null, 'neu', 'Importa el histórico de precios para calcular.')}
-          ${m?.sortino!=null ? mc('Sortino Ratio', m.sortino.toFixed(2), m.sortino>=2?'Excelente':m.sortino>=1.5?'Bueno':'Aceptable', m.sortino>=1.5?'good':'warn', 'Como Sharpe pero penaliza solo la volatilidad bajista. >2 = gestión de riesgo sobresaliente.') : mc('Sortino Ratio', 'N/A', null, 'neu', 'Sin días negativos en el VL o histórico insuficiente.')}
-          ${mc('Calmar Ratio', m?.calmar!=null?m.calmar.toFixed(2):'N/A', m?.calmar!=null?(m.calmar>=1?'Bueno':'Vigilar'):null, m?.calmar!=null?(m.calmar>=1?'good':'warn'):'neu', 'CAGR / Máx. Drawdown histórico. >1 = el retorno compensa el peor dolor sufrido.')}
-          ${m?.annVol!=null ? mc('Volatilidad Anual.', (m.annVol*100).toFixed(1)+'%', m.annVol<0.15?'Contenida':m.annVol<0.25?'Moderada':'Alta', m.annVol<0.15?'good':m.annVol<0.25?'warn':'bad', 'Desviación estándar retornos diarios del VL × √252. Referencia: SP500 ~15-20%/año.') : mc('Volatilidad Anual.', 'N/A', null, 'neu', 'Importa el histórico de precios para calcular.')}
-          ${mc('Días activo', m?.nDays!=null?m.nDays+'d':'—', null, 'neu', `Desde el ${fmtDate(m?.startDate)} · ${m?.tradingDays||0} sesiones · ${m?.nPuntos||0} puntos en la serie VL.`)}
+          ${m?.sharpe!=null ? mc('Sharpe Ratio', m.sharpe.toFixed(2), m.sharpe>=1.5?'Excelente':m.sharpe>=1?'Sólido':m.sharpe>=0.5?'Aceptable':'Débil', m.sharpe>=1?'good':m.sharpe>=0.5?'warn':'bad', 'Retorno anualizado / volatilidad diaria × √252. Calculado sobre retornos diarios reales del VL.', true) : mc('Sharpe Ratio', 'N/A', null, 'neu', 'Importa el histórico de precios para calcular.', true)}
+          ${m?.sortino!=null ? mc('Sortino Ratio', m.sortino.toFixed(2), m.sortino>=2?'Excelente':m.sortino>=1.5?'Bueno':'Aceptable', m.sortino>=1.5?'good':'warn', 'Como Sharpe pero penaliza solo la volatilidad bajista. >2 = gestión de riesgo sobresaliente.', true) : mc('Sortino Ratio', 'N/A', null, 'neu', 'Sin días negativos en el VL o histórico insuficiente.', true)}
+          ${mc('Calmar Ratio', m?.calmar!=null?m.calmar.toFixed(2):'N/A', m?.calmar!=null?(m.calmar>=1?'Bueno':'Vigilar'):null, m?.calmar!=null?(m.calmar>=1?'good':'warn'):'neu', 'CAGR / Máx. Drawdown histórico. >1 = el retorno compensa el peor dolor sufrido.', true)}
+          ${m?.annVol!=null ? mc('Volatilidad Anual.', (m.annVol*100).toFixed(1)+'%', m.annVol<0.15?'Contenida':m.annVol<0.25?'Moderada':'Alta', m.annVol<0.15?'good':m.annVol<0.25?'warn':'bad', 'Desviación estándar retornos diarios del VL × √252. Referencia: SP500 ~15-20%/año.', true) : mc('Volatilidad Anual.', 'N/A', null, 'neu', 'Importa el histórico de precios para calcular.', true)}
+          ${mc('Días activo', m?.nDays!=null?m.nDays+'d':'—', null, 'neu', `Desde el ${fmtDate(m?.startDate)} · ${m?.tradingDays||0} sesiones · ${m?.nPuntos||0} puntos en la serie VL.`, true)}
         </div>
 
         <div class="fondo-section">Beta vs SPY</div>
         <div class="fondo-metrics">
-          ${m?.beta!=null ? mc('Beta', m.beta.toFixed(2), m.beta<0.8?'Defensivo':m.beta<1.2?'Mercado':'Agresivo', m.beta<0.8?'good':m.beta<1.2?'neu':'warn', `Sensibilidad del fondo vs SP500. Beta=1 = se mueve igual que el mercado. Calculada con ${m?.nPuntos||0} sesiones.`) : `<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;"><div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:10px;">BETA VS SPY</div><div style="font-family:var(--mono);font-size:22px;font-weight:500;margin-bottom:6px;">N/A</div><div style="font-size:10.5px;color:var(--text3);line-height:1.55;">Importa el histórico de SPY para calcular. <button class="btn btn-primary" id="fondo-import-spy" style="font-size:9px;padding:4px 10px;margin-left:8px;">📥 Importar SPY</button></div></div>`}
-          ${m?.alpha!=null ? mc('Alpha (Jensen)', (m.alpha*100).toFixed(2)+'%', m.alpha>0?'Positivo':'Negativo', m.alpha>0?'good':'bad', 'Retorno del fondo no explicado por el mercado. Alpha>0 = generas valor sobre el benchmark.') : mc('Alpha', 'N/A', null, 'neu', 'Requiere Beta calculada.')}
-          ${m?.correlation!=null ? mc('Correlación', m.correlation.toFixed(2), m.correlation>0.8?'Alta':m.correlation>0.5?'Media':'Baja', m.correlation>0.8?'warn':m.correlation>0.5?'neu':'good', 'Correlación entre retornos diarios del fondo y el SP500. <1 = diversificación real.') : mc('Correlación', 'N/A', null, 'neu', 'Requiere Beta calculada.')}
+          ${m?.beta!=null ? mc('Beta', m.beta.toFixed(2), m.beta<0.8?'Defensivo':m.beta<1.2?'Mercado':'Agresivo', m.beta<0.8?'good':m.beta<1.2?'neu':'warn', `Sensibilidad del fondo vs SP500. Beta=1 = se mueve igual que el mercado. Calculada con ${m?.nPuntos||0} sesiones.`, true) : `<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;"><div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:10px;">BETA VS SPY</div><div style="font-family:var(--mono);font-size:22px;font-weight:500;margin-bottom:6px;">N/A</div><div style="font-size:10.5px;color:var(--text3);line-height:1.55;">Importa el histórico de SPY para calcular. <button class="btn btn-primary" id="fondo-import-spy" style="font-size:9px;padding:4px 10px;margin-left:8px;">📥 Importar SPY</button></div></div>`}
+          ${m?.alpha!=null ? mc('Alpha (Jensen)', (m.alpha*100).toFixed(2)+'%', m.alpha>0?'Positivo':'Negativo', m.alpha>0?'good':'bad', 'Retorno del fondo no explicado por el mercado. Alpha>0 = generas valor sobre el benchmark.', true) : mc('Alpha', 'N/A', null, 'neu', 'Requiere Beta calculada.', true)}
+          ${m?.correlation!=null ? mc('Correlación', m.correlation.toFixed(2), m.correlation>0.8?'Alta':m.correlation>0.5?'Media':'Baja', m.correlation>0.8?'warn':m.correlation>0.5?'neu':'good', 'Correlación entre retornos diarios del fondo y el SP500. <1 = diversificación real.', true) : mc('Correlación', 'N/A', null, 'neu', 'Requiere Beta calculada.', true)}
         </div>
 
         ${(() => {
@@ -809,10 +812,10 @@ export async function render(container, { actionsSlot, savedState }) {
           return `
           <div class="fondo-section">Value at Risk (VaR histórico)</div>
           <div class="fondo-metrics" style="margin-bottom:8px;">
-            ${mc('VaR 95% (1 día)', fmtPct(var95*100), 'Hist. 95%', 'bad', `Con 95% de confianza, no perderás más de ${fmtE(Math.abs(var95Eur))} en un día.`)}
-            ${mc('VaR 99% (1 día)', fmtPct(var99*100), 'Hist. 99%', 'bad', `Con 99% de confianza, no perderás más de ${fmtE(Math.abs(var99Eur))} en un día.`)}
-            ${mc('CVaR 95%', fmtPct(cvar95*100), 'Expected Shortfall', 'bad', `Pérdida media esperada en el peor 5% de los días. También llamado Expected Shortfall.`)}
-            ${mc('VaR 95% mensual', fmtPct(var95*Math.sqrt(21)*100), 'Escalado √21', 'warn', `VaR diario escalado a 21 días hábiles por la raíz del tiempo.`)}
+            ${mc('VaR 95% (1 día)', fmtPct(var95*100), 'Hist. 95%', 'bad', `Con 95% de confianza, no perderás más de ${fmtE(Math.abs(var95Eur))} en un día.`, true)}
+            ${mc('VaR 99% (1 día)', fmtPct(var99*100), 'Hist. 99%', 'bad', `Con 99% de confianza, no perderás más de ${fmtE(Math.abs(var99Eur))} en un día.`, true)}
+            ${mc('CVaR 95%', fmtPct(cvar95*100), 'Expected Shortfall', 'bad', `Pérdida media esperada en el peor 5% de los días. También llamado Expected Shortfall.`, true)}
+            ${mc('VaR 95% mensual', fmtPct(var95*Math.sqrt(21)*100), 'Escalado √21', 'warn', `VaR diario escalado a 21 días hábiles por la raíz del tiempo.`, true)}
           </div>
           <div style="background:var(--surface2);border-radius:6px;padding:10px 14px;font-size:10px;color:var(--text3);margin-bottom:16px;font-family:var(--mono);">
             Basado en ${n} retornos diarios históricos reales del VL · Método histórico (no asume distribución normal)
@@ -820,10 +823,10 @@ export async function render(container, { actionsSlot, savedState }) {
 
           <div class="fondo-section">Monte Carlo — Proyección 12 meses</div>
           <div class="fondo-metrics" style="margin-bottom:12px;">
-            ${mc('Escenario Optimista (P90)', fmtPct((p90-1)*100), '+'+fmtE((p90-1)*valorCartera), 'good', `El 10% de las simulaciones superan este resultado. Valor cartera: ${fmtE(p90*valorCartera)}`)}
-            ${mc('Escenario Base (P50)', fmtPct((p50-1)*100), fmtE((p50-1)*valorCartera), (p50-1)>=0?'good':'bad', `Mediana de 500 simulaciones. Valor cartera esperado: ${fmtE(p50*valorCartera)}`)}
-            ${mc('Escenario Pesimista (P10)', fmtPct((p10-1)*100), fmtE((p10-1)*valorCartera), 'bad', `El 90% de las simulaciones superan este resultado. Valor cartera: ${fmtE(p10*valorCartera)}`)}
-            ${mc('Tail Risk (P5)', fmtPct((pWorst-1)*100), fmtE((pWorst-1)*valorCartera), 'bad', `El peor 5% de escenarios. Pérdida máxima esperada en escenario de estrés a 12 meses.`)}
+            ${mc('Escenario Optimista (P90)', fmtPct((p90-1)*100), '+'+fmtE((p90-1)*valorCartera), 'good', `El 10% de las simulaciones superan este resultado. Valor cartera: ${fmtE(p90*valorCartera)}`, true)}
+            ${mc('Escenario Base (P50)', fmtPct((p50-1)*100), fmtE((p50-1)*valorCartera), (p50-1)>=0?'good':'bad', `Mediana de 500 simulaciones. Valor cartera esperado: ${fmtE(p50*valorCartera)}`, true)}
+            ${mc('Escenario Pesimista (P10)', fmtPct((p10-1)*100), fmtE((p10-1)*valorCartera), 'bad', `El 90% de las simulaciones superan este resultado. Valor cartera: ${fmtE(p10*valorCartera)}`, true)}
+            ${mc('Tail Risk (P5)', fmtPct((pWorst-1)*100), fmtE((pWorst-1)*valorCartera), 'bad', `El peor 5% de escenarios. Pérdida máxima esperada en escenario de estrés a 12 meses.`, true)}
           </div>
 
           <!-- Histograma Monte Carlo -->
@@ -866,14 +869,14 @@ export async function render(container, { actionsSlot, savedState }) {
           return `
           <div class="fondo-metrics" style="margin-bottom:16px;">
             ${mc('Win Rate', rg?Math.round(rg.winRate*100)+'%':'—', rg&&rg.winRate>=0.5?'Bueno':'Vigilar', rg&&rg.winRate>=0.5?'good':'warn', rg.n+' operaciones cerradas')}
-            ${mc('Profit Factor', rg&&rg.profitFactor!=null?rg.profitFactor.toFixed(2):'—', rg&&rg.profitFactor>=1.5?'Sólido':rg&&rg.profitFactor>=1?'Aceptable':'Débil', rg&&rg.profitFactor>=1.5?'good':rg&&rg.profitFactor>=1?'neu':'bad', 'Ganancias brutas / pérdidas brutas. >1.5 = sistema robusto.')}
-            ${mc('Esperanza Mat.', rg?fmtPct2(rg.esperanza*100):'—', rg&&rg.esperanza>=0?'Positiva':'Negativa', rg&&rg.esperanza>=0?'good':'bad', 'Retorno esperado por operación normalizada.')}
-            ${mc('Avg Win', rg?'+'+rg.avgWin.toFixed(1)+'%':'—', null, 'good', 'Ganancia media de las operaciones ganadoras.')}
-            ${mc('Avg Loss', rg?'-'+rg.avgLoss.toFixed(1)+'%':'—', null, 'warn', 'Pérdida media de las operaciones perdedoras.')}
-            ${mc('Payoff', rg&&rg.payoff!=null?rg.payoff.toFixed(2):'—', rg&&rg.payoff>=1.5?'Bueno':'Neutral', rg&&rg.payoff>=1.5?'good':'neu', 'Avg Win / Avg Loss.')}
-            ${mc('Holding medio', rg?.avgDays!=null?rg.avgDays+'d':'—', null, 'neu', 'Días medios por operación cerrada.')}
-            ${mc('P&L Realizado', rg?.hasAbs?fmtE2(rg.totalPL):'—', rg&&rg.totalPL>=0?'Ganancia':'Pérdida', rg&&rg.totalPL>=0?'good':'bad', 'Suma de todos los P&L realizados.')}
-            ${mc('Rent. media/op.', rg?fmtPct2(rg.avgReturn):'—', rg&&rg.avgReturn>=0?'Positiva':'Negativa', rg&&rg.avgReturn>=0?'good':'bad', 'Rentabilidad media por operación cerrada.')}
+            ${mc('Profit Factor', rg&&rg.profitFactor!=null?rg.profitFactor.toFixed(2):'—', rg&&rg.profitFactor>=1.5?'Sólido':rg&&rg.profitFactor>=1?'Aceptable':'Débil', rg&&rg.profitFactor>=1.5?'good':rg&&rg.profitFactor>=1?'neu':'bad', 'Ganancias brutas / pérdidas brutas. >1.5 = sistema robusto.', true)}
+            ${mc('Esperanza Mat.', rg?fmtPct2(rg.esperanza*100):'—', rg&&rg.esperanza>=0?'Positiva':'Negativa', rg&&rg.esperanza>=0?'good':'bad', 'Retorno esperado por operación normalizada.', true)}
+            ${mc('Avg Win', rg?'+'+rg.avgWin.toFixed(1)+'%':'—', null, 'good', 'Ganancia media de las operaciones ganadoras.', true)}
+            ${mc('Avg Loss', rg?'-'+rg.avgLoss.toFixed(1)+'%':'—', null, 'warn', 'Pérdida media de las operaciones perdedoras.', true)}
+            ${mc('Payoff', rg&&rg.payoff!=null?rg.payoff.toFixed(2):'—', rg&&rg.payoff>=1.5?'Bueno':'Neutral', rg&&rg.payoff>=1.5?'good':'neu', 'Avg Win / Avg Loss.', true)}
+            ${mc('Holding medio', rg?.avgDays!=null?rg.avgDays+'d':'—', null, 'neu', 'Días medios por operación cerrada.', true)}
+            ${mc('P&L Realizado', rg?.hasAbs?fmtE2(rg.totalPL):'—', rg&&rg.totalPL>=0?'Ganancia':'Pérdida', rg&&rg.totalPL>=0?'good':'bad', 'Suma de todos los P&L realizados.', true)}
+            ${mc('Rent. media/op.', rg?fmtPct2(rg.avgReturn):'—', rg&&rg.avgReturn>=0?'Positiva':'Negativa', rg&&rg.avgReturn>=0?'good':'bad', 'Rentabilidad media por operación cerrada.', true)}
           </div>
 
           <div class="fondo-section">Por estrategia</div>
