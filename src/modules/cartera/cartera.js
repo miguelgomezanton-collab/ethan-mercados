@@ -95,7 +95,16 @@ function detectEscapeFalso(highs, closes) {
 function analyzePosition(pos, data) {
   const { timestamps, opens, highs, lows, closes, volumes, name, currency } = data;
   const n = closes.length, di = n-1;
-  const currentPrice = closes[di];
+
+  // Buscar el último cierre válido (no null)
+  let currentPrice = null;
+  for (let i = di; i >= 0; i--) {
+    if (closes[i] != null && !isNaN(closes[i]) && closes[i] > 0) {
+      currentPrice = closes[i];
+      break;
+    }
+  }
+  if (!currentPrice) return null;
 
   const ema10d = calcEMA(closes, 10);
   const stopDiario = ema10d[di];
@@ -107,10 +116,25 @@ function analyzePosition(pos, data) {
   const activeStop = pos.stopType === 'manual'
     ? pos.stopManual
     : pos.stopType === 'semanal' ? stopSemanal : stopDiario;
+
   const escapeFalso = detectEscapeFalso(highs, closes);
-  const pnlPct = ((currentPrice - pos.entry) / pos.entry) * 100;
-  const distStop = ((currentPrice - activeStop) / currentPrice) * 100;
-  const tocoStop = currentPrice <= activeStop * 1.005;
+
+  // P&L correcto para long y short
+  const dir = pos.direction || 'alcista';
+  const pnlPct = dir === 'bajista'
+    ? ((pos.entry - currentPrice) / pos.entry) * 100
+    : ((currentPrice - pos.entry)  / pos.entry) * 100;
+
+  const distStop = activeStop > 0
+    ? dir === 'bajista'
+      ? ((activeStop - currentPrice) / currentPrice) * 100
+      : ((currentPrice - activeStop) / currentPrice) * 100
+    : 0;
+
+  // tocoStop: sin margen de 0.5% para evitar falsas alarmas
+  const tocoStop = dir === 'bajista'
+    ? currentPrice >= activeStop
+    : currentPrice <= activeStop;
 
   return { currentPrice, stopDiario, stopSemanal, activeStop, escapeFalso, tocoStop, pnlPct, distStop, name, currency };
 }
@@ -766,13 +790,14 @@ export async function render(container, { actionsSlot }) {
         <thead>
           <tr>
             <th>TICKER</th><th>ENTRADA</th><th>SALIDA</th>
-            <th>P&L %</th><th>P&L €</th><th>DURACIÓN</th><th>MOTIVO</th><th>NOTAS</th>
+            <th>CAPITAL</th><th>P&L %</th><th>P&L €</th><th>DURACIÓN</th><th>MOTIVO</th><th>NOTAS</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
           ${ops.map((h) => {
             const globalIdx = history.indexOf(h);
+            const capital = h.cost || (h.shares && h.entry ? h.shares * h.entry : null);
             return `
             <tr>
               <td>
@@ -781,6 +806,7 @@ export async function render(container, { actionsSlot }) {
               </td>
               <td class="sc2-price">$${h.entry.toFixed(2)}</td>
               <td class="sc2-price">$${h.exit.toFixed(2)}</td>
+              <td class="sc2-price" style="color:var(--text2);">${capital ? '$'+Math.round(capital).toLocaleString('es-ES') : '—'}</td>
               <td class="sc2-score" style="color:${h.pnlPct>=0?'var(--green)':'var(--red)'}">${h.pnlPct>=0?'+':''}${h.pnlPct.toFixed(2)}%</td>
               <td class="sc2-price" style="color:${h.pnlAbs!=null?(h.pnlAbs>=0?'var(--green)':'var(--red)'):'var(--text3)'}">${h.pnlAbs!=null?((h.pnlAbs>=0?'+':'')+'$'+h.pnlAbs.toFixed(0)):'—'}</td>
               <td class="sc2-vol">${h.duration}d</td>
@@ -859,21 +885,25 @@ export async function render(container, { actionsSlot }) {
       capitalAlcista = nuevo;
       await UserData.set('ethan_capital_alcista', capitalAlcista);
 
-      // Actualizar fondo de participaciones
-      try {
-        const { getFondo, aportarCapital, retirarCapital, inicializarFondo, calcVL } = await import('../../fondo.js');
-        const fondo = await getFondo();
-        // Calcular valor actual de la cartera para el VL
-        const pnlRealizado = history.filter(h=>(h.direction||'alcista')==='alcista').reduce((s,h)=>s+(h.pnlAbs||0),0);
-        const valorActual = nuevo + pnlRealizado; // simplificado sin unrealized por ahora
-        if (!fondo) {
-          await inicializarFondo(nuevo, new Date().toISOString().slice(0,10));
-        } else if (diferencia > 0) {
-          await aportarCapital(diferencia, valorActual, 'Aportación alcista');
-        } else if (diferencia < 0) {
-          await retirarCapital(Math.abs(diferencia), valorActual, 'Retirada alcista');
-        }
-      } catch(e) { console.warn('Fondo:', e.message); }
+      // Solo actualizar fondo si hay un cambio real de capital (no la configuración inicial)
+      if (diferencia !== 0) {
+        try {
+          const { getFondo, aportarCapital, retirarCapital, inicializarFondo, calcVL } = await import('../../fondo.js');
+          const fondo = await getFondo();
+          const pnlRealizado = history.filter(h=>(h.direction||'alcista')==='alcista').reduce((s,h)=>s+(h.pnlAbs||0),0);
+          const valorActual = nuevo + pnlRealizado;
+          if (!fondo) {
+            await inicializarFondo(nuevo, new Date().toISOString().slice(0,10));
+          } else {
+            // Verificar que el fondo no fue ya inicializado con este importe
+            const fondoCapital = fondo.movimientos?.reduce((s,m) => m.tipo==='inicio'||m.tipo==='aportacion' ? s+m.importe : s-Math.abs(m.importe), 0) || 0;
+            if (Math.abs(fondoCapital - nuevo) > 1) {
+              if (diferencia > 0) await aportarCapital(diferencia, valorActual, 'Aportación alcista');
+              else await retirarCapital(Math.abs(diferencia), valorActual, 'Retirada alcista');
+            }
+          }
+        } catch(e) { console.warn('Fondo:', e.message); }
+      }
 
       renderHistory();
     });
