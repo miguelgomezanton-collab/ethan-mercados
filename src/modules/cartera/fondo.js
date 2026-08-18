@@ -274,7 +274,8 @@ async function calcMetricas(fondo, vlActual, history = [], positions = [], capit
   // Asegurar que el último punto es el VL actual de hoy
   if (serieFinal.length > 0) serieFinal[serieFinal.length - 1] = [today, vlActual];
 
-  // ── Estadísticas sobre la serie diaria ───────────────────────────
+  // ── MaxDD sobre la serie completa ────────────────────────────────
+  // Se calcula DESPUÉS de tener serieFinal completa con precios diarios
   let peak = VL_INICIAL, maxDD = 0, ddDate = startDate;
   serieFinal.forEach(([date, vl]) => {
     if (vl > peak) peak = vl;
@@ -306,7 +307,7 @@ async function calcMetricas(fondo, vlActual, history = [], positions = [], capit
 
   let sharpe = null, sortino = null, annVol = null, beta = null, alpha = null, correlation = null, spyStats = null;
   if (dailyReturns.length >= 10) {
-    // Volatilidad sobre todos los retornos incluyendo días planos
+    // Volatilidad sobre todos los retornos incluyendo días hábiles planos
     const mean = allReturns.reduce((a, b) => a + b, 0) / allReturns.length;
     const variance = allReturns.reduce((a, r) => a + (r - mean) ** 2, 0) / allReturns.length;
     annVol = Math.sqrt(variance * 252);
@@ -316,28 +317,54 @@ async function calcMetricas(fondo, vlActual, history = [], positions = [], capit
       ? Math.pow(Math.max(1 + totalReturn, 0.001), 365 / nDays) - 1
       : totalReturn;
 
-    sharpe = annVol > 0 ? annReturn2 / annVol : null;
-    const downR = allReturns.filter(r => r < 0);
+    // Risk-free rate anual actual (~5% Fed Funds) → diario
+    const rfAnual = 0.05;
+    const rfDiario = Math.pow(1 + rfAnual, 1/252) - 1;
+
+    // Sharpe = (Retorno anual - RF anual) / Volatilidad anual
+    // Calculado sobre excess returns diarios para mayor precisión
+    const excessReturns = allReturns.map(r => r - rfDiario);
+    const excessMean = excessReturns.reduce((a, b) => a + b, 0) / excessReturns.length;
+    const excessVar  = excessReturns.reduce((a, r) => a + (r - excessMean) ** 2, 0) / excessReturns.length;
+    const excessVol  = Math.sqrt(excessVar * 252);
+    sharpe = excessVol > 0 ? (excessMean * 252) / excessVol : null;
+
+    // Sortino = (Retorno anual - RF anual) / Downside Deviation
+    // Downside deviation solo sobre excess returns negativos
+    const downR = excessReturns.filter(r => r < 0);
     if (downR.length > 0) {
-      const downVol = Math.sqrt(downR.reduce((a, r) => a + r * r, 0) / downR.length * 252);
-      sortino = downVol > 0 ? annReturn2 / downVol : null;
+      const downVar = downR.reduce((a, r) => a + r * r, 0) / downR.length;
+      const downVol = Math.sqrt(downVar * 252);
+      sortino = downVol > 0 ? (excessMean * 252) / downVol : null;
     }
 
-    // Beta vs SPY — leer histórico de SPY de Firestore
+    // Beta vs SPY — usar serie completa alineada por fecha incluyendo días en cash
     const spyHist = await UserData.get('ethan_px_hist_SPY') || {};
     const spyReturns = [];
     const fondoReturnsSPY = [];
-    // dailyDates[i] = fecha del día i, serieFinal[i+1][0] = fecha actual, serieFinal[i][0] = día anterior
+
+    // Construir mapa de retornos del fondo por fecha
+    const fondoReturnMap = {};
     for (let i = 0; i < dailyDates.length; i++) {
-      const date     = dailyDates[i];            // fecha del retorno diario
-      const prevDate = serieFinal[i]?.[0];       // día anterior en la serie VL
-      if (!date || !prevDate || date === prevDate) continue;
+      fondoReturnMap[dailyDates[i]] = dailyReturns[i];
+    }
+
+    // Inner join por fecha: usar todos los días donde SPY tiene datos
+    // y el fondo tiene retorno (real o 0 por cash)
+    const spyDates = Object.keys(spyHist).sort();
+    for (let i = 1; i < spyDates.length; i++) {
+      const date     = spyDates[i];
+      const prevDate = spyDates[i-1];
+      if (date < (startDate || '')) continue; // antes del inicio del fondo
+      if (date > today) break;
       const spyCur  = spyHist[date];
       const spyPrev = spyHist[prevDate];
-      if (spyCur && spyPrev && spyPrev > 0 && dailyReturns[i] != null) {
-        spyReturns.push((spyCur - spyPrev) / spyPrev);
-        fondoReturnsSPY.push(dailyReturns[i]);
-      }
+      if (!spyCur || !spyPrev || spyPrev <= 0) continue;
+      const spyR = (spyCur - spyPrev) / spyPrev;
+      // Retorno del fondo: real si hay posición, 0 si estaba en cash
+      const fondoR = fondoReturnMap[date] ?? 0;
+      spyReturns.push(spyR);
+      fondoReturnsSPY.push(fondoR);
     }
 
     if (spyReturns.length >= 10) {
